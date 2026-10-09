@@ -1,0 +1,178 @@
+.main-footer {
+  margin-top: 100px;
+
+  background: #1d2b23;
+
+  color: white;
+}
+
+.footer-container {
+  width: min(1180px, calc(100% - 40px));
+
+  margin: 0 auto;
+
+  padding: 70px 0 55px;
+
+  display: grid;
+
+  grid-template-columns: 2fr 1fr 1fr 1.2fr;
+
+  gap: 60px;
+}
+
+/* BRAND */
+
+.footer-logo {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  text-decoration: none;
+
+  color: white;
+}
+
+.footer-logo div {
+  width: 40px;
+  height: 40px;
+
+  display: grid;
+
+  place-items: center;
+
+  border-radius: 11px;
+
+  background: #e6ebe6;
+
+  color: #243a2e;
+
+  font-size: 20px;
+
+  font-weight: 700;
+}
+
+.footer-logo span {
+  font-size: 19px;
+
+  font-weight: 700;
+}
+
+.footer-brand > p {
+  max-width: 340px;
+
+  margin-top: 20px;
+
+  color: rgba(255, 255, 255, 0.58);
+
+  font-size: 13px;
+
+  line-height: 1.8;
+}
+
+/* COLUMN */
+
+.footer-column {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-start;
+
+  gap: 12px;
+}
+
+.footer-column h4 {
+  margin: 5px 0 10px;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  color: white;
+}
+
+.footer-column a,
+.footer-column span,
+.footer-column p {
+  margin: 0;
+
+  color: rgba(255, 255, 255, 0.58);
+
+  text-decoration: none;
+
+  font-size: 13px;
+
+  line-height: 1.5;
+}
+
+.footer-column a {
+  transition: 0.2s;
+}
+
+.footer-column a:hover {
+  color: white;
+
+  transform: translateX(3px);
+}
+
+/* BOTTOM */
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.footer-bottom > div {
+  width: min(1180px, calc(100% - 40px));
+
+  margin: 0 auto;
+
+  padding: 22px 0;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  gap: 20px;
+}
+
+.footer-bottom p {
+  margin: 0;
+
+  color: rgba(255, 255, 255, 0.38);
+
+  font-size: 11px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
+  .footer-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .main-footer {
+    margin-top: 70px;
+  }
+
+  .footer-container {
+    width: calc(100% - 40px);
+
+    padding: 50px 0 40px;
+
+    grid-template-columns: 1fr;
+
+    gap: 35px;
+  }
+
+  .footer-bottom > div {
+    width: calc(100% - 40px);
+
+    flex-direction: column;
+
+    gap: 6px;
+  }
+}

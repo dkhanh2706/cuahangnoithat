@@ -1,0 +1,149 @@
+.floating-chat {
+  position: fixed;
+
+  right: 25px;
+  bottom: 25px;
+
+  z-index: 2500;
+}
+
+.floating-chat-button {
+  width: 58px;
+  height: 58px;
+
+  display: grid;
+
+  place-items: center;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: #294233;
+
+  color: white;
+
+  font-size: 23px;
+
+  cursor: pointer;
+
+  box-shadow: 0 12px 30px rgba(27, 52, 37, 0.28);
+
+  transition: 0.25s;
+}
+
+.floating-chat-button:hover {
+  transform: translateY(-3px);
+}
+
+.floating-chat-box {
+  width: 300px;
+
+  position: absolute;
+
+  right: 0;
+  bottom: 72px;
+
+  overflow: hidden;
+
+  border-radius: 15px;
+
+  background: white;
+
+  box-shadow: 0 20px 55px rgba(0, 0, 0, 0.18);
+}
+
+.floating-chat-heading {
+  padding: 15px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  background: #294233;
+
+  color: white;
+}
+
+.floating-chat-heading div {
+  display: flex;
+
+  flex-direction: column;
+}
+
+.floating-chat-heading strong {
+  font-size: 13px;
+}
+
+.floating-chat-heading span {
+  margin-top: 2px;
+
+  font-size: 10px;
+
+  opacity: 0.65;
+}
+
+.floating-chat-heading button {
+  border: none;
+
+  background: transparent;
+
+  color: white;
+
+  font-size: 20px;
+
+  cursor: pointer;
+}
+
+.floating-chat-body {
+  padding: 20px;
+}
+
+.floating-chat-body p {
+  margin: 0 0 8px;
+
+  font-weight: 600;
+}
+
+.floating-chat-body span {
+  display: block;
+
+  color: #777;
+
+  font-size: 12px;
+
+  line-height: 1.6;
+}
+
+.floating-chat-body button {
+  width: 100%;
+
+  height: 40px;
+
+  margin-top: 18px;
+
+  border: none;
+
+  border-radius: 8px;
+
+  background: #294233;
+
+  color: white;
+
+  font-size: 12px;
+
+  cursor: pointer;
+}
+
+@media (max-width: 500px) {
+  .floating-chat {
+    right: 15px;
+    bottom: 15px;
+  }
+
+  .floating-chat-box {
+    width: calc(100vw - 30px);
+  }
+}
