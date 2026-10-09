@@ -26,9 +26,9 @@ function Footer() {
 
           <Link to="/products">Sản phẩm</Link>
 
-          <a href="/#collections">Bộ sưu tập</a>
+          <a href="/#rooms">Theo phòng</a>
 
-          <a href="/#about">Về chúng tôi</a>
+          <a href="/#featured-collections">Bộ sưu tập</a>
         </div>
 
         <div className="footer-column">
@@ -37,8 +37,6 @@ function Footer() {
           <Link to="/cart">Giỏ hàng</Link>
 
           <Link to="/orders">Đơn hàng</Link>
-
-          <Link to="/consultation">Tư vấn</Link>
 
           <span>Chính sách mua hàng</span>
         </div>

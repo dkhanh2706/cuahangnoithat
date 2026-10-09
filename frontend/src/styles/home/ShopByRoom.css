@@ -1,0 +1,146 @@
+.shop-room-section {
+  width: min(1180px, calc(100% - 40px));
+
+  margin: 115px auto;
+}
+
+.home-section-heading {
+  margin-bottom: 34px;
+}
+
+.home-section-heading > span {
+  color: #667a6d;
+
+  font-size: 10px;
+
+  letter-spacing: 2.5px;
+}
+
+.home-section-heading h2 {
+  max-width: 620px;
+
+  margin: 9px 0 0;
+
+  color: #272727;
+
+  font-size: 39px;
+
+  font-weight: 500;
+
+  line-height: 1.15;
+
+  letter-spacing: -1.5px;
+}
+
+.shop-room-grid {
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  grid-auto-rows: 260px;
+
+  gap: 15px;
+}
+
+.shop-room-card {
+  position: relative;
+
+  overflow: hidden;
+
+  border-radius: 17px;
+
+  background: #ddd;
+
+  cursor: pointer;
+}
+
+.shop-room-card.large {
+  grid-column: span 2;
+
+  grid-row: span 2;
+}
+
+.shop-room-card img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  transition: transform 0.55s ease;
+}
+
+.shop-room-card:hover img {
+  transform: scale(1.06);
+}
+
+.shop-room-overlay {
+  position: absolute;
+
+  inset: 0;
+
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.62), transparent 65%);
+}
+
+.shop-room-info {
+  position: absolute;
+
+  left: 22px;
+  right: 22px;
+  bottom: 21px;
+
+  display: flex;
+
+  align-items: flex-end;
+
+  justify-content: space-between;
+
+  color: white;
+}
+
+.shop-room-info span {
+  display: block;
+
+  margin-bottom: 5px;
+
+  font-size: 10px;
+
+  opacity: 0.72;
+}
+
+.shop-room-info h3 {
+  margin: 0;
+
+  font-size: 24px;
+
+  font-weight: 500;
+}
+
+.shop-room-info strong {
+  font-size: 25px;
+
+  font-weight: 400;
+}
+
+@media (max-width: 900px) {
+  .shop-room-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 550px) {
+  .shop-room-grid {
+    grid-template-columns: 1fr;
+
+    grid-auto-rows: 270px;
+  }
+
+  .shop-room-card.large {
+    grid-column: span 1;
+
+    grid-row: span 1;
+  }
+
+  .home-section-heading h2 {
+    font-size: 31px;
+  }
+}

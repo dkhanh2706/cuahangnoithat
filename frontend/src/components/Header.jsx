@@ -21,7 +21,11 @@ function Header() {
 
   const handleProtectedNavigate = (path) => {
     if (!token) {
-      navigate("/login");
+      navigate("/login", {
+        state: {
+          from: path,
+        },
+      });
 
       return;
     }
@@ -32,8 +36,6 @@ function Header() {
   return (
     <header className="main-header">
       <div className="header-container">
-        {/* LOGO */}
-
         <Link to="/" className="brand">
           <div className="brand-logo">F</div>
 
@@ -43,8 +45,6 @@ function Header() {
             <span>Interior Living</span>
           </div>
         </Link>
-
-        {/* MENU */}
 
         <nav className="main-nav">
           <NavLink
@@ -62,16 +62,12 @@ function Header() {
             Sản phẩm
           </NavLink>
 
-          <a href="/#collections">Bộ sưu tập</a>
+          <a href="/#rooms">Theo phòng</a>
 
-          <a href="/#about">Về chúng tôi</a>
+          <a href="/#featured-collections">Bộ sưu tập</a>
         </nav>
 
-        {/* ACTION */}
-
         <div className="header-actions">
-          {/* CART */}
-
           <button
             className="header-icon-btn"
             onClick={() => handleProtectedNavigate("/cart")}

@@ -1,43 +1,26 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 
 import api from "../services/api";
 
-import HeroSection from "../components/home/HeroSection";
-
-import RoomCollectionsSection from "../components/home/RoomCollectionsSection";
-
-import FeaturedProductsSection from "../components/home/FeaturedProductsSection";
-
-import ConsultationSection from "../components/home/ConsultationSection";
-
-import FloatingChat from "../components/home/FloatingChat";
+import HeroSlider from "../components/home/HeroSlider";
+import ShopByRoom from "../components/home/ShopByRoom";
+import FeaturedCollections from "../components/home/FeaturedCollections";
+import ProductShowcase from "../components/home/ProductShowcase";
+import Testimonials from "../components/home/Testimonials";
 
 function Home() {
-  const navigate = useNavigate();
-  const location = useLocation();
-
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadProducts = async () => {
       try {
-        const productResponse = await api.get("/api/products");
+        const response = await api.get("/api/products");
 
-        const productData = productResponse.data;
-
-        /*
-         * Lấy ảnh chính từng sản phẩm.
-         *
-         * Hiện API product chưa trả ảnh chính
-         * nên FE gọi API images.
-         *
-         * Sau này mình sẽ tối ưu BE để
-         * GET /products trả primary_image luôn.
-         */
+        const productData = response.data;
 
         const productsWithImages = await Promise.all(
-          productData.slice(0, 12).map(async (product) => {
+          productData.map(async (product) => {
             try {
               const imageResponse = await api.get(
                 `/api/products/${product.id}/images`,
@@ -45,13 +28,13 @@ function Home() {
 
               const images = imageResponse.data;
 
-              const primary =
+              const primaryImage =
                 images.find((image) => image.is_primary) || images[0];
 
               return {
                 ...product,
 
-                primary_image: primary?.image_url || null,
+                primary_image: primaryImage?.image_url || null,
               };
             } catch {
               return {
@@ -65,51 +48,25 @@ function Home() {
         setProducts(productsWithImages);
       } catch (error) {
         console.error("Không thể tải sản phẩm:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
     loadProducts();
   }, []);
 
-  const handleAddToCart = (product) => {
-    const token = localStorage.getItem("access_token");
-
-    if (!token) {
-      navigate("/login", {
-        state: {
-          from: location.pathname,
-        },
-      });
-
-      return;
-    }
-
-    /*
-     * Cart API chưa xây.
-     * Bước sau sẽ thay bằng:
-     *
-     * POST /api/cart/items
-     */
-
-    console.log("Sản phẩm cần thêm giỏ:", product);
-
-    navigate("/cart");
-  };
-
   return (
     <>
-      <HeroSection />
+      <HeroSlider />
 
-      <RoomCollectionsSection />
+      <ShopByRoom />
 
-      <FeaturedProductsSection
-        products={products}
-        onAddToCart={handleAddToCart}
-      />
+      <FeaturedCollections />
 
-      <ConsultationSection />
+      <ProductShowcase products={products} loading={loading} />
 
-      <FloatingChat />
+      <Testimonials />
     </>
   );
 }

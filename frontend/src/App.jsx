@@ -3,48 +3,49 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import UserLayout from "./layouts/UserLayout";
 
 import Home from "./pages/Home";
+
 import Login from "./pages/Login";
+
 import Register from "./pages/Register";
+
+import Products from "./pages/Products";
+
+import ProductDetail from "./pages/ProductDetail";
+
+import Cart from "./pages/Cart";
+
+import Profile from "./pages/Profile";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
 import "./App.css";
 
-function ProductsPlaceholder() {
+function CollectionsPlaceholder() {
   return (
     <div
       style={{
-        minHeight: "60vh",
-        padding: "60px 40px",
+        width: "min(1180px, calc(100% - 40px))",
+        margin: "60px auto",
+        minHeight: "55vh",
       }}
     >
-      <h1>Sản phẩm</h1>
+      <h1>Bộ sưu tập</h1>
+
+      <p>Trang bộ sưu tập sẽ được xây dựng ở bước tiếp theo.</p>
     </div>
   );
 }
 
-function CartPlaceholder() {
+function CollectionDetailPlaceholder() {
   return (
     <div
       style={{
-        minHeight: "60vh",
-        padding: "60px 40px",
+        width: "min(1180px, calc(100% - 40px))",
+        margin: "60px auto",
+        minHeight: "55vh",
       }}
     >
-      <h1>Giỏ hàng</h1>
-    </div>
-  );
-}
-
-function ProfilePlaceholder() {
-  return (
-    <div
-      style={{
-        minHeight: "60vh",
-        padding: "60px 40px",
-      }}
-    >
-      <h1>Hồ sơ cá nhân</h1>
+      <h1>Chi tiết bộ sưu tập</h1>
     </div>
   );
 }
@@ -53,16 +54,21 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* =========================
-            USER LAYOUT
-        ========================= */}
-
         <Route element={<UserLayout />}>
           {/* PUBLIC */}
 
           <Route path="/" element={<Home />} />
 
-          <Route path="/products" element={<ProductsPlaceholder />} />
+          <Route path="/products" element={<Products />} />
+
+          <Route path="/products/:id" element={<ProductDetail />} />
+
+          <Route path="/collections" element={<CollectionsPlaceholder />} />
+
+          <Route
+            path="/collections/:slug"
+            element={<CollectionDetailPlaceholder />}
+          />
 
           <Route path="/login" element={<Login />} />
 
@@ -74,7 +80,7 @@ function App() {
             path="/cart"
             element={
               <ProtectedRoute>
-                <CartPlaceholder />
+                <Cart />
               </ProtectedRoute>
             }
           />
@@ -83,7 +89,7 @@ function App() {
             path="/profile"
             element={
               <ProtectedRoute>
-                <ProfilePlaceholder />
+                <Profile />
               </ProtectedRoute>
             }
           />
