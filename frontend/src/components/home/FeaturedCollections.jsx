@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-
+import { ArrowRight, Sparkles, CheckCircle2 } from "lucide-react";
 import "../../styles/home/FeaturedCollections.css";
 
 function FeaturedCollections() {
@@ -7,61 +7,99 @@ function FeaturedCollections() {
 
   return (
     <section className="featured-collection-section" id="featured-collections">
-      <div className="home-section-heading">
-        <span>BỘ SƯU TẬP NỔI BẬT</span>
-
-        <h2>Phong cách tạo nên cảm xúc cho không gian.</h2>
+      <div className="collection-header">
+        <span className="collection-eyebrow">
+          <Sparkles size={14} /> BỘ SƯU TẬP TIÊU BIỂU
+        </span>
+        <h2>Phong cách kiến tạo cảm xúc cho không gian sống.</h2>
+        <p className="collection-subtitle">
+          Sự kết hợp hài hòa giữa công năng hiện đại và vẻ đẹp mộc mạc của vật liệu tự nhiên, mang đến hơi thở thư thái cho tổ ấm của bạn.
+        </p>
       </div>
 
       <div className="collection-showcase">
+        {/* MAIN LARGE CARD */}
         <div
           className="collection-main"
-          onClick={() => navigate("/collections/bac-au")}
+          onClick={() => navigate("/products?category=1")}
         >
-          <img
-            src="/images/collections/scandinavian-main.jpg"
-            alt="Phong cách Bắc Âu"
-          />
+          <div className="collection-img-box">
+            <img
+              src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80"
+              alt="Phong cách Bắc Âu Scandinavian"
+              loading="lazy"
+            />
+            <div className="collection-main-overlay" />
+          </div>
 
-          <div className="collection-main-overlay" />
+          <div className="collection-tag">
+            <span>Bộ sưu tập 2026</span>
+          </div>
 
           <div className="collection-main-copy">
-            <span>BỘ SƯU TẬP</span>
-
-            <h3>Phong cách Bắc Âu</h3>
-
-            <p>Sự kết hợp giữa tối giản, ấm áp và tiện nghi.</p>
+            <span className="collection-label">SCANDINAVIAN LIVING</span>
+            <h3>Phong cách Bắc Âu Thuần Khiết</h3>
+            <p>
+              Tối giản nhưng ấm áp, đề cao ánh sáng tự nhiên cùng các chi tiết gỗ sồi sáng màu và vải dệt thủ công.
+            </p>
+            <div className="collection-perks">
+              <span className="perk-item">
+                <CheckCircle2 size={14} /> 100% Gỗ sồi tự nhiên
+              </span>
+              <span className="perk-item">
+                <CheckCircle2 size={14} /> Đệm bọc linen tháo giặt
+              </span>
+            </div>
           </div>
         </div>
 
+        {/* SIDE CARDS */}
         <div className="collection-side">
-          <div className="collection-mini">
+          <div
+            className="collection-mini"
+            onClick={() => navigate("/products?category=2")}
+          >
             <img
-              src="/images/collections/minimal-1.jpg"
-              alt="Không gian tối giản"
+              src="https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=800&q=80"
+              alt="Phong cách Japandi"
+              loading="lazy"
             />
+            <div className="mini-overlay" />
+            <div className="mini-info">
+              <span>JAPANDI STYLE</span>
+              <h4>Giao thoa Nhật - Bắc Âu</h4>
+            </div>
           </div>
 
-          <div className="collection-mini">
+          <div
+            className="collection-mini"
+            onClick={() => navigate("/products?category=3")}
+          >
             <img
-              src="/images/collections/minimal-2.jpg"
-              alt="Phong cách tối giản"
+              src="https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=800&q=80"
+              alt="Phong cách Tối giản Hiện đại"
+              loading="lazy"
             />
+            <div className="mini-overlay" />
+            <div className="mini-info">
+              <span>MINIMALIST DINING</span>
+              <h4>Không gian Bếp Đương đại</h4>
+            </div>
           </div>
 
           <div className="collection-description">
-            <span>PHONG CÁCH TỐI GIẢN</span>
-
-            <h3>Ít hơn, nhưng tốt hơn.</h3>
-
+            <span className="philosophy-tag">TRIẾT LÝ THIẾT KẾ</span>
+            <h3>Ít hơn, nhưng tốt hơn và bền lâu hơn.</h3>
             <p>
-              Những đường nét tinh gọn, bảng màu nhẹ nhàng và công năng được đặt
-              lên hàng đầu.
+              Mỗi sản phẩm tại FurniHome là một bản giao hưởng giữa tỷ lệ hoàn hảo, vật liệu thân thiện môi trường và giá trị sử dụng lâu dài qua năm tháng.
             </p>
 
-            <button onClick={() => navigate("/collections")}>
-              Xem toàn bộ bộ sưu tập
-              <b>→</b>
+            <button
+              className="collection-cta-btn"
+              onClick={() => navigate("/products")}
+            >
+              <span>Khám phá toàn bộ danh mục</span>
+              <ArrowRight size={16} />
             </button>
           </div>
         </div>

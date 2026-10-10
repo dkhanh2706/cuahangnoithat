@@ -1,429 +1,329 @@
+/* =========================================================
+   HERO SLIDER COMPONENT
+   ========================================================= */
+
 .hero-slider {
   width: 100%;
-  height: min(720px, calc(100vh - 78px));
-  min-height: 600px;
-
+  height: min(760px, calc(100vh - 110px));
+  min-height: 580px;
   position: relative;
-
   overflow: hidden;
-
-  background: #d8d6cf;
+  background: #121c16;
 }
 
 .hero-slide {
   position: absolute;
-
   inset: 0;
-
   opacity: 0;
-
   visibility: hidden;
-
   background-size: cover;
-
   background-position: center;
-
-  transition:
-    opacity 0.8s ease,
-    visibility 0.8s ease;
+  transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), visibility 1s ease;
+  transform: scale(1.05);
+  will-change: transform, opacity;
 }
 
 .hero-slide.active {
   opacity: 1;
-
   visibility: visible;
+  transform: scale(1);
+  transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), transform 7s cubic-bezier(0.16, 1, 0.3, 1), visibility 1s ease;
 }
 
 .hero-inner {
-  width: min(1180px, calc(100% - 50px));
-
+  width: min(1220px, calc(100% - 48px));
   height: 100%;
-
   margin: 0 auto;
-
   display: flex;
-
   align-items: center;
+  position: relative;
+  z-index: 2;
 }
 
 .hero-copy {
   max-width: 680px;
-
-  color: white;
+  color: #ffffff;
 }
 
-/* =========================
-   LABEL
-========================= */
+/* TAG & EYEBROW */
+.hero-tag-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
 
 .hero-eyebrow {
-  display: block;
-
-  margin-bottom: 18px;
-
-  font-size: 11px;
-
-  letter-spacing: 2.5px;
-
-  color: rgba(255, 255, 255, 0.74);
-
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  letter-spacing: 2.2px;
+  font-weight: 600;
+  color: #e5c396;
   text-transform: uppercase;
 }
 
-/* =========================
-   TITLE
-========================= */
-
-.hero-copy h1 {
-  max-width: 680px;
-
-  margin: 0;
-
-  /*
-    Times New Roman xử lý dấu tiếng Việt
-    ổn định hơn Georgia.
-  */
-  font-family: "Times New Roman", Times, serif;
-
-  font-size: clamp(50px, 6vw, 82px);
-
-  /*
-    Tăng nhẹ line-height để dấu tiếng Việt
-    không bị chạm nhau.
-  */
-  line-height: 1.06;
-
-  /*
-    Không ép chữ quá sát.
-    -3px trước đó dễ làm font tiếng Việt lỗi.
-  */
-  letter-spacing: -0.8px;
-
-  word-spacing: 0;
-
-  font-weight: 400;
-
-  font-kerning: normal;
-
-  font-variant-ligatures: normal;
-
-  text-rendering: optimizeLegibility;
+.eyebrow-icon {
+  color: #c49a62;
+  animation: pulseGlow 2.5s infinite;
 }
 
-/* =========================
-   DESCRIPTION
-========================= */
-
-.hero-copy p {
-  max-width: 500px;
-
-  margin: 25px 0 0;
-
-  color: rgba(255, 255, 255, 0.8);
-
-  font-family: Arial, Helvetica, sans-serif;
-
-  font-size: 15px;
-
-  line-height: 1.8;
-
-  letter-spacing: 0;
-}
-
-/* =========================
-   BUTTONS
-========================= */
-
-.hero-buttons {
-  margin-top: 34px;
-
-  display: flex;
-
-  gap: 12px;
-}
-
-.hero-buttons button {
-  min-height: 49px;
-
-  padding: 0 23px;
-
-  border-radius: 8px;
-
-  font-family: Arial, Helvetica, sans-serif;
-
-  font-size: 13px;
-
-  font-weight: 500;
-
-  cursor: pointer;
-
-  transition:
-    transform 0.25s ease,
-    background 0.25s ease,
-    border-color 0.25s ease;
-}
-
-.hero-primary {
-  border: 1px solid white;
-
-  background: white;
-
-  color: #243a2e;
-}
-
-.hero-primary:hover {
-  background: #f2f2ed;
-}
-
-.hero-outline {
-  border: 1px solid rgba(255, 255, 255, 0.55);
-
-  background: rgba(255, 255, 255, 0.08);
-
-  color: white;
-
+.hero-badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(8px);
+  color: #f0ede5;
+  padding: 3px 12px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 500;
+  border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
-.hero-outline:hover {
-  background: rgba(255, 255, 255, 0.16);
-
-  border-color: rgba(255, 255, 255, 0.8);
+/* TITLE */
+.hero-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(38px, 5.2vw, 68px);
+  line-height: 1.1;
+  letter-spacing: -0.8px;
+  font-weight: 500;
+  color: #ffffff;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
 }
 
-.hero-buttons button:hover {
+/* DESCRIPTION */
+.hero-description {
+  max-width: 560px;
+  margin: 22px 0 0;
+  color: rgba(245, 245, 240, 0.88);
+  font-size: 15.5px;
+  line-height: 1.8;
+  font-weight: 400;
+}
+
+/* BUTTONS */
+.hero-buttons {
+  margin-top: 36px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.hero-primary-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 28px;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #17291f;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-primary-btn:hover {
+  background: #f7ede0;
+  color: #122119;
+  transform: translateY(-3px);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35);
+}
+
+.hero-primary-btn:hover svg {
+  transform: translateX(4px);
+  transition: transform 0.2s;
+}
+
+.hero-outline-btn {
+  min-height: 52px;
+  padding: 0 24px;
+  border-radius: 12px;
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.hero-outline-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: #ffffff;
   transform: translateY(-2px);
 }
 
-/* =========================
-   SLIDER ARROWS
-========================= */
+/* TRUST MINI BADGES */
+.hero-trust-row {
+  margin-top: 36px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
 
+.hero-trust-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 12.5px;
+}
+
+.hero-trust-item svg {
+  color: #c49a62;
+}
+
+/* SLIDE ENTRANCE ANIMATIONS */
+.hero-slide.active .hero-tag-row {
+  animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+
+.hero-slide.active .hero-title {
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+.hero-slide.active .hero-description {
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+}
+
+.hero-slide.active .hero-buttons {
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+}
+
+.hero-slide.active .hero-trust-row {
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+}
+
+/* ARROWS */
 .hero-arrow {
-  width: 45px;
-  height: 45px;
-
   position: absolute;
-
   top: 50%;
-
-  z-index: 5;
-
   transform: translateY(-50%);
-
-  display: grid;
-
-  place-items: center;
-
-  padding: 0;
-
-  border: 1px solid rgba(255, 255, 255, 0.35);
-
+  z-index: 10;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-
-  background: rgba(18, 27, 22, 0.23);
-
-  color: white;
-
-  font-size: 29px;
-
-  line-height: 1;
-
+  background: rgba(18, 28, 22, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
   cursor: pointer;
-
-  backdrop-filter: blur(8px);
-
-  transition:
-    background 0.2s ease,
-    transform 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .hero-arrow:hover {
-  background: rgba(18, 27, 22, 0.45);
+  background: rgba(30, 52, 40, 0.85);
+  border-color: #ffffff;
+  transform: translateY(-50%) scale(1.08);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 .hero-arrow-left {
-  left: 24px;
+  left: 32px;
 }
 
 .hero-arrow-right {
-  right: 24px;
+  right: 32px;
 }
 
-/* =========================
-   DOTS
-========================= */
-
-.hero-dots {
+/* INDICATOR PROGRESS BARS */
+.hero-indicators-container {
   position: absolute;
-
   left: 50%;
-  bottom: 27px;
-
-  z-index: 6;
-
+  bottom: 30px;
   transform: translateX(-50%);
-
+  z-index: 10;
   display: flex;
-
   align-items: center;
-
-  gap: 8px;
+  gap: 10px;
 }
 
-.hero-dots button {
-  width: 7px;
-  height: 7px;
-
+.hero-indicator-bar {
+  width: 48px;
+  height: 4px;
   padding: 0;
-
-  border: none;
-
+  background: rgba(255, 255, 255, 0.25);
   border-radius: 999px;
-
-  background: rgba(255, 255, 255, 0.52);
-
+  overflow: hidden;
   cursor: pointer;
-
-  transition:
-    width 0.25s ease,
-    background 0.25s ease;
+  position: relative;
+  transition: width 0.3s ease;
 }
 
-.hero-dots button.active {
-  width: 26px;
-
-  background: white;
+.hero-indicator-bar.active {
+  width: 72px;
+  background: rgba(255, 255, 255, 0.35);
 }
 
-/* =========================
-   TABLET
-========================= */
+.hero-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: #ffffff;
+  border-radius: 999px;
+}
 
+.hero-indicator-bar.active .hero-progress-fill {
+  width: 100%;
+  animation: fillProgressBar linear forwards;
+}
+
+@keyframes fillProgressBar {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
+/* RESPONSIVE */
 @media (max-width: 900px) {
-  .hero-copy {
-    max-width: 590px;
-  }
-
-  .hero-copy h1 {
-    max-width: 590px;
-
-    font-size: clamp(46px, 7vw, 68px);
-
-    letter-spacing: -0.6px;
-  }
-}
-
-/* =========================
-   MOBILE
-========================= */
-
-@media (max-width: 700px) {
-  .hero-slider {
-    height: 620px;
-
-    min-height: 620px;
-  }
-
-  .hero-inner {
-    width: calc(100% - 40px);
-
-    align-items: flex-end;
-
-    padding-bottom: 95px;
-  }
-
-  .hero-copy {
-    max-width: 100%;
-  }
-
-  .hero-eyebrow {
-    margin-bottom: 13px;
-
-    font-size: 9px;
-
-    letter-spacing: 2px;
-  }
-
-  .hero-copy h1 {
-    max-width: 100%;
-
-    font-size: 45px;
-
-    line-height: 1.08;
-
-    /*
-      Mobile không dùng -2px nữa,
-      tránh lỗi khoảng cách chữ có dấu.
-    */
-    letter-spacing: -0.3px;
-
-    word-spacing: 0;
-  }
-
-  .hero-copy p {
-    max-width: 95%;
-
-    margin-top: 18px;
-
-    font-size: 13px;
-
-    line-height: 1.7;
-  }
-
   .hero-arrow {
     display: none;
   }
-
-  .hero-buttons {
-    margin-top: 25px;
-
-    flex-direction: column;
-
-    align-items: flex-start;
-  }
-
-  .hero-buttons button {
-    min-height: 46px;
-
-    padding: 0 20px;
+  .hero-copy {
+    max-width: 100%;
   }
 }
 
-/* =========================
-   SMALL MOBILE
-========================= */
-
-@media (max-width: 430px) {
+@media (max-width: 680px) {
   .hero-slider {
-    height: 590px;
-
-    min-height: 590px;
+    height: 600px;
+    min-height: 600px;
   }
-
   .hero-inner {
-    width: calc(100% - 28px);
-
-    padding-bottom: 85px;
+    align-items: flex-end;
+    padding-bottom: 75px;
   }
-
-  .hero-copy h1 {
-    font-size: 39px;
-
-    line-height: 1.08;
-
-    letter-spacing: 0;
+  .hero-title {
+    font-size: 34px;
+    line-height: 1.15;
   }
-
-  .hero-copy p {
-    font-size: 12px;
+  .hero-description {
+    font-size: 13.5px;
   }
-
   .hero-buttons {
-    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
   }
-
-  .hero-buttons button {
+  .hero-primary-btn,
+  .hero-outline-btn {
     width: 100%;
+    justify-content: center;
+    min-height: 48px;
+  }
+  .hero-trust-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
   }
 }

@@ -1,54 +1,58 @@
 import { useEffect, useRef, useState } from "react";
-
 import { useNavigate } from "react-router-dom";
-
+import { ChevronLeft, ChevronRight, ArrowRight, Sparkles, Shield, Award } from "lucide-react";
 import "../../styles/home/HeroSlider.css";
 
 const slides = [
   {
     id: 1,
-    image: "/images/home/hero-1.jpg",
-    eyebrow: "BỘ SƯU TẬP MỚI",
-    title: "Không gian sống mang dấu ấn riêng.",
-    description: "Những thiết kế tinh tế dành cho ngôi nhà hiện đại.",
+    image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1920&q=85",
+    eyebrow: "BỘ SƯU TẬP XUÂN HÈ 2026",
+    title: "Không gian sống mang dấu ấn riêng biệt.",
+    description: "Những tuyệt tác nội thất gỗ sồi tự nhiên tinh tế, hòa quyện giữa chủ nghĩa tối giản Bắc Âu và nét ấm cúng cho ngôi nhà hiện đại.",
+    tag: "Phong cách Scandinavian",
   },
   {
     id: 2,
-    image: "/images/home/hero-2.jpg",
-    eyebrow: "PHÒNG KHÁCH",
-    title: "Nơi mọi câu chuyện bắt đầu.",
-    description: "Khám phá nội thất phòng khách hiện đại và đầy cảm hứng.",
+    image: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1920&q=85",
+    eyebrow: "PHÒNG KHÁCH ĐƯƠNG ĐẠI",
+    title: "Nơi mọi câu chuyện đong đầy cảm hứng.",
+    description: "Khám phá bộ sưu tập sofa da bò Ý nhập khẩu và bàn trà mặt đá cẩm thạch nguyên khối được chế tác thủ công hoàn mỹ.",
+    tag: "Độc bản & Sang trọng",
   },
   {
     id: 3,
-    image: "/images/home/hero-3.jpg",
-    eyebrow: "PHÒNG NGỦ",
-    title: "Một khoảng riêng để thật sự nghỉ ngơi.",
-    description: "Tạo nên không gian yên bình bằng những lựa chọn tinh tế.",
+    image: "https://images.unsplash.com/photo-1540518614846-7ede433c4ef4?auto=format&fit=crop&w=1920&q=85",
+    eyebrow: "PHÒNG NGỦ YÊN BÌNH",
+    title: "Khoảng lặng để tâm hồn thật sự nghỉ ngơi.",
+    description: "Thiết kế giường ngủ phong cách Zen Nhật Bản mang lại giấc ngủ trọn vẹn với chất liệu gỗ tự nhiên không mùi, an toàn tuyệt đối.",
+    tag: "Phong cách Japandi",
   },
   {
     id: 4,
-    image: "/images/home/hero-4.jpg",
-    eyebrow: "FURNIHOME",
-    title: "Đơn giản. Tinh tế. Khác biệt.",
-    description: "Nội thất phù hợp với phong cách sống của chính bạn.",
+    image: "https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=1920&q=85",
+    eyebrow: "KHÔNG GIAN ẨM THỰC",
+    title: "Ấm áp từng khoảnh khắc sum vầy.",
+    description: "Bàn ăn thông minh mở rộng và ghế ăn công thái học ôm trọn vóc dáng, nâng niu từng bữa cơm đầm ấm của gia đình.",
+    tag: "Thiết kế Đa năng",
   },
 ];
 
 function HeroSlider() {
   const navigate = useNavigate();
-
   const [currentSlide, setCurrentSlide] = useState(0);
-
+  const [isPaused, setIsPaused] = useState(false);
   const touchStartX = useRef(null);
 
   useEffect(() => {
+    if (isPaused) return;
+
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
-    }, 5500);
+    }, 6000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [isPaused]);
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
@@ -58,27 +62,17 @@ function HeroSlider() {
     setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
   };
 
-  const handleTouchStart = (event) => {
-    touchStartX.current = event.touches[0].clientX;
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
   };
 
-  const handleTouchEnd = (event) => {
-    if (touchStartX.current === null) {
-      return;
+  const handleTouchEnd = (e) => {
+    if (touchStartX.current === null) return;
+    const distance = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(distance) > 40) {
+      if (distance > 0) nextSlide();
+      else previousSlide();
     }
-
-    const endX = event.changedTouches[0].clientX;
-
-    const distance = touchStartX.current - endX;
-
-    if (Math.abs(distance) > 50) {
-      if (distance > 0) {
-        nextSlide();
-      } else {
-        previousSlide();
-      }
-    }
-
     touchStartX.current = null;
   };
 
@@ -87,83 +81,108 @@ function HeroSlider() {
       className="hero-slider"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
     >
-      {slides.map((slide, index) => (
-        <div
-          key={slide.id}
-          className={
-            currentSlide === index ? "hero-slide active" : "hero-slide"
-          }
-          style={{
-            backgroundImage: `
-              linear-gradient(
-                90deg,
-                rgba(16, 22, 18, 0.70),
-                rgba(16, 22, 18, 0.10)
-              ),
-              url("${slide.image}")
-            `,
-          }}
-        >
-          <div className="hero-inner">
-            <div className="hero-copy">
-              <span className="hero-eyebrow">{slide.eyebrow}</span>
+      {slides.map((slide, index) => {
+        const isActive = currentSlide === index;
+        return (
+          <div
+            key={slide.id}
+            className={`hero-slide ${isActive ? "active" : ""}`}
+            style={{
+              backgroundImage: `linear-gradient(90deg, rgba(14, 23, 18, 0.85) 0%, rgba(14, 23, 18, 0.45) 55%, rgba(14, 23, 18, 0.1) 100%), url("${slide.image}")`,
+            }}
+          >
+            <div className="hero-inner">
+              <div className="hero-copy">
+                <div className="hero-tag-row">
+                  <span className="hero-eyebrow">
+                    <Sparkles size={13} className="eyebrow-icon" />
+                    {slide.eyebrow}
+                  </span>
+                  <span className="hero-badge">{slide.tag}</span>
+                </div>
 
-              <h1>{slide.title}</h1>
+                <h1 className="hero-title">{slide.title}</h1>
 
-              <p>{slide.description}</p>
+                <p className="hero-description">{slide.description}</p>
 
-              <div className="hero-buttons">
-                <button
-                  className="hero-primary"
-                  onClick={() =>
-                    document
-                      .getElementById("featured-collections")
-                      ?.scrollIntoView({
+                <div className="hero-buttons">
+                  <button
+                    className="hero-primary-btn"
+                    onClick={() =>
+                      document.getElementById("featured-collections")?.scrollIntoView({
                         behavior: "smooth",
                       })
-                  }
-                >
-                  Khám phá bộ sưu tập
-                </button>
+                    }
+                  >
+                    <span>Khám phá bộ sưu tập</span>
+                    <ArrowRight size={17} />
+                  </button>
 
-                <button
-                  className="hero-outline"
-                  onClick={() => navigate("/products")}
-                >
-                  Mua ngay
-                </button>
+                  <button
+                    className="hero-outline-btn"
+                    onClick={() => navigate("/products")}
+                  >
+                    Xem tất cả sản phẩm
+                  </button>
+                </div>
+
+                {/* Trust mini badges */}
+                <div className="hero-trust-row">
+                  <div className="hero-trust-item">
+                    <Shield size={15} />
+                    <span>Bảo hành chính hãng 5 năm</span>
+                  </div>
+                  <div className="hero-trust-item">
+                    <Award size={15} />
+                    <span>Gỗ tự nhiên tuyển chọn</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
 
+      {/* Navigation Arrows with Glassmorphism */}
       <button
         className="hero-arrow hero-arrow-left"
         onClick={previousSlide}
         aria-label="Slide trước"
       >
-        ‹
+        <ChevronLeft size={24} />
       </button>
 
       <button
         className="hero-arrow hero-arrow-right"
         onClick={nextSlide}
-        aria-label="Slide sau"
+        aria-label="Slide tiếp theo"
       >
-        ›
+        <ChevronRight size={24} />
       </button>
 
-      <div className="hero-dots">
-        {slides.map((slide, index) => (
-          <button
-            key={slide.id}
-            className={currentSlide === index ? "active" : ""}
-            onClick={() => setCurrentSlide(index)}
-            aria-label={`Slide ${index + 1}`}
-          />
-        ))}
+      {/* Modern Slide Indicators with Progress Animation */}
+      <div className="hero-indicators-container">
+        {slides.map((slide, index) => {
+          const isActive = currentSlide === index;
+          return (
+            <button
+              key={slide.id}
+              className={`hero-indicator-bar ${isActive ? "active" : ""}`}
+              onClick={() => setCurrentSlide(index)}
+              aria-label={`Chuyển đến Slide ${index + 1}`}
+            >
+              <div
+                className="hero-progress-fill"
+                style={{
+                  animationDuration: isActive && !isPaused ? "6s" : "0s",
+                }}
+              />
+            </button>
+          );
+        })}
       </div>
     </section>
   );

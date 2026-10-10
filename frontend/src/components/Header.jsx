@@ -1,112 +1,353 @@
-import { Link, NavLink, useNavigate } from "react-router-dom";
-
+import { useState, useEffect } from "react";
+import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
+import {
+  ShoppingBag,
+  Heart,
+  Search,
+  User,
+  LogOut,
+  Menu,
+  X,
+  ChevronDown,
+  Sparkles,
+  PhoneCall,
+  ArrowRight,
+} from "lucide-react";
+import { useCart } from "../context/CartContext";
 import "../styles/Header.css";
 
 function Header() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { cartCount, wishlist } = useCart();
+
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const token = localStorage.getItem("access_token");
-
   const user = JSON.parse(localStorage.getItem("user") || "null");
+
+  // Detect scroll for glassmorphism elevation
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    /* eslint-disable-next-line react-hooks/set-state-in-effect */
+    setMobileMenuOpen(false);
+    setUserDropdownOpen(false);
+    setSearchOpen(false);
+  }, [location.pathname]);
 
   const handleLogout = () => {
     localStorage.removeItem("access_token");
-
     localStorage.removeItem("user");
-
     navigate("/");
-
     window.location.reload();
   };
 
   const handleProtectedNavigate = (path) => {
     if (!token) {
-      navigate("/login", {
-        state: {
-          from: path,
-        },
-      });
-
+      navigate("/login", { state: { from: path } });
       return;
     }
-
     navigate(path);
   };
 
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchOpen(false);
+      setSearchQuery("");
+    }
+  };
+
   return (
-    <header className="main-header">
-      <div className="header-container">
-        <Link to="/" className="brand">
-          <div className="brand-logo">F</div>
-
-          <div className="brand-text">
-            <h2>FurniHome</h2>
-
-            <span>Interior Living</span>
+    <>
+      {/* Top Luxury Announcement Bar */}
+      <div className="top-announcement-bar">
+        <div className="announcement-content">
+          <span className="announcement-badge">
+            <Sparkles size={13} /> Ưu đãi độc quyền
+          </span>
+          <p className="announcement-text">
+            Miễn phí vận chuyển toàn quốc đơn từ <strong>2.000.000₫</strong> • Nhập mã{" "}
+            <span className="code-tag">FURNI10</span> giảm ngay 10%
+          </p>
+          <div className="announcement-contact">
+            <PhoneCall size={13} />
+            <span>Hotline: 1900 6868</span>
           </div>
-        </Link>
-
-        <nav className="main-nav">
-          <NavLink
-            to="/"
-            end
-            className={({ isActive }) => (isActive ? "nav-active" : "")}
-          >
-            Trang chủ
-          </NavLink>
-
-          <NavLink
-            to="/products"
-            className={({ isActive }) => (isActive ? "nav-active" : "")}
-          >
-            Sản phẩm
-          </NavLink>
-
-          <a href="/#rooms">Theo phòng</a>
-
-          <a href="/#featured-collections">Bộ sưu tập</a>
-        </nav>
-
-        <div className="header-actions">
-          <button
-            className="header-icon-btn"
-            onClick={() => handleProtectedNavigate("/cart")}
-            title="Giỏ hàng"
-          >
-            <span>🛒</span>
-          </button>
-
-          {!token ? (
-            <>
-              <Link to="/login" className="login-link">
-                Đăng nhập
-              </Link>
-
-              <Link to="/register" className="register-btn">
-                Đăng ký
-              </Link>
-            </>
-          ) : (
-            <div className="user-menu">
-              <button
-                className="user-button"
-                onClick={() => navigate("/profile")}
-              >
-                <div className="user-avatar">
-                  {user?.full_name?.charAt(0)?.toUpperCase() || "U"}
-                </div>
-
-                <span>{user?.full_name || "Tài khoản"}</span>
-              </button>
-
-              <button className="logout-btn" onClick={handleLogout}>
-                Đăng xuất
-              </button>
-            </div>
-          )}
         </div>
       </div>
-    </header>
+
+      {/* Main Glassmorphic Header */}
+      <header className={`main-header ${isScrolled ? "header-scrolled" : ""}`}>
+        <div className="header-container">
+          {/* Mobile Menu Hamburger Toggle */}
+          <button
+            className="mobile-toggle-btn"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle Navigation Menu"
+          >
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+
+          {/* Brand Logo */}
+          <Link to="/" className="brand">
+            <div className="brand-logo">
+              <span>F</span>
+            </div>
+            <div className="brand-text">
+              <h2>FurniHome</h2>
+              <span>Interior Living</span>
+            </div>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <nav className="main-nav">
+            <NavLink
+              to="/"
+              end
+              className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")}
+            >
+              Trang chủ
+            </NavLink>
+            <NavLink
+              to="/products"
+              className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")}
+            >
+              Sản phẩm
+            </NavLink>
+            <a href="/#rooms" className="nav-link">
+              Theo không gian
+            </a>
+            <a href="/#featured-collections" className="nav-link">
+              Bộ sưu tập
+            </a>
+            <a href="/#reviews" className="nav-link">
+              Đánh giá
+            </a>
+          </nav>
+
+          {/* Header Action Tools */}
+          <div className="header-actions">
+            {/* Search Trigger */}
+            <button
+              className="action-icon-btn search-trigger"
+              onClick={() => setSearchOpen(!searchOpen)}
+              title="Tìm kiếm sản phẩm"
+            >
+              <Search size={19} />
+            </button>
+
+            {/* Wishlist Button */}
+            <button
+              className="action-icon-btn"
+              onClick={() => handleProtectedNavigate("/profile")}
+              title="Sản phẩm yêu thích"
+            >
+              <Heart size={19} />
+              {wishlist.length > 0 && (
+                <span className="badge-counter wishlist-badge">{wishlist.length}</span>
+              )}
+            </button>
+
+            {/* Shopping Cart Button */}
+            <button
+              className="action-icon-btn cart-btn"
+              onClick={() => handleProtectedNavigate("/cart")}
+              title="Giỏ hàng của bạn"
+            >
+              <ShoppingBag size={20} />
+              {cartCount > 0 && (
+                <span className="badge-counter cart-badge">{cartCount}</span>
+              )}
+            </button>
+
+            {/* Auth Actions / User Menu */}
+            {!token ? (
+              <div className="auth-buttons">
+                <Link to="/login" className="login-link">
+                  Đăng nhập
+                </Link>
+                <Link to="/register" className="register-btn">
+                  Đăng ký
+                </Link>
+              </div>
+            ) : (
+              <div className="user-menu-wrapper">
+                <button
+                  className={`user-button ${userDropdownOpen ? "open" : ""}`}
+                  onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                >
+                  <div className="user-avatar">
+                    {user?.full_name?.charAt(0)?.toUpperCase() || "U"}
+                  </div>
+                  <span className="user-name">
+                    {user?.full_name?.split(" ").slice(-1)[0] || "Tài khoản"}
+                  </span>
+                  <ChevronDown size={14} className="user-chevron" />
+                </button>
+
+                {/* Dropdown Menu */}
+                {userDropdownOpen && (
+                  <div className="user-dropdown-menu">
+                    <div className="dropdown-header">
+                      <strong>{user?.full_name || "Khách hàng"}</strong>
+                      <small>{user?.email || ""}</small>
+                    </div>
+                    <div className="dropdown-divider" />
+                    <button
+                      className="dropdown-item"
+                      onClick={() => {
+                        setUserDropdownOpen(false);
+                        navigate("/profile");
+                      }}
+                    >
+                      <User size={16} />
+                      <span>Hồ sơ cá nhân</span>
+                    </button>
+                    <button
+                      className="dropdown-item"
+                      onClick={() => {
+                        setUserDropdownOpen(false);
+                        navigate("/cart");
+                      }}
+                    >
+                      <ShoppingBag size={16} />
+                      <span>Giỏ hàng ({cartCount})</span>
+                    </button>
+                    <div className="dropdown-divider" />
+                    <button className="dropdown-item logout" onClick={handleLogout}>
+                      <LogOut size={16} />
+                      <span>Đăng xuất</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Expandable Search Bar Drawer */}
+        {searchOpen && (
+          <div className="header-search-bar animate-slide-down">
+            <div className="header-search-inner">
+              <form onSubmit={handleSearchSubmit} className="header-search-form">
+                <Search size={20} className="search-icon" />
+                <input
+                  type="text"
+                  placeholder="Tìm kiếm bàn ghế, sofa, giường ngủ, đèn trang trí..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  autoFocus
+                />
+                <button type="submit" className="search-submit-btn">
+                  Tìm kiếm <ArrowRight size={16} />
+                </button>
+                <button
+                  type="button"
+                  className="search-close-btn"
+                  onClick={() => setSearchOpen(false)}
+                >
+                  <X size={18} />
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
+      </header>
+
+      {/* Mobile Drawer Navigation */}
+      {mobileMenuOpen && (
+        <div className="mobile-drawer-overlay" onClick={() => setMobileMenuOpen(false)}>
+          <div
+            className="mobile-drawer-panel"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="drawer-header">
+              <div className="brand">
+                <div className="brand-logo">F</div>
+                <div className="brand-text">
+                  <h2>FurniHome</h2>
+                  <span>Interior Living</span>
+                </div>
+              </div>
+              <button
+                className="drawer-close-btn"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <X size={22} />
+              </button>
+            </div>
+
+            <nav className="mobile-nav-links">
+              <NavLink to="/" end onClick={() => setMobileMenuOpen(false)}>
+                Trang chủ
+              </NavLink>
+              <NavLink to="/products" onClick={() => setMobileMenuOpen(false)}>
+                Sản phẩm
+              </NavLink>
+              <a href="/#rooms" onClick={() => setMobileMenuOpen(false)}>
+                Theo không gian
+              </a>
+              <a href="/#featured-collections" onClick={() => setMobileMenuOpen(false)}>
+                Bộ sưu tập
+              </a>
+              <a href="/#reviews" onClick={() => setMobileMenuOpen(false)}>
+                Đánh giá khách hàng
+              </a>
+            </nav>
+
+            <div className="mobile-drawer-footer">
+              {!token ? (
+                <div className="mobile-auth-actions">
+                  <Link
+                    to="/login"
+                    className="mobile-btn-outline"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Đăng nhập
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="mobile-btn-primary"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Đăng ký tài khoản
+                  </Link>
+                </div>
+              ) : (
+                <div className="mobile-user-box">
+                  <div className="mobile-user-info">
+                    <div className="user-avatar">
+                      {user?.full_name?.charAt(0)?.toUpperCase() || "U"}
+                    </div>
+                    <div>
+                      <strong>{user?.full_name}</strong>
+                      <p>{user?.email}</p>
+                    </div>
+                  </div>
+                  <button className="mobile-logout-btn" onClick={handleLogout}>
+                    <LogOut size={16} /> Đăng xuất
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
