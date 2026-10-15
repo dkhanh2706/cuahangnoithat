@@ -78,10 +78,10 @@ def require_staff(
 def require_admin(
     current_user: User = Depends(get_current_user)
 ):
-    if current_user.role != "ADMIN":
+    if current_user.role != "ADMIN" or current_user.email != "adminhdk@gmail.com":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Chỉ quản trị viên được phép truy cập"
+            detail="Chỉ tài khoản quản trị viên duy nhất (adminhdk@gmail.com) mới có quyền truy cập"
         )
 
     return current_user

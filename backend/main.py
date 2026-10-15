@@ -11,6 +11,8 @@ from routers.users import router as users_router
 from routers.categories import router as categories_router
 from routers.products import router as products_router
 from routers.product_images import router as product_images_router
+from admin.router import router as admin_router
+from admin.init_admin import ensure_single_admin
 
 
 app = FastAPI(
@@ -18,6 +20,11 @@ app = FastAPI(
     description="RESTful API cho hệ thống quản lý cửa hàng nội thất",
     version="1.0.0"
 )
+
+
+@app.on_event("startup")
+def on_startup():
+    ensure_single_admin()
 
 
 # =========================
@@ -56,6 +63,7 @@ app.include_router(users_router)
 app.include_router(categories_router)
 app.include_router(products_router)
 app.include_router(product_images_router)
+app.include_router(admin_router)
 
 
 # =========================

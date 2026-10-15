@@ -1,11 +1,13 @@
 import os
+from pathlib import Path
 from datetime import datetime, timedelta, timezone
 
 from jose import jwt, JWTError
 from passlib.context import CryptContext
 from dotenv import load_dotenv
 
-
+env_path = Path(__file__).resolve().parent.parent / ".env"
+load_dotenv(dotenv_path=env_path)
 load_dotenv()
 
 

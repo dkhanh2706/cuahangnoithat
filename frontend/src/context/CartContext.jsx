@@ -14,9 +14,10 @@ export function CartProvider({ children }) {
     }
   });
 
-  const [wishlist, setWishlist] = useState(() => {
+  // wishlist stores full product objects (not just IDs)
+  const [wishlistProducts, setWishlistProducts] = useState(() => {
     try {
-      const saved = localStorage.getItem("furni_wishlist");
+      const saved = localStorage.getItem("furni_wishlist_v2");
       return saved ? JSON.parse(saved) : [];
     } catch {
       return [];
@@ -35,11 +36,12 @@ export function CartProvider({ children }) {
 
   useEffect(() => {
     try {
-      localStorage.setItem("furni_wishlist", JSON.stringify(wishlist));
+      localStorage.setItem("furni_wishlist_v2", JSON.stringify(wishlistProducts));
     } catch (e) {
       console.error(e);
     }
-  }, [wishlist]);
+  }, [wishlistProducts]);
+
 
   const showToast = (message, type = "success") => {
     const id = Date.now() + Math.random();
@@ -94,17 +96,21 @@ export function CartProvider({ children }) {
   };
 
   const toggleWishlist = (product) => {
-    const exists = wishlist.some((id) => id === product.id);
+    const exists = wishlistProducts.some((p) => p.id === product.id);
     if (exists) {
-      setWishlist((prev) => prev.filter((id) => id !== product.id));
+      setWishlistProducts((prev) => prev.filter((p) => p.id !== product.id));
       showToast(`Đã bỏ "${product.name}" khỏi danh sách yêu thích.`, "info");
     } else {
-      setWishlist((prev) => [...prev, product.id]);
-      showToast(`Đã lưu "${product.name}" vào danh sách yêu thích!`, "success");
+      setWishlistProducts((prev) => [...prev, product]);
+      showToast(`Đã lưu "${product.name}" vào yêu thích! 💛`, "success");
     }
   };
 
-  const isWishlisted = (productId) => wishlist.includes(productId);
+  const isWishlisted = (productId) =>
+    wishlistProducts.some((p) => p.id === productId);
+
+  // Keep backward-compat: wishlist as array of IDs
+  const wishlist = wishlistProducts.map((p) => p.id);
 
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
 
@@ -118,6 +124,7 @@ export function CartProvider({ children }) {
       value={{
         cart,
         wishlist,
+        wishlistProducts,
         addToCart,
         removeFromCart,
         updateQuantity,
@@ -129,6 +136,7 @@ export function CartProvider({ children }) {
         showToast,
       }}
     >
+
       {children}
 
       {/* Floating Animated Toast Container */}

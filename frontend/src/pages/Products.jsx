@@ -68,6 +68,18 @@ function Products() {
   const [quickViewQty, setQuickViewQty] = useState(1);
   const [addedIds, setAddedIds] = useState([]);
 
+  // Accordion state for filter sidebar sections
+  const [openSections, setOpenSections] = useState({
+    room: true,
+    category: true,
+    price: true,
+    material: false,
+    color: false,
+    style: false,
+  });
+  const toggleSection = (key) =>
+    setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }));
+
   // Sync state when URL params change
   useEffect(() => {
     /* eslint-disable-next-line react-hooks/set-state-in-effect */
@@ -78,15 +90,15 @@ function Products() {
     setCurrentPage(1);
   }, [searchParams]);
 
-  // Fetch from backend or fallback to rich mock data
+  // Fetch from backend then MERGE with mock data so all products show
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
         const res = await api.get("/api/products");
         if (res.data && res.data.length > 0) {
-          // Merge images
-          const withImages = await Promise.all(
+          // Merge images for backend products
+          const backendProducts = await Promise.all(
             res.data.map(async (p) => {
               try {
                 const imgRes = await api.get(`/api/products/${p.id}/images`);
@@ -96,13 +108,31 @@ function Products() {
                   ...p,
                   primary_image: primary?.image_url || null,
                   secondary_image: imgs[1]?.image_url || primary?.image_url || null,
+                  _source: "backend",
                 };
               } catch {
-                return { ...p, primary_image: null, secondary_image: null };
+                return { ...p, primary_image: null, secondary_image: null, _source: "backend" };
               }
             })
           );
-          setProducts(withImages);
+
+          // Get IDs already fetched from backend to avoid duplicates
+          const backendIds = new Set(backendProducts.map((p) => String(p.id)));
+
+          // Append mock products that don't conflict with backend IDs
+          // Give mock products high IDs (1000+) to avoid collision
+          const mockWithHighIds = MOCK_PRODUCTS.map((p, idx) => ({
+            ...p,
+            id: 1000 + idx,
+            _source: "mock",
+          }));
+
+          const merged = [
+            ...backendProducts,
+            ...mockWithHighIds.filter((p) => !backendIds.has(String(p.id))),
+          ];
+
+          setProducts(merged);
         } else {
           setProducts(MOCK_PRODUCTS);
         }
@@ -116,6 +146,7 @@ function Products() {
 
     fetchProducts();
   }, []);
+
 
   // Reset all filters
   const handleResetFilters = () => {
@@ -303,165 +334,217 @@ function Products() {
         <aside className="filter-sidebar">
           <div className="filter-sidebar-header">
             <h3>
-              <SlidersHorizontal size={17} /> Bộ lọc sản phẩm
+              <SlidersHorizontal size={17} /> Bộ lọc
             </h3>
             {activeFiltersCount > 0 && (
               <button
                 className="reset-all-filters-btn"
                 onClick={handleResetFilters}
               >
-                Xóa tất cả ({activeFiltersCount})
+                Xóa ({activeFiltersCount})
               </button>
             )}
           </div>
 
-          {/* Filter: Room / Collection */}
-          <div className="filter-group">
-            <span className="filter-group-title">Không gian sống</span>
-            <div className="filter-options-list">
-              {FILTER_ROOMS.map((r) => (
-                <label
-                  key={r.slug}
-                  className={`filter-radio-item ${selectedRoom === r.slug ? "active" : ""}`}
-                >
-                  <input
-                    type="radio"
-                    name="room"
-                    checked={selectedRoom === r.slug}
-                    onChange={() => {
-                      setSelectedRoom(r.slug);
-                      setCurrentPage(1);
-                    }}
-                  />
-                  <span>{r.name}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          {/* Filter: Category */}
-          <div className="filter-group">
-            <span className="filter-group-title">Danh mục sản phẩm</span>
-            <div className="filter-options-list">
-              {FILTER_CATEGORIES.map((c) => (
-                <label
-                  key={c.slug}
-                  className={`filter-radio-item ${selectedCat === c.slug ? "active" : ""}`}
-                >
-                  <input
-                    type="radio"
-                    name="category"
-                    checked={selectedCat === c.slug}
-                    onChange={() => {
-                      setSelectedCat(c.slug);
-                      setCurrentPage(1);
-                    }}
-                  />
-                  <span>{c.name}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          {/* Filter: Price Range Slider */}
-          <div className="filter-group">
-            <span className="filter-group-title">Khoảng giá tối đa</span>
-            <div className="price-slider-box">
-              <input
-                type="range"
-                className="price-slider-range"
-                min="3000000"
-                max="30000000"
-                step="1000000"
-                value={maxPrice}
-                onChange={(e) => {
-                  setMaxPrice(Number(e.target.value));
-                  setCurrentPage(1);
-                }}
-              />
-              <div className="price-slider-labels">
-                <span>0₫</span>
-                <strong>{Number(maxPrice).toLocaleString("vi-VN")}₫</strong>
+          {/* Filter: Room / Collection — Accordion */}
+          <div className="filter-group accordion-group">
+            <button
+              className={`accordion-toggle ${openSections.room ? "open" : ""}`}
+              onClick={() => toggleSection("room")}
+            >
+              <span>Không gian sống</span>
+              <ChevronRight size={14} className="accordion-chevron" />
+            </button>
+            {openSections.room && (
+              <div className="filter-options-list accordion-body">
+                {FILTER_ROOMS.map((r) => (
+                  <label
+                    key={r.slug}
+                    className={`filter-radio-item ${selectedRoom === r.slug ? "active" : ""}`}
+                  >
+                    <input
+                      type="radio"
+                      name="room"
+                      checked={selectedRoom === r.slug}
+                      onChange={() => {
+                        setSelectedRoom(r.slug);
+                        setCurrentPage(1);
+                      }}
+                    />
+                    <span>{r.name}</span>
+                  </label>
+                ))}
               </div>
-            </div>
+            )}
           </div>
 
-          {/* Filter: Material */}
-          <div className="filter-group">
-            <span className="filter-group-title">Chất liệu chế tác</span>
-            <div className="filter-options-list">
-              {FILTER_MATERIALS.map((mat) => (
-                <label
-                  key={mat}
-                  className={`filter-radio-item ${selectedMaterial === mat ? "active" : ""}`}
-                >
+          {/* Filter: Category — Accordion */}
+          <div className="filter-group accordion-group">
+            <button
+              className={`accordion-toggle ${openSections.category ? "open" : ""}`}
+              onClick={() => toggleSection("category")}
+            >
+              <span>Danh mục</span>
+              <ChevronRight size={14} className="accordion-chevron" />
+            </button>
+            {openSections.category && (
+              <div className="filter-options-list accordion-body">
+                {FILTER_CATEGORIES.map((c) => (
+                  <label
+                    key={c.slug}
+                    className={`filter-radio-item ${selectedCat === c.slug ? "active" : ""}`}
+                  >
+                    <input
+                      type="radio"
+                      name="category"
+                      checked={selectedCat === c.slug}
+                      onChange={() => {
+                        setSelectedCat(c.slug);
+                        setCurrentPage(1);
+                      }}
+                    />
+                    <span>{c.name}</span>
+                  </label>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Filter: Price — Accordion */}
+          <div className="filter-group accordion-group">
+            <button
+              className={`accordion-toggle ${openSections.price ? "open" : ""}`}
+              onClick={() => toggleSection("price")}
+            >
+              <span>Khoảng giá</span>
+              <ChevronRight size={14} className="accordion-chevron" />
+            </button>
+            {openSections.price && (
+              <div className="accordion-body">
+                <div className="price-slider-box">
                   <input
-                    type="radio"
-                    name="material"
-                    checked={selectedMaterial === mat}
-                    onChange={() => {
-                      setSelectedMaterial(mat);
+                    type="range"
+                    className="price-slider-range"
+                    min="3000000"
+                    max="30000000"
+                    step="1000000"
+                    value={maxPrice}
+                    onChange={(e) => {
+                      setMaxPrice(Number(e.target.value));
                       setCurrentPage(1);
                     }}
                   />
-                  <span>{mat}</span>
-                </label>
-              ))}
-            </div>
+                  <div className="price-slider-labels">
+                    <span>0₫</span>
+                    <strong>{Number(maxPrice).toLocaleString("vi-VN")}₫</strong>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
-          {/* Filter: Color Swatches */}
-          <div className="filter-group">
-            <span className="filter-group-title">Màu sắc chủ đạo</span>
-            <div className="color-swatches-grid">
-              {FILTER_COLORS.map((col) => (
-                <button
-                  key={col.name}
-                  className={`color-swatch-btn ${selectedColor === col.name ? "active" : ""}`}
-                  style={{
-                    backgroundColor: col.hex === "transparent" ? "#ffffff" : col.hex,
-                  }}
-                  title={col.name}
-                  onClick={() => {
-                    setSelectedColor(col.name);
-                    setCurrentPage(1);
-                  }}
-                >
-                  {col.name === "Tất cả" && (
-                    <span style={{ fontSize: "10px", color: "#666" }}>ALL</span>
-                  )}
-                </button>
-              ))}
-            </div>
+          {/* Filter: Material — Accordion */}
+          <div className="filter-group accordion-group">
+            <button
+              className={`accordion-toggle ${openSections.material ? "open" : ""}`}
+              onClick={() => toggleSection("material")}
+            >
+              <span>Chất liệu{selectedMaterial !== "Tất cả" && <em className="filter-dot" />}</span>
+              <ChevronRight size={14} className="accordion-chevron" />
+            </button>
+            {openSections.material && (
+              <div className="filter-options-list accordion-body">
+                {FILTER_MATERIALS.map((mat) => (
+                  <label
+                    key={mat}
+                    className={`filter-radio-item ${selectedMaterial === mat ? "active" : ""}`}
+                  >
+                    <input
+                      type="radio"
+                      name="material"
+                      checked={selectedMaterial === mat}
+                      onChange={() => {
+                        setSelectedMaterial(mat);
+                        setCurrentPage(1);
+                      }}
+                    />
+                    <span>{mat}</span>
+                  </label>
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* Filter: Style */}
-          <div className="filter-group">
-            <span className="filter-group-title">Phong cách thiết kế</span>
-            <div className="filter-options-list">
-              {FILTER_STYLES.map((st) => (
-                <label
-                  key={st}
-                  className={`filter-radio-item ${selectedStyle === st ? "active" : ""}`}
-                >
-                  <input
-                    type="radio"
-                    name="style"
-                    checked={selectedStyle === st}
-                    onChange={() => {
-                      setSelectedStyle(st);
-                      setCurrentPage(1);
-                    }}
-                  />
-                  <span>{st}</span>
-                </label>
-              ))}
-            </div>
+          {/* Filter: Color — Accordion */}
+          <div className="filter-group accordion-group">
+            <button
+              className={`accordion-toggle ${openSections.color ? "open" : ""}`}
+              onClick={() => toggleSection("color")}
+            >
+              <span>Màu sắc{selectedColor !== "Tất cả" && <em className="filter-dot" />}</span>
+              <ChevronRight size={14} className="accordion-chevron" />
+            </button>
+            {openSections.color && (
+              <div className="accordion-body">
+                <div className="color-swatches-grid">
+                  {FILTER_COLORS.map((col) => (
+                    <button
+                      key={col.name}
+                      className={`color-swatch-btn ${selectedColor === col.name ? "active" : ""}`}
+                      style={{
+                        backgroundColor: col.hex === "transparent" ? "#ffffff" : col.hex,
+                      }}
+                      title={col.name}
+                      onClick={() => {
+                        setSelectedColor(col.name);
+                        setCurrentPage(1);
+                      }}
+                    >
+                      {col.name === "Tất cả" && (
+                        <span style={{ fontSize: "10px", color: "#666" }}>ALL</span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Filter: Style — Accordion */}
+          <div className="filter-group accordion-group">
+            <button
+              className={`accordion-toggle ${openSections.style ? "open" : ""}`}
+              onClick={() => toggleSection("style")}
+            >
+              <span>Phong cách{selectedStyle !== "Tất cả" && <em className="filter-dot" />}</span>
+              <ChevronRight size={14} className="accordion-chevron" />
+            </button>
+            {openSections.style && (
+              <div className="filter-options-list accordion-body">
+                {FILTER_STYLES.map((st) => (
+                  <label
+                    key={st}
+                    className={`filter-radio-item ${selectedStyle === st ? "active" : ""}`}
+                  >
+                    <input
+                      type="radio"
+                      name="style"
+                      checked={selectedStyle === st}
+                      onChange={() => {
+                        setSelectedStyle(st);
+                        setCurrentPage(1);
+                      }}
+                    />
+                    <span>{st}</span>
+                  </label>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Filter: In Stock Only Toggle */}
           <div className="stock-toggle-box">
-            <span className="stock-toggle-label">Chỉ hiện còn hàng</span>
+            <span className="stock-toggle-label">Còn hàng</span>
             <label className="toggle-switch">
               <input
                 type="checkbox"
@@ -479,6 +562,7 @@ function Products() {
         {/* RIGHT CATALOG CONTAINER */}
         <main className="catalog-content-main">
           {/* TOOLBAR */}
+
           <div className="catalog-toolbar">
             {/* Search Input with Clear Button */}
             <form

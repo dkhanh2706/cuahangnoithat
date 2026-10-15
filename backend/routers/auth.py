@@ -36,6 +36,12 @@ def register(
     db: Session = Depends(get_db)
 ):
 
+    if data.email.lower() == "adminhdk@gmail.com":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Không thể đăng ký tài khoản quản trị viên hệ thống"
+        )
+
     existing_user = db.query(User).filter(
         User.email == data.email
     ).first()

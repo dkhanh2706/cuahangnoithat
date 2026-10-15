@@ -61,7 +61,15 @@ function Login() {
       localStorage.setItem("access_token", access_token);
       localStorage.setItem("user", JSON.stringify(user));
 
-      const redirectPath = location.state?.from || "/";
+      let redirectPath = location.state?.from;
+      if (!redirectPath || redirectPath === "/") {
+        if (user.role === "ADMIN" && user.email?.toLowerCase() === "adminhdk@gmail.com") {
+          redirectPath = "/admin";
+        } else {
+          redirectPath = "/";
+        }
+      }
+
       navigate(redirectPath, { replace: true });
       window.location.reload();
     } catch (err) {

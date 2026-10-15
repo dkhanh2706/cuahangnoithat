@@ -21,7 +21,7 @@ function FeaturedCollections() {
         {/* MAIN LARGE CARD */}
         <div
           className="collection-main"
-          onClick={() => navigate("/products?category=1")}
+          onClick={() => navigate("/collections/phong-khach-bac-au")}
         >
           <div className="collection-img-box">
             <img
@@ -57,7 +57,7 @@ function FeaturedCollections() {
         <div className="collection-side">
           <div
             className="collection-mini"
-            onClick={() => navigate("/products?category=2")}
+            onClick={() => navigate("/collections/phong-ngu-japandi-zen")}
           >
             <img
               src="https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=800&q=80"
@@ -73,7 +73,7 @@ function FeaturedCollections() {
 
           <div
             className="collection-mini"
-            onClick={() => navigate("/products?category=3")}
+            onClick={() => navigate("/collections/phong-an-bac-au-nordic-dining")}
           >
             <img
               src="https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=800&q=80"
@@ -96,9 +96,9 @@ function FeaturedCollections() {
 
             <button
               className="collection-cta-btn"
-              onClick={() => navigate("/products")}
+              onClick={() => navigate("/collections")}
             >
-              <span>Khám phá toàn bộ danh mục</span>
+              <span>Khám phá các bộ sưu tập</span>
               <ArrowRight size={16} />
             </button>
           </div>

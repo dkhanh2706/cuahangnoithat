@@ -9,12 +9,12 @@ import {
   Menu,
   X,
   ChevronDown,
-  Sparkles,
-  PhoneCall,
   ArrowRight,
+  ShieldCheck,
 } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import "../styles/Header.css";
+
 
 function Header() {
   const navigate = useNavigate();
@@ -54,14 +54,6 @@ function Header() {
     window.location.reload();
   };
 
-  const handleProtectedNavigate = (path) => {
-    if (!token) {
-      navigate("/login", { state: { from: path } });
-      return;
-    }
-    navigate(path);
-  };
-
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -73,24 +65,7 @@ function Header() {
 
   return (
     <>
-      {/* Top Luxury Announcement Bar */}
-      <div className="top-announcement-bar">
-        <div className="announcement-content">
-          <span className="announcement-badge">
-            <Sparkles size={13} /> Ưu đãi độc quyền
-          </span>
-          <p className="announcement-text">
-            Miễn phí vận chuyển toàn quốc đơn từ <strong>2.000.000₫</strong> • Nhập mã{" "}
-            <span className="code-tag">FURNI10</span> giảm ngay 10%
-          </p>
-          <div className="announcement-contact">
-            <PhoneCall size={13} />
-            <span>Hotline: 1900 6868</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Glassmorphic Header */}
+      {/* Main Glassmorphic Header — NO announcement bar */}
       <header className={`main-header ${isScrolled ? "header-scrolled" : ""}`}>
         <div className="header-container">
           {/* Mobile Menu Hamburger Toggle */}
@@ -131,9 +106,12 @@ function Header() {
             <a href="/#rooms" className="nav-link">
               Theo không gian
             </a>
-            <a href="/#featured-collections" className="nav-link">
+            <NavLink
+              to="/collections"
+              className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")}
+            >
               Bộ sưu tập
-            </a>
+            </NavLink>
             <a href="/#reviews" className="nav-link">
               Đánh giá
             </a>
@@ -150,22 +128,22 @@ function Header() {
               <Search size={19} />
             </button>
 
-            {/* Wishlist Button */}
-            <button
+            {/* Wishlist Button — links directly to /wishlist */}
+            <Link
+              to="/wishlist"
               className="action-icon-btn"
-              onClick={() => handleProtectedNavigate("/profile")}
               title="Sản phẩm yêu thích"
             >
               <Heart size={19} />
               {wishlist.length > 0 && (
                 <span className="badge-counter wishlist-badge">{wishlist.length}</span>
               )}
-            </button>
+            </Link>
 
             {/* Shopping Cart Button */}
             <button
               className="action-icon-btn cart-btn"
-              onClick={() => handleProtectedNavigate("/cart")}
+              onClick={() => navigate("/cart")}
               title="Giỏ hàng của bạn"
             >
               <ShoppingBag size={20} />
@@ -207,6 +185,19 @@ function Header() {
                       <small>{user?.email || ""}</small>
                     </div>
                     <div className="dropdown-divider" />
+                    {user?.role === "ADMIN" && user?.email?.toLowerCase() === "adminhdk@gmail.com" && (
+                      <button
+                        className="dropdown-item"
+                        style={{ color: "#c59b6c", fontWeight: "600" }}
+                        onClick={() => {
+                          setUserDropdownOpen(false);
+                          navigate("/admin");
+                        }}
+                      >
+                        <ShieldCheck size={16} />
+                        <span>Trang Quản Trị Admin</span>
+                      </button>
+                    )}
                     <button
                       className="dropdown-item"
                       onClick={() => {
@@ -292,18 +283,31 @@ function Header() {
             </div>
 
             <nav className="mobile-nav-links">
+              {user?.role === "ADMIN" && user?.email?.toLowerCase() === "adminhdk@gmail.com" && (
+                <NavLink
+                  to="/admin"
+                  onClick={() => setMobileMenuOpen(false)}
+                  style={{ color: "#c59b6c", fontWeight: "700", display: "flex", alignItems: "center", gap: "8px" }}
+                >
+                  <ShieldCheck size={18} />
+                  <span>Trang Quản Trị Admin</span>
+                </NavLink>
+              )}
               <NavLink to="/" end onClick={() => setMobileMenuOpen(false)}>
                 Trang chủ
               </NavLink>
               <NavLink to="/products" onClick={() => setMobileMenuOpen(false)}>
                 Sản phẩm
               </NavLink>
+              <NavLink to="/wishlist" onClick={() => setMobileMenuOpen(false)}>
+                Yêu thích {wishlist.length > 0 && `(${wishlist.length})`}
+              </NavLink>
               <a href="/#rooms" onClick={() => setMobileMenuOpen(false)}>
                 Theo không gian
               </a>
-              <a href="/#featured-collections" onClick={() => setMobileMenuOpen(false)}>
+              <NavLink to="/collections" onClick={() => setMobileMenuOpen(false)}>
                 Bộ sưu tập
-              </a>
+              </NavLink>
               <a href="/#reviews" onClick={() => setMobileMenuOpen(false)}>
                 Đánh giá khách hàng
               </a>
@@ -349,6 +353,7 @@ function Header() {
       )}
     </>
   );
+
 }
 
 export default Header;
