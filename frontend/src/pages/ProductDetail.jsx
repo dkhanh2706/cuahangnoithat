@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import {
-  Star,
   ShoppingBag,
   Heart,
   Truck,
@@ -10,7 +9,7 @@ import {
 } from "lucide-react";
 import api from "../services/api";
 import { useCart } from "../context/CartContext";
-import { MOCK_PRODUCTS } from "../data/mockProducts";
+import { productImageUrl } from "../services/media";
 import "../styles/ProductDetail.css";
 import "../styles/home/ProductShowcase.css";
 
@@ -23,6 +22,8 @@ function ProductDetail() {
   const [selectedImage, setSelectedImage] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [related, setRelated] = useState([]);
+  const [loadError, setLoadError] = useState("");
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -32,6 +33,7 @@ function ProductDetail() {
     const loadProduct = async () => {
       try {
         setLoading(true);
+        setLoadError("");
         const res = await api.get(`/api/products/${id}`);
         const p = res.data;
 
@@ -49,19 +51,27 @@ function ProductDetail() {
           setProduct(p);
           setSelectedImage(p.primary_image || "");
         }
-      } catch {
-        // Fallback to mock product
-        const mockP =
-          MOCK_PRODUCTS.find((item) => String(item.id) === String(id)) ||
-          MOCK_PRODUCTS[0];
-        setProduct(mockP);
-        setSelectedImage(mockP.primary_image);
+      } catch (err) {
+        setProduct(null);
+        setSelectedImage("");
+        setLoadError(err.response?.status === 404 ? "Sản phẩm không còn tồn tại." : "Không thể tải sản phẩm. Vui lòng thử lại.");
       } finally {
         setLoading(false);
       }
     };
 
     loadProduct();
+    let active = true;
+    api.get("/api/products").then(async ({ data }) => {
+      const items = await Promise.all(data.filter(p => String(p.id) !== String(id)).slice(0, 4).map(async p => {
+        try {
+          const { data: images } = await api.get(`/api/products/${p.id}/images`);
+          return { ...p, primary_image: productImageUrl((images.find(image => image.is_primary) || images[0])?.image_url) };
+        } catch { return { ...p, primary_image: null }; }
+      }));
+      if (active) setRelated(items);
+    }).catch(() => { if (active) setRelated([]); });
+    return () => { active = false; };
   }, [id]);
 
   if (loading) {
@@ -76,6 +86,7 @@ function ProductDetail() {
     return (
       <div className="detail-container" style={{ padding: "80px 0", textAlign: "center" }}>
         <h2>Không tìm thấy sản phẩm</h2>
+        {loadError && <p role="alert">{loadError}</p>}
         <Link to="/products" className="reset-filter-btn" style={{ marginTop: "20px", display: "inline-block" }}>
           Quay lại danh sách sản phẩm
         </Link>
@@ -85,7 +96,6 @@ function ProductDetail() {
 
   const isFav = isWishlisted(product.id);
   const images = product.images && product.images.length > 0 ? product.images : [selectedImage];
-  const related = MOCK_PRODUCTS.filter((p) => p.id !== product.id).slice(0, 4);
 
   return (
     <div className="product-detail-page">
@@ -135,14 +145,7 @@ function ProductDetail() {
             <h1 className="detail-title">{product.name}</h1>
 
             <div className="detail-rating-row">
-              <div className="detail-stars">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={15} fill="#c49a62" color="#c49a62" />
-                ))}
-              </div>
-              <span>
-                <strong>{product.rating || "4.9"}</strong> ({product.reviews_count || "32"} đánh giá)
-              </span>
+              <Link to="/reviews">Xem đánh giá cửa hàng</Link>
               <span>•</span>
               <span className="in-stock-tag">Còn hàng</span>
             </div>

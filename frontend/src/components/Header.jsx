@@ -103,18 +103,18 @@ function Header() {
             >
               Sản phẩm
             </NavLink>
-            <a href="/#rooms" className="nav-link">
-              Theo không gian
-            </a>
+            <NavLink to="/orders" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+              Lịch sử đơn hàng
+            </NavLink>
             <NavLink
               to="/collections"
               className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")}
             >
               Bộ sưu tập
             </NavLink>
-            <a href="/#reviews" className="nav-link">
+            <NavLink to="/reviews" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
               Đánh giá
-            </a>
+            </NavLink>
           </nav>
 
           {/* Header Action Tools */}
@@ -302,15 +302,15 @@ function Header() {
               <NavLink to="/wishlist" onClick={() => setMobileMenuOpen(false)}>
                 Yêu thích {wishlist.length > 0 && `(${wishlist.length})`}
               </NavLink>
-              <a href="/#rooms" onClick={() => setMobileMenuOpen(false)}>
-                Theo không gian
-              </a>
+              <NavLink to="/orders" onClick={() => setMobileMenuOpen(false)}>
+                Lịch sử đơn hàng
+              </NavLink>
               <NavLink to="/collections" onClick={() => setMobileMenuOpen(false)}>
                 Bộ sưu tập
               </NavLink>
-              <a href="/#reviews" onClick={() => setMobileMenuOpen(false)}>
+              <Link to="/reviews" onClick={() => setMobileMenuOpen(false)}>
                 Đánh giá khách hàng
-              </a>
+              </Link>
             </nav>
 
             <div className="mobile-drawer-footer">

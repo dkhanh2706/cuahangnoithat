@@ -8,6 +8,8 @@ import Register from "./pages/Register";
 import Products from "./pages/Products";
 import ProductDetail from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
+import Reviews from "./pages/Reviews";
+import OrderHistory from "./pages/OrderHistory";
 import Wishlist from "./pages/Wishlist";
 import Profile from "./pages/Profile";
 import Collections from "./pages/Collections";
@@ -68,6 +70,8 @@ function App() {
             <Route path="/collections/:slug" element={<CollectionDetail />} />
 
             <Route path="/cart" element={<Cart />} />
+            <Route path="/reviews" element={<Reviews />} />
+            <Route path="/orders" element={<ProtectedRoute><OrderHistory /></ProtectedRoute>} />
 
             <Route path="/wishlist" element={<Wishlist />} />
 

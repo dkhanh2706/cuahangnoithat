@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   ShoppingBag,
@@ -19,6 +19,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { useCart } from "../context/CartContext";
+import api from "../services/api";
 import "../styles/Cart.css";
 
 const TRUST_BADGES = [
@@ -36,7 +37,9 @@ function Cart() {
   const [discountPercent, setDiscountPercent] = useState(0);
   const [orderModalOpen, setOrderModalOpen] = useState(false);
   const [orderCode, setOrderCode] = useState("");
-
+  const [checkingOut, setCheckingOut] = useState(false);
+  const checkoutLock = useRef(false);
+  const [shipping, setShipping] = useState({ receiver_name: "", receiver_phone: "", shipping_address: "" });
   const handleApplyPromo = (e) => {
     e.preventDefault();
     if (promoCode.trim().toUpperCase() === "FURNI10") {
@@ -57,10 +60,31 @@ function Cart() {
   const finalTotal = cartTotal - discountAmount + shippingFee;
   const progressPercent = Math.min((cartTotal / freeShippingThreshold) * 100, 100);
 
-  const handleCheckout = () => {
-    const generatedCode = "FH-" + Math.floor(100000 + Math.random() * 900000);
-    setOrderCode(generatedCode);
-    setOrderModalOpen(true);
+  const handleCheckout = async (event) => {
+    event.preventDefault();
+    if (checkoutLock.current || orderModalOpen || cart.length === 0) return;
+    if (!localStorage.getItem("access_token")) {
+      navigate("/login", { state: { from: "/cart" } });
+      return;
+    }
+    checkoutLock.current = true;
+    setCheckingOut(true);
+    try {
+      const { data } = await api.post("/api/orders/demo", {
+        ...shipping,
+        items: cart.map(item => ({ product_id: item.product.id, quantity: item.quantity })),
+        promo_code: discountPercent ? (discountPercent === 0.1 ? "FURNI10" : "FURNI20") : "",
+      });
+      setOrderCode(data.code);
+      setOrderModalOpen(true);
+      clearCart();
+      navigate("/orders", { state: { checkoutSuccess: true } });
+    } catch (err) {
+      showToast(typeof err.response?.data?.detail === "string" ? err.response.data.detail : "Không thể thanh toán. Vui lòng thử lại.", "error");
+    } finally {
+      checkoutLock.current = false;
+      setCheckingOut(false);
+    }
   };
 
   const handleFinishOrder = () => {
@@ -376,11 +400,18 @@ function Cart() {
               </div>
             )}
 
-            <button className="checkout-btn" onClick={handleCheckout}>
+            <form className="checkout-shipping-form" onSubmit={handleCheckout}>
+              <h4>Thông tin nhận hàng</h4>
+              <label>Họ tên<input required maxLength={100} autoComplete="name" value={shipping.receiver_name} onChange={e => setShipping({ ...shipping, receiver_name: e.target.value })} disabled={checkingOut} /></label>
+              <label>Số điện thoại<input required type="tel" maxLength={20} autoComplete="tel" value={shipping.receiver_phone} onChange={e => setShipping({ ...shipping, receiver_phone: e.target.value })} disabled={checkingOut} /></label>
+              <label>Địa chỉ nhận hàng<textarea required maxLength={2000} autoComplete="street-address" value={shipping.shipping_address} onChange={e => setShipping({ ...shipping, shipping_address: e.target.value })} disabled={checkingOut} /></label>
+            <p>Thanh toán giả lập: không thu tiền, lưu đơn để xem lịch sử và đánh giá.</p>
+            <button className="checkout-btn" type="submit" disabled={orderModalOpen || checkingOut}>
               <PackageCheck size={18} />
-              <span>Đặt hàng ngay</span>
+              <span>{checkingOut ? "Đang xử lý..." : "Thanh toán giả lập"}</span>
               <ArrowRight size={16} />
             </button>
+            </form>
 
             {/* Trust micro-badges */}
             <div className="summary-trust-mini">
@@ -421,9 +452,12 @@ function Cart() {
             <p>
               Cảm ơn quý khách đã tin tưởng FurniHome. Mã đơn hàng:{" "}
               <strong className="order-code-text">{orderCode}</strong>
-              <br />Nhân viên sẽ liên hệ xác nhận trong vòng 15 phút.
+              <br />Thanh toán giả lập thành công. Đơn đã được lưu vào lịch sử, không thu tiền thật.
             </p>
             <div className="success-modal-actions">
+              <Link to="/orders" className="success-shop-btn" onClick={() => setOrderModalOpen(false)}>
+                Xem lịch sử và đánh giá
+              </Link>
               <button className="success-home-btn" onClick={handleFinishOrder}>
                 Về trang chủ
               </button>

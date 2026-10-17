@@ -21,7 +21,6 @@ import {
 import api from "../services/api";
 import { useCart } from "../context/CartContext";
 import {
-  MOCK_PRODUCTS,
   ROOM_BANNERS,
   FILTER_ROOMS,
   FILTER_CATEGORIES,
@@ -90,7 +89,7 @@ function Products() {
     setCurrentPage(1);
   }, [searchParams]);
 
-  // Fetch from backend then MERGE with mock data so all products show
+  // Only database products can be ordered.
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -116,29 +115,13 @@ function Products() {
             })
           );
 
-          // Get IDs already fetched from backend to avoid duplicates
-          const backendIds = new Set(backendProducts.map((p) => String(p.id)));
-
-          // Append mock products that don't conflict with backend IDs
-          // Give mock products high IDs (1000+) to avoid collision
-          const mockWithHighIds = MOCK_PRODUCTS.map((p, idx) => ({
-            ...p,
-            id: 1000 + idx,
-            _source: "mock",
-          }));
-
-          const merged = [
-            ...backendProducts,
-            ...mockWithHighIds.filter((p) => !backendIds.has(String(p.id))),
-          ];
-
-          setProducts(merged);
+          setProducts(backendProducts);
         } else {
-          setProducts(MOCK_PRODUCTS);
+          setProducts([]);
         }
       } catch (err) {
-        console.warn("Backend not available, using high-res mock products:", err);
-        setProducts(MOCK_PRODUCTS);
+        console.error("Không thể tải sản phẩm:", err);
+        setProducts([]);
       } finally {
         setLoading(false);
       }

@@ -3,13 +3,11 @@ import { useNavigate } from "react-router-dom";
 import {
   ShoppingBag,
   Heart,
-  Star,
   ArrowRight,
   Sparkles,
   Check,
 } from "lucide-react";
 import { useCart } from "../../context/CartContext";
-import { MOCK_PRODUCTS } from "../../data/mockProducts";
 import "../../styles/home/ProductShowcase.css";
 
 function ProductShowcase({ products = [], loading = false }) {
@@ -19,16 +17,8 @@ function ProductShowcase({ products = [], loading = false }) {
   const [tab, setTab] = useState("all");
   const [addedIds, setAddedIds] = useState([]);
 
-  // Merge real backend products with mock products as rich fallback
-  const sourceProducts = useMemo(() => {
-    if (products && products.length > 0) {
-      return products;
-    }
-    return MOCK_PRODUCTS;
-  }, [products]);
-
   const displayProducts = useMemo(() => {
-    let list = [...sourceProducts];
+    let list = [...products];
 
     if (tab === "new") {
       list.sort((a, b) => (b.id || 0) - (a.id || 0));
@@ -39,7 +29,7 @@ function ProductShowcase({ products = [], loading = false }) {
     }
 
     return list.slice(0, 8);
-  }, [sourceProducts, tab]);
+  }, [products, tab]);
 
   const handleAddToCart = (e, product) => {
     e.stopPropagation();
@@ -199,10 +189,6 @@ function ProductShowcase({ products = [], loading = false }) {
                     <span className="showcase-material">
                       {product.material || "Nội thất cao cấp"}
                     </span>
-                    <div className="showcase-rating">
-                      <Star size={13} fill="#c49a62" color="#c49a62" />
-                      <span>{product.rating || "4.9"}</span>
-                    </div>
                   </div>
 
                   <h3 className="showcase-title">{product.name}</h3>

@@ -960,3 +960,12 @@
     padding: 32px 24px;
   }
 }
+.checkout-shipping { display: grid; gap: 12px; margin: 20px 0; }
+.checkout-shipping label { display: grid; gap: 6px; font-size: 14px; }
+.checkout-shipping input, .checkout-shipping textarea { width: 100%; padding: 10px; border: 1px solid #cbd6cb; border-radius: 8px; font: inherit; }
+.checkout-shipping textarea { resize: vertical; }
+.checkout-shipping-form { display: grid; gap: 14px; margin-top: 20px; }
+.checkout-shipping-form label { display: grid; gap: 6px; font-size: 14px; }
+.checkout-shipping-form input, .checkout-shipping-form textarea { width: 100%; padding: 10px 12px; border: 1px solid #dce4dc; border-radius: 8px; font: inherit; }
+.checkout-shipping-form textarea { resize: vertical; min-height: 70px; }
+.checkout-shipping-form p { font-size: 13px; line-height: 1.6; color: #65736a; }

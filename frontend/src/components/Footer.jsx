@@ -120,16 +120,16 @@ function Footer() {
           <h4>Khám phá</h4>
           <Link to="/">Trang chủ</Link>
           <Link to="/products">Tất cả sản phẩm</Link>
-          <a href="/#rooms">Theo không gian sống</a>
+          <Link to="/orders">Lịch sử đơn hàng</Link>
           <a href="/#featured-collections">Bộ sưu tập tiêu biểu</a>
-          <a href="/#reviews">Đánh giá khách hàng</a>
+          <Link to="/reviews">Đánh giá khách hàng</Link>
         </div>
 
         {/* CUSTOMER SUPPORT */}
         <div className="footer-column">
           <h4>Hỗ trợ khách hàng</h4>
           <Link to="/cart">Giỏ hàng của bạn</Link>
-          <Link to="/profile">Tra cứu đơn hàng</Link>
+          <Link to="/orders">Tra cứu đơn hàng</Link>
           <a href="#chinh-sach">Chính sách bảo hành 5 năm</a>
           <a href="#doi-tra">Chính sách đổi trả 30 ngày</a>
           <a href="#van-chuyen">Chính sách vận chuyển</a>

@@ -67,6 +67,7 @@ function Home() {
       <ProductShowcase products={products} loading={loading} />
 
       <Testimonials />
+
     </>
   );
 }

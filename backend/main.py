@@ -11,6 +11,7 @@ from routers.users import router as users_router
 from routers.categories import router as categories_router
 from routers.products import router as products_router
 from routers.product_images import router as product_images_router
+from routers.store_reviews import router as store_reviews_router
 from admin.router import router as admin_router
 from admin.init_admin import ensure_single_admin
 
@@ -63,6 +64,7 @@ app.include_router(users_router)
 app.include_router(categories_router)
 app.include_router(products_router)
 app.include_router(product_images_router)
+app.include_router(store_reviews_router)
 app.include_router(admin_router)
 
 
