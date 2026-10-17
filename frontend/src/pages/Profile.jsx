@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   User,
@@ -6,51 +6,79 @@ import {
   Heart,
   LogOut,
   Sparkles,
-  Package,
+  Camera,
   Trash2,
 } from "lucide-react";
 import { useCart } from "../context/CartContext";
-import { MOCK_PRODUCTS } from "../data/mockProducts";
+import api from "../services/api";
+import { readUser, saveUser } from "../services/session";
+import UserAvatar from "../components/UserAvatar";
+import { productImageUrl } from "../services/media";
 import "../styles/Profile.css";
 import "../styles/home/ProductShowcase.css";
 
-const MOCK_ORDERS = [
-  {
-    code: "FH-894210",
-    date: "12/03/2026",
-    items: "Sofa Scandinavia Nord x 1",
-    total: 18500000,
-    status: "Đang vận chuyển",
-    statusType: "shipping",
-  },
-  {
-    code: "FH-731055",
-    date: "28/01/2026",
-    items: "Bàn ăn mở rộng OAK x 1, Bộ 4 ghế Elbow x 1",
-    total: 18700000,
-    status: "Đã giao thành công",
-    statusType: "delivered",
-  },
-];
-
 function Profile() {
   const navigate = useNavigate();
-  const { wishlist, toggleWishlist, addToCart, showToast } = useCart();
+  const { wishlist, wishlistProducts, toggleWishlist, addToCart, showToast } = useCart();
 
   const [activeTab, setActiveTab] = useState("info");
-  const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+  const [storedUser, setStoredUser] = useState(() => readUser() || {});
+  const [uploading, setUploading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [profileLoading, setProfileLoading] = useState(true);
+  const [profileError, setProfileError] = useState("");
+  const uploadLock = useRef(false);
+  const saveLock = useRef(false);
 
   const [userInfo, setUserInfo] = useState({
-    full_name: storedUser.full_name || "Nguyễn Minh Khoa",
-    email: storedUser.email || "minhkhoa@gmail.com",
-    phone: storedUser.phone || "0912 345 678",
-    address: storedUser.address || "123 Lê Lợi, P. Bến Nghé, Quận 1, TP.HCM",
+    full_name: storedUser.full_name || "",
+    email: storedUser.email || "",
+    phone: storedUser.phone || "",
+    address: storedUser.address || "",
   });
 
-  const handleSaveInfo = (e) => {
+  useEffect(() => {
+    let active = true;
+    api.get("/api/users/me").then(({ data }) => {
+      if (!active) return;
+      setStoredUser(data);
+      setUserInfo({ full_name: data.full_name, email: data.email, phone: data.phone || "", address: data.address || "" });
+      saveUser(data);
+    }).catch(() => { if (active) setProfileError("Không thể tải hồ sơ. Vui lòng tải lại trang."); })
+      .finally(() => { if (active) setProfileLoading(false); });
+    return () => { active = false; };
+  }, []);
+
+  const handleSaveInfo = async (e) => {
     e.preventDefault();
-    localStorage.setItem("user", JSON.stringify({ ...storedUser, ...userInfo }));
-    showToast("Cập nhật thông tin thành công!", "success");
+    if (saveLock.current || uploading) return;
+    saveLock.current = true; setSaving(true);
+    try {
+      const { data } = await api.patch("/api/users/me", { full_name: userInfo.full_name, phone: userInfo.phone, address: userInfo.address });
+      setStoredUser(data); saveUser(data);
+      setUserInfo({ full_name: data.full_name, email: data.email, phone: data.phone || "", address: data.address || "" });
+      showToast("Cập nhật thông tin thành công!", "success");
+    } catch (err) {
+      showToast(typeof err.response?.data?.detail === "string" ? err.response.data.detail : "Không thể lưu thông tin. Vui lòng thử lại.", "error");
+    } finally { saveLock.current = false; setSaving(false); }
+  };
+
+  const handleAvatarChange = async (event) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file || uploadLock.current || saving) return;
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type) || file.size > 5 * 1024 * 1024) {
+      showToast("Vui lòng chọn ảnh JPG, PNG hoặc WebP tối đa 5 MB.", "error"); return;
+    }
+    uploadLock.current = true; setUploading(true);
+    const form = new FormData(); form.append("file", file);
+    try {
+      const { data } = await api.post("/api/users/me/avatar", form, { headers: { "Content-Type": "multipart/form-data" } });
+      setStoredUser(data); saveUser(data);
+      showToast("Đã cập nhật ảnh đại diện!", "success");
+    } catch (err) {
+      showToast(typeof err.response?.data?.detail === "string" ? err.response.data.detail : "Không thể tải ảnh lên. Vui lòng thử lại.", "error");
+    } finally { uploadLock.current = false; setUploading(false); }
   };
 
   const handleLogout = () => {
@@ -60,7 +88,7 @@ function Profile() {
     window.location.reload();
   };
 
-  const wishlistedProducts = MOCK_PRODUCTS.filter((p) => wishlist.includes(p.id));
+  const wishlistedProducts = wishlistProducts;
 
   return (
     <div className="profile-page">
@@ -70,7 +98,7 @@ function Profile() {
           <aside className="profile-sidebar">
             <div className="profile-user-summary">
               <div className="profile-large-avatar">
-                {userInfo.full_name.charAt(0).toUpperCase()}
+                <UserAvatar user={storedUser} />
               </div>
               <h3>{userInfo.full_name}</h3>
               <p>{userInfo.email}</p>
@@ -88,13 +116,7 @@ function Profile() {
                 <span>Hồ sơ cá nhân</span>
               </button>
 
-              <button
-                className={`profile-nav-btn ${activeTab === "orders" ? "active" : ""}`}
-                onClick={() => setActiveTab("orders")}
-              >
-                <Package size={18} />
-                <span>Lịch sử đơn hàng</span>
-              </button>
+
 
               <button
                 className={`profile-nav-btn ${activeTab === "wishlist" ? "active" : ""}`}
@@ -121,11 +143,23 @@ function Profile() {
                 </div>
 
                 <form onSubmit={handleSaveInfo}>
+                  {profileError && <p role="alert">{profileError}</p>}
+                  {profileLoading && <p role="status">Đang tải hồ sơ...</p>}
+                  <div className="profile-avatar-editor">
+                    <div className="profile-large-avatar"><UserAvatar user={storedUser} /></div>
+                    <div>
+                      <label className="profile-avatar-upload"><Camera size={17} />{uploading ? "Đang tải ảnh..." : "Đổi ảnh đại diện"}<input type="file" accept="image/jpeg,image/png,image/webp" onChange={handleAvatarChange} disabled={uploading || saving || profileLoading || Boolean(profileError)} /></label>
+                      <p>JPG, PNG hoặc WebP · Tối đa 5 MB</p>
+                      <small>Ảnh được lưu ngay và hiển thị cạnh tên trên header.</small>
+                    </div>
+                  </div>
+                  <fieldset className="profile-fields-group" disabled={saving || uploading || profileLoading || Boolean(profileError)}>
                   <div className="profile-form-grid">
                     <div className="profile-field">
                       <label>Họ và tên</label>
                       <input
                         type="text"
+                        required minLength={2} maxLength={100}
                         value={userInfo.full_name}
                         onChange={(e) =>
                           setUserInfo({ ...userInfo, full_name: e.target.value })
@@ -137,6 +171,7 @@ function Profile() {
                       <label>Địa chỉ Email</label>
                       <input
                         type="email"
+                        readOnly
                         value={userInfo.email}
                         onChange={(e) =>
                           setUserInfo({ ...userInfo, email: e.target.value })
@@ -148,6 +183,7 @@ function Profile() {
                       <label>Số điện thoại</label>
                       <input
                         type="tel"
+                        maxLength={20}
                         value={userInfo.phone}
                         onChange={(e) =>
                           setUserInfo({ ...userInfo, phone: e.target.value })
@@ -159,6 +195,7 @@ function Profile() {
                       <label>Địa chỉ nhận hàng mặc định</label>
                       <input
                         type="text"
+                        maxLength={2000}
                         value={userInfo.address}
                         onChange={(e) =>
                           setUserInfo({ ...userInfo, address: e.target.value })
@@ -168,51 +205,10 @@ function Profile() {
                   </div>
 
                   <button type="submit" className="profile-save-btn">
-                    Lưu thay đổi
+                    {saving ? "Đang lưu..." : "Lưu thay đổi"}
                   </button>
+                  </fieldset>
                 </form>
-              </div>
-            )}
-
-            {activeTab === "orders" && (
-              <div>
-                <div className="panel-header">
-                  <h2>Lịch sử đơn hàng</h2>
-                  <p>Theo dõi tiến độ vận chuyển và các đơn hàng đã đặt</p>
-                </div>
-
-                <div style={{ overflowX: "auto" }}>
-                  <table className="orders-table">
-                    <thead>
-                      <tr>
-                        <th>Mã đơn</th>
-                        <th>Ngày đặt</th>
-                        <th>Sản phẩm</th>
-                        <th>Tổng tiền</th>
-                        <th>Trạng thái</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {MOCK_ORDERS.map((o) => (
-                        <tr key={o.code}>
-                          <td>
-                            <strong>{o.code}</strong>
-                          </td>
-                          <td>{o.date}</td>
-                          <td>{o.items}</td>
-                          <td>
-                            <strong>{Number(o.total).toLocaleString("vi-VN")}₫</strong>
-                          </td>
-                          <td>
-                            <span className={`status-badge ${o.statusType}`}>
-                              {o.status}
-                            </span>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
               </div>
             )}
 
@@ -232,7 +228,7 @@ function Profile() {
                     {wishlistedProducts.map((p) => (
                       <article className="showcase-card" key={p.id}>
                         <div className="showcase-image">
-                          <img src={p.primary_image} alt={p.name} />
+                          <img src={productImageUrl(p.primary_image)} alt={p.name} />
                           <button
                             className="wishlist-btn active"
                             onClick={() => toggleWishlist(p)}

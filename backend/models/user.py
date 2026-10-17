@@ -26,6 +26,7 @@ class User(Base):
     phone = Column(String(20), nullable=True)
 
     address = Column(Text, nullable=True)
+    avatar_url = Column(Text, nullable=True)
 
     role = Column(
         Enum(

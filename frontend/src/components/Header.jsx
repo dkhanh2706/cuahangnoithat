@@ -13,6 +13,9 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { useCart } from "../context/CartContext";
+import api from "../services/api";
+import { readUser, saveUser } from "../services/session";
+import UserAvatar from "./UserAvatar";
 import "../styles/Header.css";
 
 
@@ -28,7 +31,18 @@ function Header() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const token = localStorage.getItem("access_token");
-  const user = JSON.parse(localStorage.getItem("user") || "null");
+  const [user, setUser] = useState(readUser);
+
+  useEffect(() => {
+    let active = true;
+    const update = () => setUser(readUser());
+    window.addEventListener("user-updated", update);
+    window.addEventListener("storage", update);
+    if (token) {
+      api.get("/api/users/me").then(({ data }) => { if (active) saveUser(data); }).catch(() => {});
+    }
+    return () => { active = false; window.removeEventListener("user-updated", update); window.removeEventListener("storage", update); };
+  }, [token]);
 
   // Detect scroll for glassmorphism elevation
   useEffect(() => {
@@ -169,7 +183,7 @@ function Header() {
                   onClick={() => setUserDropdownOpen(!userDropdownOpen)}
                 >
                   <div className="user-avatar">
-                    {user?.full_name?.charAt(0)?.toUpperCase() || "U"}
+                    <UserAvatar user={user} />
                   </div>
                   <span className="user-name">
                     {user?.full_name?.split(" ").slice(-1)[0] || "Tài khoản"}
@@ -335,7 +349,7 @@ function Header() {
                 <div className="mobile-user-box">
                   <div className="mobile-user-info">
                     <div className="user-avatar">
-                      {user?.full_name?.charAt(0)?.toUpperCase() || "U"}
+                      <UserAvatar user={user} />
                     </div>
                     <div>
                       <strong>{user?.full_name}</strong>

@@ -1,5 +1,79 @@
 # Thay đổi database: lịch sử đơn hàng và đánh giá sản phẩm
 
+## Ảnh đại diện và hồ sơ cá nhân — 18/10/2026
+
+### Thay đổi cấu trúc đã áp dụng
+
+- Đã chạy `python -B -m database.migrate_user_avatar` trên PostgreSQL của dự án.
+- Thêm **một cột `users.avatar_url TEXT NULL`**, không có giá trị mặc định, không thêm index hay ràng buộc. Các tài khoản hiện có nhận NULL và tiếp tục hiển thị chữ cái đầu tên khi chưa có ảnh.
+- SQL: `ALTER TABLE users ADD COLUMN IF NOT EXISTS avatar_url TEXT`. Có thể chạy lại, không thêm trùng cột. Không thay đổi cột cũ, bảng khác hay ENUM; không tạo tài khoản/ảnh mẫu.
+
+### Dữ liệu ghi khi sử dụng
+
+- `POST /api/users/me/avatar`: chỉ cập nhật `users.avatar_url` của tài khoản đang đăng nhập, trả về hồ sơ đã lưu. Ảnh JPG/PNG/WebP tối đa 5 MB được kiểm tra MIME và chữ ký định dạng; lưu thành tên UUID trong `uploads/avatars` tại thư mục chạy backend và phục vụ qua `/uploads/avatars/<tên-file>`. Không lưu dữ liệu nhị phân ảnh trong database, không dùng tên file do người dùng gửi để tạo đường dẫn.
+- Mỗi lần đổi ảnh tạo file mới, cập nhật URL trong cùng tài khoản. File ảnh cũ vẫn được giữ; không tự xóa file đang dùng trong các nơi khác. Nếu ghi database thất bại, transaction rollback và file mới được dọn.
+- `PATCH /api/users/me`: lưu `full_name`, `phone`, `address` của tài khoản hiện tại vào database thay cho cách chỉ lưu localStorage trước đây. Email đăng nhập hiển thị chỉ đọc; API này không đổi email, quyền, trạng thái hay mật khẩu. Tên được trim, dài 2–100 ký tự; điện thoại tối đa 20 ký tự; địa chỉ tối đa 2000 ký tự.
+- Theo model có sẵn, cập nhật tài khoản cũng cập nhật `users.updated_at`. Không cập nhật tài khoản khác.
+- `GET /api/users/me` và phản hồi đăng nhập bổ sung `avatar_url`; đây là thao tác đọc. Frontend cập nhật cache hồ sơ ở localStorage và thông báo header ngay sau khi lưu; ảnh hiển thị cạnh tên trên desktop và phần tài khoản trên mobile, giữ lại khi đăng nhập lại.
+- Gỡ tab lịch sử đơn hàng và dữ liệu đơn mẫu khỏi Profile; không xóa đơn trong database. Lịch sử thật vẫn ở `/orders`.
+- Kiểm thử upload và cập nhật hồ sơ dùng SQLite cùng thư mục tạm, không cập nhật hồ sơ hoặc tải ảnh thử lên database thật.
+
+Chạy migration trên môi trường khác từ thư mục `backend`:
+
+```powershell
+python -B -m database.migrate_user_avatar
+```
+
+Sau đó khởi động lại backend nếu không dùng reload.
+
+## Bổ sung danh mục sản phẩm — 18/10/2026
+
+Đã chạy `python -B -m database.seed_catalog` trên PostgreSQL cấu hình trong dự án:
+
+- **INSERT 28 bản ghi `products`**, ID **6–33**. Tổng sản phẩm tăng từ **4 lên 32**. Các trường được ghi: `category_id`, `name`, `description`, `price`, `material`, `color`, `dimensions`, `stock_quantity`, `status = true`. `id` tự tăng; `created_at`, `updated_at` theo mặc định database.
+- **INSERT 57 bản ghi `product_images`**. Các trường: `product_id`, `image_url`, `is_primary`, `sort_order`; `id`, `created_at` tự sinh. Mỗi sản phẩm mới có đúng một ảnh chính, các ảnh còn lại là ảnh phụ. Tổng ảnh tăng từ **0 lên 57**.
+- Tận dụng 6 danh mục hiện có: Sofa, Bàn, Ghế, Giường, Tủ, Đèn. Không thêm/sửa danh mục và không UPDATE/DELETE 4 sản phẩm cũ.
+- Sequence khóa chính của `products` và `product_images` tăng theo bản ghi mới. Không thay đổi bảng/cột/index/ENUM, không cần migration cấu trúc.
+- Nội dung, giá và tồn kho là dữ liệu danh mục minh họa lấy từ bộ 28 sản phẩm đã có trong dự án, nay được lưu thật để dùng với API và thanh toán giả lập. Không chép điểm sao, đánh giá, lượt bán hoặc số đánh giá giả vào database.
+- Ảnh là URL Unsplash từ bộ nội dung hiện có, không tải file lên `uploads`; hình ảnh có thể mang tính minh họa và phụ thuộc kết nối Internet.
+- Không thêm đơn hàng, đánh giá, thanh toán hoặc giao dịch kho. Không thay đổi dữ liệu tài khoản.
+- File dữ liệu đầy đủ: [catalog_products.json](backend/database/catalog_products.json). Script: [seed_catalog.py](backend/database/seed_catalog.py). Khi chạy lại, sản phẩm trùng tên được bỏ qua; không cập nhật đè dữ liệu hoặc thêm ảnh trùng cho những sản phẩm đó.
+
+Danh sách đã thêm (giá VND):
+
+| ID | Sản phẩm | Giá | Tồn kho | Số ảnh |
+| --- | --- | ---: | ---: | ---: |
+| 6 | Sofa Góc L-Shape Scandinavia Nord | 18500000 | 12 | 3 |
+| 7 | Bàn Trà Tròn Đôi Slate Marble & Walnut | 6800000 | 18 | 2 |
+| 8 | Ghế Thư Giãn Lounge Chair Eames Style | 14200000 | 8 | 2 |
+| 9 | Giường Ngủ Nhật Bản Muji Zen Minimalist | 15900000 | 10 | 2 |
+| 10 | Bàn Ăn Mở Rộng Bắc Âu OAK Nature | 13500000 | 14 | 2 |
+| 11 | Bộ 4 Ghế Ăn Bọc Đệm Elbow Hans Wegner | 5200000 | 25 | 2 |
+| 12 | Tủ Kệ Tivi Gỗ Óc Chó Walnut Floating Console | 9900000 | 9 | 2 |
+| 13 | Bàn Làm Việc Studio Desk Gỗ Sồi Có Ngăn Kéo | 7500000 | 15 | 2 |
+| 14 | Sofa Văng Đôi 2 Chỗ Cozy Velvet Green | 11200000 | 7 | 2 |
+| 15 | Giường Ngủ Bọc Vải Nệm Cloud King Size | 17800000 | 5 | 2 |
+| 16 | Tủ Quần Áo Cánh Kính Khung Nhôm Minimalist | 24500000 | 3 | 2 |
+| 17 | Đèn Cây Đứng Nordic Arc Brass Floor Lamp | 3600000 | 22 | 2 |
+| 18 | Tủ Đầu Giường Gỗ Tần Bì Có Ngăn Khóa Nightstand | 2800000 | 16 | 2 |
+| 19 | Ghế Làm Việc Công Thái Học Herman Leather Office Chair | 8900000 | 11 | 2 |
+| 20 | Kệ Sách Cây Khung Thép 5 Tầng Bookshelf Minimal | 4900000 | 0 | 2 |
+| 21 | Đèn Thả Bàn Ăn 3 Bóng Nghệ Thuật Trio Pendant | 3200000 | 13 | 2 |
+| 22 | Sofa Đơn Accent Chair Bọc Nhung Blush Pink | 6900000 | 9 | 2 |
+| 23 | Bàn Trang Điểm Gỗ Sồi Gương LED Vanity Table | 8400000 | 8 | 2 |
+| 24 | Kệ Trang Trí Floating Wall Shelf Gỗ Tần Bì 3 Tầng | 2200000 | 30 | 2 |
+| 25 | Sofa 3 Chỗ Bọc Da Ý Premium Leather Milano | 28500000 | 4 | 2 |
+| 26 | Bàn Cà Phê Gỗ Tái Chế Reclaimed Wood Coffee Table | 4500000 | 12 | 2 |
+| 27 | Tủ Bếp Trên Dưới Hiện Đại Kitchen Cabinet Set | 22000000 | 6 | 2 |
+| 28 | Ghế Bar Cao Chân Gỗ Bọc Da PU Counter Stool | 1850000 | 20 | 2 |
+| 29 | Đèn Ngủ Để Bàn Ceramic Table Lamp Gốm Thủ Công | 1250000 | 28 | 2 |
+| 30 | Bàn Làm Việc Đứng Điều Chỉnh Điện Standing Desk | 12500000 | 10 | 2 |
+| 31 | Tủ Giày Cửa Gỗ Kết Hợp Gương Full-Length Shoe Cabinet | 5800000 | 11 | 2 |
+| 32 | Ghế Xích Đu Trong Nhà Rattan Swing Chair Boho | 3900000 | 7 | 2 |
+| 33 | Sofa Góc Modular 5 Module Cấu Hình Tự Do | 24900000 | 5 | 2 |
+
+Kiểm tra trên SQLite độc lập: dữ liệu đáp ứng schema sản phẩm, mỗi sản phẩm có một ảnh chính, chạy seed hai lần không tăng thêm sản phẩm/ảnh. Việc bổ sung được ghi trong một transaction.
+
 ## Xóa đánh giá — 18/10/2026
 
 - Thêm `DELETE /api/product-reviews/{review_id}`: yêu cầu đăng nhập và chỉ cho phép xóa đánh giá thuộc tài khoản hiện tại. Đánh giá không tồn tại hoặc thuộc người khác đều trả 404; chưa đăng nhập bị từ chối.

@@ -29,16 +29,18 @@ class ASGIClient:
     def __init__(self, app):
         self.app = app
 
-    def request(self, method, path, payload=None):
+    def request(self, method, path, payload=None, body=None, headers=None):
+        request_body = body if body is not None else json.dumps(payload).encode() if payload is not None else b""
+        request_headers = headers if headers is not None else [(b"content-type", b"application/json")]
         async def run():
             messages = []
             async def receive():
-                return {"type": "http.request", "body": json.dumps(payload).encode() if payload is not None else b"", "more_body": False}
+                return {"type": "http.request", "body": request_body, "more_body": False}
             async def send(message):
                 messages.append(message)
             await self.app({"type": "http", "asgi": {"version": "3.0"}, "http_version": "1.1", "method": method,
                             "scheme": "http", "path": path, "raw_path": path.encode(), "query_string": b"",
-                            "root_path": "", "headers": [(b"content-type", b"application/json")],
+                            "root_path": "", "headers": request_headers,
                             "client": ("test", 1), "server": ("test", 80)}, receive, send)
             status = next(message["status"] for message in messages if message["type"] == "http.response.start")
             body = b"".join(message.get("body", b"") for message in messages if message["type"] == "http.response.body")

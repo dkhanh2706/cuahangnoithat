@@ -32,6 +32,7 @@ class UserResponse(BaseModel):
     email: str
     phone: Optional[str] = None
     address: Optional[str] = None
+    avatar_url: Optional[str] = None
     role: str
     status: bool
     created_at: datetime
