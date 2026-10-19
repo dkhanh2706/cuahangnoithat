@@ -1,11 +1,11 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useRef } from "react";
 import { CheckCircle2, Heart, X } from "lucide-react";
 
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
-  const [cart, setCart] = useState(() => {
+  const [cart, setCartState] = useState(() => {
     try {
       const saved = localStorage.getItem("furni_cart");
       return saved ? JSON.parse(saved) : [];
@@ -13,6 +13,13 @@ export function CartProvider({ children }) {
       return [];
     }
   });
+
+  const cartRef = useRef(cart);
+  const setCart = (update) => {
+    const next = typeof update === "function" ? update(cartRef.current) : update;
+    cartRef.current = next;
+    setCartState(next);
+  };
 
   // wishlist stores full product objects (not just IDs)
   const [wishlistProducts, setWishlistProducts] = useState(() => {
@@ -72,6 +79,36 @@ export function CartProvider({ children }) {
     showToast(`Đã thêm "${product.name}" vào giỏ hàng!`, "success");
   };
 
+  // One synchronous operation: either the entire confirmed selection is added,
+  // or the cart is untouched, even if it changed during the availability request.
+  const addToCartBatch = (items) => {
+    const current = cartRef.current;
+    const seen = new Set();
+    for (const { product, quantity } of items) {
+      const existing = current.find((item) => item.product.id === product.id);
+      if (seen.has(product.id) || !Number.isInteger(quantity) || quantity < 1 ||
+          (existing?.quantity || 0) + quantity > product.stock_quantity) {
+        return { ok: false, error: `Số lượng "${product.name}" vượt tồn kho. Chưa thêm món nào; vui lòng kiểm tra lại giỏ hàng.` };
+      }
+      seen.add(product.id);
+    }
+    setCart((previous) => {
+      const next = previous.map((item) => ({ ...item }));
+      for (const { product, quantity } of items) {
+        const existing = next.find((item) => item.product.id === product.id);
+        if (existing) {
+          existing.product = product;
+          existing.quantity += quantity;
+        } else {
+          next.push({ id: product.id, product, quantity });
+        }
+      }
+      return next;
+    });
+    showToast(`Đã thêm ${items.length > 1 ? `cả bộ ${items.length} sản phẩm` : `"${items[0].product.name}"`} vào giỏ hàng!`);
+    return { ok: true };
+  };
+
   const removeFromCart = (productId) => {
     setCart((prev) => prev.filter((item) => item.product.id !== productId));
     showToast("Đã xóa sản phẩm khỏi giỏ hàng.", "info");
@@ -126,6 +163,7 @@ export function CartProvider({ children }) {
         wishlist,
         wishlistProducts,
         addToCart,
+        addToCartBatch,
         removeFromCart,
         updateQuantity,
         clearCart,

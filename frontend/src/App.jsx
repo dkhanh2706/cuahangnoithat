@@ -20,6 +20,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./admin/AdminRoute";
 import AdminLayout from "./admin/layouts/AdminLayout";
 import UserManagement from "./admin/pages/UserManagement";
+import ProductManagement from "./admin/pages/ProductManagement";
 
 import { CartProvider } from "./context/CartContext";
 
@@ -53,6 +54,8 @@ function App() {
               </AdminRoute>
             }
           />
+
+          <Route path="/admin/products" element={<AdminRoute><AdminLayout><ProductManagement /></AdminLayout></AdminRoute>} />
 
           {/* ================= STORE CLIENT ================= */}
 

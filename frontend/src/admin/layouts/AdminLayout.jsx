@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, NavLink, useNavigate, useLocation, Outlet } from "react-router-dom";
 import {
   Users,
+  Package,
   Store,
   LogOut,
   Menu,
@@ -28,6 +29,7 @@ function AdminLayout({ children }) {
   };
 
   const getPageTitle = () => {
+    if (location.pathname.includes("/admin/products")) return "Quản Lý Sản Phẩm";
     if (location.pathname.includes("/admin/users") || location.pathname === "/admin") {
       return "Quản Lý Tài Khoản Người Dùng";
     }
@@ -79,6 +81,10 @@ function AdminLayout({ children }) {
           >
             <Users size={18} />
             <span>Quản lý Người dùng</span>
+          </NavLink>
+
+          <NavLink to="/admin/products" className={({ isActive }) => `admin-nav-item${isActive ? " active" : ""}`} onClick={() => setSidebarOpen(false)}>
+            <Package size={18} /><span>Quản lý Sản phẩm</span>
           </NavLink>
 
           <div className="nav-group-title" style={{ marginTop: "24px" }}>

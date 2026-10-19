@@ -1,5 +1,13 @@
 # Thay đổi database: lịch sử đơn hàng và đánh giá sản phẩm
 
+## Chat tư vấn nội thất — 19/10/2026
+
+- **Không thay đổi cấu trúc hoặc dữ liệu database**, không chạy migration hay seed cho tính năng này.
+- `POST /api/advisor/chat` chỉ đọc sản phẩm đang mở bán, ảnh và danh mục để tư vấn; không đề xuất mua hàng hết tồn kho. Các bộ được ghép từ sản phẩm thật và tính giá bằng tổng từng món, không dùng ID/giá mẫu của trang bộ sưu tập.
+- `POST /api/advisor/check-cart` chỉ đọc lại giá, trạng thái và tồn kho trước khi khách xác nhận. Nếu bất kỳ món nào không khả dụng hoặc số lượng (kể cả trong giỏ hiện tại) vượt tồn kho, từ chối cả lựa chọn.
+- Khách bấm **Có** thì frontend thêm món lẻ/cả bộ vào giỏ localStorage `furni_cart` đang có; **Không** không thêm gì. Giá thay đổi cần xác nhận lại. Không tạo đơn, giữ chỗ hoặc trừ tồn kho từ chat.
+- Nội dung chat nằm trong bộ nhớ giao diện, không lưu vào database và không gọi dịch vụ AI ngoài. Kiểm thử dùng SQLite riêng; không ghi dữ liệu thử vào database đang cấu hình của dự án.
+
 ## Ảnh đại diện và hồ sơ cá nhân — 18/10/2026
 
 ### Thay đổi cấu trúc đã áp dụng

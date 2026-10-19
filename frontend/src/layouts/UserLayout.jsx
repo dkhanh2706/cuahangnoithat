@@ -3,6 +3,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import { ArrowUp } from "lucide-react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import FurnitureChat from "../components/FurnitureChat";
 
 function ScrollToTopOnNavigate() {
   const { pathname, search } = useLocation();
@@ -43,6 +44,7 @@ function UserLayout() {
       </main>
 
       <Footer />
+      <FurnitureChat />
 
       {/* Floating Back To Top Button */}
       <button

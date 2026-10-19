@@ -6,7 +6,8 @@ from fastapi import (
     Query
 )
 
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy import or_
 
 from database.database import get_db
@@ -48,7 +49,7 @@ def get_products(
     ),
     db: Session = Depends(get_db)
 ):
-    query = db.query(Product)
+    query = db.query(Product).options(selectinload(Product.images)).filter(Product.status.is_(True))
 
     if search:
         search_value = f"%{search}%"
@@ -79,6 +80,14 @@ def get_products(
 # PUBLIC
 # =========================
 
+@router.get("/admin/all", response_model=list[ProductResponse])
+def get_admin_products(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_admin)
+):
+    return db.query(Product).options(selectinload(Product.images)).order_by(Product.id.desc()).all()
+
+
 @router.get(
     "/{product_id}",
     response_model=ProductResponse
@@ -88,7 +97,8 @@ def get_product(
     db: Session = Depends(get_db)
 ):
     product = db.query(Product).filter(
-        Product.id == product_id
+        Product.id == product_id,
+        Product.status.is_(True)
     ).first()
 
     if not product:
@@ -223,8 +233,12 @@ def delete_product(
             detail="Không tìm thấy sản phẩm"
         )
 
-    db.delete(product)
-    db.commit()
+    try:
+        db.delete(product)
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=409, detail="Sản phẩm đang được sử dụng. Hãy khóa sản phẩm thay vì xóa.")
 
     return {
         "message": "Xóa sản phẩm thành công"
