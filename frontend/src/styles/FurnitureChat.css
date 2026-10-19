@@ -17,6 +17,7 @@
 .furniture-chat-messages { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 16px; background: #f8f7f3; scrollbar-width: thin; }
 .furniture-chat-note { margin: 0 0 18px; text-align: center; font-size: 10px; color: var(--text-secondary); }
 .furniture-chat-message { margin-bottom: 17px; }
+.furniture-chat-sender { display: block; margin: 0 0 4px 3px; font-size: 10px; color: var(--text-secondary); }
 .furniture-chat-bubble { white-space: pre-wrap; overflow-wrap: anywhere; border-radius: 13px 13px 13px 3px; background: #fff; padding: 12px 14px; font-size: 12px; line-height: 1.8; border: 1px solid var(--border-light); }
 .furniture-chat-message.user { display: flex; justify-content: flex-end; }
 .furniture-chat-message.user .furniture-chat-bubble { max-width: 88%; background: var(--color-primary); color: #fff; border-radius: 13px 13px 3px 13px; border: 0; }

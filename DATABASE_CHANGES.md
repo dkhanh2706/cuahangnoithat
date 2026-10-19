@@ -1,5 +1,17 @@
 # Thay đổi database: lịch sử đơn hàng và đánh giá sản phẩm
 
+## Tư vấn trực tiếp với admin, chat tạm thời — 20/10/2026
+
+- **Không thêm/sửa bảng, cột hay dữ liệu trong database đang cấu hình của dự án. Không migration, không seed.** Phương án 3 bảng lịch sử chat không được áp dụng theo lựa chọn của bạn.
+- Tin nhắn, danh sách phiên và heartbeat admin chỉ giữ trong RAM của **một tiến trình backend**. Không ghi chat vào PostgreSQL, SQLite, file, localStorage hay sessionStorage. Backend khởi động/reload lại thì mất toàn bộ các phiên và admin chuyển offline.
+- Admin mở `/admin/chat` và bật **Nhận tư vấn** để gửi heartbeat mỗi 10 giây. Server dùng đồng hồ của server để kiểm tra `now - lastSeen < 30 giây`; đúng 30 giây là offline. Chỉ tài khoản admin đang có quyền mới gửi heartbeat/trả lời được. Mỗi tab có lease riêng; đóng một tab không tắt tab tư vấn khác còn online.
+- Khách chưa đăng nhập vẫn được chat. Tên khách đã đăng nhập lấy từ tài khoản qua thao tác đọc. Phiên khách có token ngẫu nhiên chỉ ở bộ nhớ giao diện; khách khác không thể xem/xóa chat bằng cách biết ID. Admin không nhận token của khách.
+- Admin online: lưu tin khách vào hàng chờ RAM, bot không trả lời cùng tin đó. Admin offline hoặc tắt nhận tư vấn: bot trả lời các tin chưa được admin phản hồi. Có mã gửi để chống trùng khi thử lại; từ chối trả lời thủ công vào tin đã được bot trả lời.
+- Nút **Cuộc trò chuyện mới** xóa phiên trên server và giao diện. Đăng xuất, tải lại/đóng trang, hoặc rời website gửi yêu cầu kết thúc phiên; phiên biến mất khỏi danh sách admin. Thu gọn khung chat và chuyển trang nội bộ cửa hàng vẫn giữ cuộc trò chuyện. Nếu trình duyệt đóng đột ngột hoặc mất mạng khiến yêu cầu xóa không tới server, phiên tự bị dọn sau 90 giây không có tín hiệu khách, với tác vụ dọn chạy mỗi 5 giây (khoảng 90–95 giây).
+- Admin có thể gửi món lẻ/cả bộ từ sản phẩm thật còn hàng; chỉ khi khách chọn **Có** mới thêm vào giỏ localStorage hiện có. Kiểm tra lại giá/tồn kho vẫn dùng `/api/advisor/check-cart`. Xóa chat không xóa giỏ hàng, tài khoản hoặc dữ liệu đơn hàng.
+- Dữ liệu RAM không dùng chung giữa nhiều worker. Chạy cấu hình hiện tại **một worker** (`uvicorn main:app --reload` khi phát triển); không chạy nhiều worker/instance độc lập cho tính năng này.
+- Kiểm thử API và trình duyệt sử dụng database SQLite riêng trong bộ nhớ. Tài khoản/tồn kho chỉnh trong máy chủ thử không ảnh hưởng database thật.
+
 ## Chat tư vấn nội thất — 19/10/2026
 
 - **Không thay đổi cấu trúc hoặc dữ liệu database**, không chạy migration hay seed cho tính năng này.

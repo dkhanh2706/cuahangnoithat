@@ -21,6 +21,7 @@ import AdminRoute from "./admin/AdminRoute";
 import AdminLayout from "./admin/layouts/AdminLayout";
 import UserManagement from "./admin/pages/UserManagement";
 import ProductManagement from "./admin/pages/ProductManagement";
+import CustomerChat from "./admin/pages/CustomerChat";
 
 import { CartProvider } from "./context/CartContext";
 
@@ -56,6 +57,7 @@ function App() {
           />
 
           <Route path="/admin/products" element={<AdminRoute><AdminLayout><ProductManagement /></AdminLayout></AdminRoute>} />
+          <Route path="/admin/chat" element={<AdminRoute><AdminLayout><CustomerChat /></AdminLayout></AdminRoute>} />
 
           {/* ================= STORE CLIENT ================= */}
 

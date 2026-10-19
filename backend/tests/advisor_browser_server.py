@@ -15,15 +15,25 @@ from sqlalchemy.orm import Session
 
 from test_furniture_advisor import FurnitureAdvisorTests
 from models.product import Product
+from models.user import User
 from database.database import get_db
 from routers.products import router as products_router
 from routers.product_images import router as images_router
 from routers.categories import router as categories_router
 from routers.store_reviews import router as reviews_router
+from routers.live_chat import router as live_chat_router
+from routers.users import router as users_router
+from services.live_chat import live_chat
+from utils.security import create_access_token
 
 fixture = FurnitureAdvisorTests()
 fixture.setUp()
 app = fixture.app
+admin_user = User(full_name="Admin kiểm thử", email="adminhdk@gmail.com", password_hash="unused", role="ADMIN", status=True)
+customer_user = User(full_name="Khách kiểm thử", email="browser-live@example.com", password_hash="unused", role="CUSTOMER", status=True)
+fixture.db.add_all([admin_user, customer_user]); fixture.db.commit()
+admin_credentials = {"access_token": create_access_token({"sub": str(admin_user.id)}), "user": {"id": admin_user.id, "full_name": admin_user.full_name, "email": admin_user.email, "role": admin_user.role}}
+customer_credentials = {"access_token": create_access_token({"sub": str(customer_user.id)}), "user": {"id": customer_user.id, "full_name": customer_user.full_name, "email": customer_user.email, "role": customer_user.role}}
 fixture.db.close()
 db_lock = Lock()
 
@@ -37,8 +47,21 @@ def browser_db():
 
 
 app.dependency_overrides[get_db] = browser_db
-for router in (products_router, images_router, categories_router, reviews_router):
+for router in (products_router, images_router, categories_router, reviews_router, live_chat_router, users_router):
     app.include_router(router)
+
+
+@app.get("/__test/credentials/{role}")
+def credentials(role: str):
+    return admin_credentials if role == "admin" else customer_credentials
+
+
+@app.post("/__test/expire-presence")
+def expire_presence():
+    with live_chat.lock:
+        for lease in live_chat.presence.values():
+            lease["last_seen"] -= 31
+    return {"ok": True}
 
 
 class ProductChange(BaseModel):

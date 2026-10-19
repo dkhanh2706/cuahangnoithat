@@ -84,6 +84,7 @@ try {
   console.log("PASS: decline bundle leaves cart unchanged");
 
   await click('button[aria-label="Cuộc trò chuyện mới"]');
+  await wait(() => evaluate('document.querySelectorAll(".furniture-chat-message").length === 1 && !document.querySelector(\'button[aria-label="Cuộc trò chuyện mới"]\').disabled'), "chat reset");
   await send("Tư vấn phòng ngủ ngân sách 30 triệu");
   const expected = await evaluate('document.querySelectorAll(".furniture-chat-offer .furniture-chat-product").length');
   await evaluate(`(() => { const button = document.querySelector(${JSON.stringify(mainActions + " button.yes")}); button.click(); button.click(); })()`);

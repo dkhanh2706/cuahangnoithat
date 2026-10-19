@@ -62,6 +62,7 @@ function Header() {
   }, [location.pathname]);
 
   const handleLogout = () => {
+    window.dispatchEvent(new Event("session-ending"));
     localStorage.removeItem("access_token");
     localStorage.removeItem("user");
     navigate("/");

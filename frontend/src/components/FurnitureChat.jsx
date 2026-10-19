@@ -4,29 +4,24 @@ import { Check, ChevronDown, LoaderCircle, MessageCircle, RotateCcw, Send, Shopp
 import { useCart } from "../context/CartContext";
 import api from "../services/api";
 import { productImageUrl } from "../services/media";
+import useCustomerChat from "../hooks/useCustomerChat";
 import "../styles/FurnitureChat.css";
 
 const price = (value) => new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(value);
-const welcome = () => ({
-  id: crypto.randomUUID(), role: "assistant",
-  text: "Chào bạn! Tôi là trợ lý tư vấn tự động FurniHome. Bạn muốn sắm nội thất cho phòng nào? Cho tôi biết diện tích và ngân sách, tôi sẽ gợi ý món lẻ hoặc ghép bộ phù hợp nhé.",
-  offers: [], suggestions: ["Phòng ngủ nên có những món gì?", "Tư vấn phòng khách", "Tìm sofa dưới 15 triệu"],
-});
 
 export default function FurnitureChat() {
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState(() => [welcome()]);
+  const chat = useCustomerChat(open);
+  const { messages, setMessages, error, retryMessage } = chat;
   const [input, setInput] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
-  const [retryMessage, setRetryMessage] = useState("");
+  const [cartBusy, setBusy] = useState(false);
+  const busy = cartBusy || chat.busy;
   const { cart, addToCartBatch } = useCart();
   const { pathname } = useLocation();
   const panelId = useId();
   const listRef = useRef(null);
   const inputRef = useRef(null);
   const launcherRef = useRef(null);
-  const sendingRef = useRef(false);
   const actingRef = useRef(false);
   const requestRef = useRef(null);
   const mountedRef = useRef(true);
@@ -53,54 +48,16 @@ export default function FurnitureChat() {
 
   const send = async (value, retry = false) => {
     const text = value.trim();
-    if (!text || text.length > 1200 || sendingRef.current || actingRef.current) return;
-    sendingRef.current = true;
-    setBusy("chat");
-    setError("");
-    setRetryMessage("");
+    if (!text || text.length > 1200 || chat.busy || actingRef.current) return;
     setInput("");
-    // A newer consultation closes older undecided offers, preventing accidental
-    // confirmation of a selection from a different point in the conversation.
-    setMessages((previous) => [...previous.map((message) => ({ ...message,
-      offers: message.offers?.map((offer) => offer.status === "pending" ? { ...offer, status: "expired" } : offer),
-    })), ...(retry ? [] : [{ id: crypto.randomUUID(), role: "user", text }])]);
-    const history = messages.filter((message) => message.role === "user").map((message) => message.text);
-    if (retry && history.at(-1) === text) history.pop();
     const last = messages.findLast((message) => message.role === "assistant" && message.offers?.length);
     const suggestedIds = [...new Set(last?.offers.flatMap((offer) => offer.items.map((item) => item.product.id)) || [])].slice(0, 8);
     const productMatch = pathname.match(/^\/products\/(\d+)\/?$/);
-    const controller = new AbortController();
-    requestRef.current = controller;
-    try {
-      const { data } = await api.post("/api/advisor/chat", {
-        message: text, history: history.slice(-12), suggested_ids: suggestedIds,
-        product_id: productMatch ? Number(productMatch[1]) : null,
-      }, { signal: controller.signal, timeout: 20000 });
-      if (!mountedRef.current) return;
-      // Give bundle members their own independent yes/no confirmation as well.
-      const offers = data.offers.flatMap((offer) => {
-        const main = { ...offer, status: "pending", error: "" };
-        if (offer.kind !== "bundle") return [main];
-        return [main, ...offer.items.map((item) => ({
-          id: `single-${item.product.id}`, kind: "product", title: item.product.name,
-          items: [item], total_price: item.product.price * item.quantity,
-          parentId: offer.id, status: "pending", error: "",
-        }))];
-      });
-      setMessages((previous) => [...previous, { id: crypto.randomUUID(), role: "assistant", text: data.reply, offers, suggestions: data.suggestions }]);
-    } catch (failure) {
-      if (mountedRef.current && failure.code !== "ERR_CANCELED") {
-        setError("Chưa kết nối được trợ lý tư vấn. Bạn có thể thử lại; giỏ hàng chưa thay đổi.");
-        setRetryMessage(text);
-      }
-    } finally {
-      sendingRef.current = false;
-      if (mountedRef.current) setBusy(false);
-    }
+    await chat.send(text, productMatch ? Number(productMatch[1]) : null, suggestedIds, retry);
   };
 
   const confirm = async (message, offer) => {
-    if (actingRef.current || sendingRef.current || offer.status !== "pending") return;
+    if (actingRef.current || chat.busy || offer.status !== "pending") return;
     actingRef.current = true;
     setBusy("cart");
     updateOffer(message.id, offer.id, { status: "checking", error: "" });
@@ -147,9 +104,9 @@ export default function FurnitureChat() {
     }
   };
 
-  const reset = () => {
-    if (sendingRef.current || actingRef.current) return;
-    setMessages([welcome()]); setError(""); setRetryMessage(""); setInput(""); inputRef.current?.focus();
+  const reset = async () => {
+    if (chat.busy || actingRef.current) return;
+    await chat.reset(); setInput(""); inputRef.current?.focus();
   };
   const lastAssistant = messages.findLast((message) => message.role === "assistant");
 
@@ -159,14 +116,15 @@ export default function FurnitureChat() {
         onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); close(); } }}>
         <header className="furniture-chat-header">
           <div className="furniture-chat-avatar"><Sparkles size={22} /></div>
-          <div><h2 id={`${panelId}-title`}>Tư vấn FurniHome</h2><p><span /> Trợ lý tự động · Theo danh mục cửa hàng</p></div>
+          <div><h2 id={`${panelId}-title`}>Tư vấn FurniHome</h2><p><span /> {chat.online ? "Nhân viên đang online" : "Trợ lý tự động đang hỗ trợ"}</p></div>
           <button type="button" onClick={reset} disabled={busy} title="Cuộc trò chuyện mới" aria-label="Cuộc trò chuyện mới"><RotateCcw size={17} /></button>
           <button type="button" onClick={close} aria-label="Đóng khung tư vấn"><ChevronDown size={23} /></button>
         </header>
 
         <div className="furniture-chat-messages" ref={listRef} role="log" aria-label="Cuộc trò chuyện tư vấn" aria-live="polite" aria-relevant="additions text">
-          <p className="furniture-chat-note">Tư vấn từ sản phẩm thực tế. Chỉ thêm vào giỏ khi bạn chọn Có.</p>
+          <p className="furniture-chat-note">Chat tạm thời · Làm mới, đăng xuất hoặc rời trang sẽ xóa cuộc trò chuyện.</p>
           {messages.map((message) => <div key={message.id} className={`furniture-chat-message ${message.role}`}>
+            {message.role === "assistant" && <small className="furniture-chat-sender">{message.source === "admin" ? "Tư vấn viên FurniHome" : "Trợ lý tự động"}</small>}
             <p className="furniture-chat-bubble">{message.text}</p>
             {message.offers?.filter((offer) => !offer.parentId).map((offer) => <div className="furniture-chat-offer" key={offer.id}>
               {offer.kind === "bundle" && <h3><ShoppingBag size={16} />{offer.title}</h3>}
@@ -186,7 +144,8 @@ export default function FurnitureChat() {
             </div>)}
           </div>)}
           {busy && <div className="furniture-chat-working" role="status"><LoaderCircle size={15} className="furniture-chat-spin" />{busy === "cart" ? "Đang kiểm tra sản phẩm…" : "Đang chọn gợi ý cho bạn…"}</div>}
-          {error && <div className="furniture-chat-error" role="alert">{error}{retryMessage && <button type="button" disabled={busy} onClick={() => send(retryMessage, true)}>Thử lại</button>}</div>}
+          {chat.waiting && !busy && <div className="furniture-chat-working" role="status">Đã chuyển tin cho tư vấn viên. Bạn có thể nhắn thêm trong lúc chờ.</div>}
+          {error && <div className="furniture-chat-error" role="alert">{error}{retryMessage && <button type="button" disabled={busy} onClick={() => send(retryMessage.message, true)}>Thử lại</button>}</div>}
           {!busy && !error && <div className="furniture-chat-suggestions">{lastAssistant?.suggestions?.map((suggestion) => <button type="button" key={suggestion} onClick={() => send(suggestion)}>{suggestion}</button>)}</div>}
         </div>
 

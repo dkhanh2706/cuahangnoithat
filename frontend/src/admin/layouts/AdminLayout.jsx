@@ -11,6 +11,7 @@ import {
   ShieldCheck,
   ChevronRight,
   Sparkles,
+  MessageCircle,
 } from "lucide-react";
 import "../styles/Admin.css";
 
@@ -22,6 +23,7 @@ function AdminLayout({ children }) {
   const user = JSON.parse(localStorage.getItem("user") || "null");
 
   const handleLogout = () => {
+    window.dispatchEvent(new Event("session-ending"));
     localStorage.removeItem("access_token");
     localStorage.removeItem("user");
     navigate("/login");
@@ -29,6 +31,7 @@ function AdminLayout({ children }) {
   };
 
   const getPageTitle = () => {
+    if (location.pathname.includes("/admin/chat")) return "Tư Vấn Khách Hàng";
     if (location.pathname.includes("/admin/products")) return "Quản Lý Sản Phẩm";
     if (location.pathname.includes("/admin/users") || location.pathname === "/admin") {
       return "Quản Lý Tài Khoản Người Dùng";
@@ -37,7 +40,7 @@ function AdminLayout({ children }) {
   };
 
   return (
-    <div className="admin-root">
+    <div className={`admin-root${location.pathname.startsWith("/admin/chat") ? " admin-chat-root" : ""}`}>
       {/* Mobile Backdrop */}
       {sidebarOpen && (
         <div
@@ -85,6 +88,10 @@ function AdminLayout({ children }) {
 
           <NavLink to="/admin/products" className={({ isActive }) => `admin-nav-item${isActive ? " active" : ""}`} onClick={() => setSidebarOpen(false)}>
             <Package size={18} /><span>Quản lý Sản phẩm</span>
+          </NavLink>
+
+          <NavLink to="/admin/chat" className={({ isActive }) => `admin-nav-item${isActive ? " active" : ""}`} onClick={() => setSidebarOpen(false)}>
+            <MessageCircle size={18} /><span>Tư vấn khách hàng</span>
           </NavLink>
 
           <div className="nav-group-title" style={{ marginTop: "24px" }}>
