@@ -230,7 +230,7 @@ function CollectionDetail() {
               </div>
               <h3>Sở hữu trọn vẹn không gian {collection.title}</h3>
               <p>
-                Tiết kiệm thời gian phối đồ và chi phí với gói nội thất đồng bộ từ FurniHome. Cam kết chuẩn tỷ lệ, đồng nhất màu sắc và hỗ trợ lắp đặt miễn phí tại nhà.
+                Tiết kiệm thời gian phối đồ và chi phí với gói nội thất đồng bộ từ CHNT. Cam kết chuẩn tỷ lệ, đồng nhất màu sắc và hỗ trợ lắp đặt miễn phí tại nhà.
               </p>
               <div className="bundle-perks-list">
                 <span>

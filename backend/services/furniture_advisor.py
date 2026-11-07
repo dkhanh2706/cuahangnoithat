@@ -167,7 +167,7 @@ def advise(request, products):
     if any(contains(text, term) for term in ("thanh toan", "don hang", "dat hang", "lich su", "gio hang")) and not requested_kind(text):
         return reply("Bạn mở Giỏ hàng để kiểm tra các món và số lượng. Thanh toán hiện là giả lập DEMO, không thu tiền và không trừ tồn kho; đăng nhập để đặt đơn và xem ở Lịch sử đơn hàng. Khi tôi gợi ý món lẻ hoặc cả bộ, bạn có thể bấm Có để thêm vào giỏ, hoặc Không để bỏ qua.")
     if text in ("xin chao", "chao", "hi", "hello", "alo"):
-        return reply("Chào bạn, tôi là trợ lý tư vấn tự động của FurniHome. Bạn đang muốn bố trí phòng nào, diện tích khoảng bao nhiêu và dự kiến ngân sách thế nào? Tôi có thể gợi ý món lẻ hoặc ghép một bộ phù hợp từ sản phẩm đang có.")
+        return reply("Chào bạn, tôi là trợ lý tư vấn tự động của CHNT. Bạn đang muốn bố trí phòng nào, diện tích khoảng bao nhiêu và dự kiến ngân sách thế nào? Tôi có thể gợi ý món lẻ hoặc ghép một bộ phù hợp từ sản phẩm đang có.")
     if any(contains(text, term) for term in ("cam on", "thank")):
         return reply("Rất vui được hỗ trợ bạn! Bạn cần tôi điều chỉnh bộ nội thất hay tìm thêm món nào không?")
     if text in ("co", "dong y", "ok", "khong", "khong them"):

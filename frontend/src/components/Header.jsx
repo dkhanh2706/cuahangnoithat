@@ -95,10 +95,10 @@ function Header() {
           {/* Brand Logo */}
           <Link to="/" className="brand">
             <div className="brand-logo">
-              <span>F</span>
+              <span>C</span>
             </div>
             <div className="brand-text">
-              <h2>FurniHome</h2>
+              <h2>CHNT</h2>
               <span>Interior Living</span>
             </div>
           </Link>
@@ -283,9 +283,9 @@ function Header() {
           >
             <div className="drawer-header">
               <div className="brand">
-                <div className="brand-logo">F</div>
+                <div className="brand-logo">C</div>
                 <div className="brand-text">
-                  <h2>FurniHome</h2>
+                  <h2>CHNT</h2>
                   <span>Interior Living</span>
                 </div>
               </div>

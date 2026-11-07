@@ -271,7 +271,7 @@ function UserManagement() {
           <span className="admin-section-tag">HỆ THỐNG QUẢN TRỊ NGƯỜI DÙNG</span>
           <h1>Quản Lý Tài Khoản</h1>
           <p>
-            Xem, phân quyền, quản lý trạng thái và bảo mật cho tất cả tài khoản trong hệ thống FurniHome.
+            Xem, phân quyền, quản lý trạng thái và bảo mật cho tất cả tài khoản trong hệ thống CHNT.
           </p>
         </div>
 

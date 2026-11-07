@@ -41,7 +41,7 @@ def ensure_single_admin():
                     email=ADMIN_EMAIL,
                     password_hash=hash_password(ADMIN_PASSWORD),
                     phone="0987654321",
-                    address="Hệ thống quản trị FurniHome",
+                    address="Hệ thống quản trị CHNT",
                     role="ADMIN",
                     status=True
                 )

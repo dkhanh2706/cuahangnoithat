@@ -181,7 +181,7 @@ function ProductDetail() {
               </div>
               <div className="spec-item">
                 <span>Xuất xứ & Thiết kế</span>
-                <strong>FurniHome Design (Scandinavia)</strong>
+                <strong>CHNT Design (Scandinavia)</strong>
               </div>
             </div>
 

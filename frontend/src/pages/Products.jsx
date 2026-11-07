@@ -261,7 +261,7 @@ function Products() {
     }
     return {
       name: "Tất cả sản phẩm",
-      eyebrow: "FURNIHOME LIVING",
+      eyebrow: "CHNT LIVING",
       title: "Bộ Sưu Tập Nội Thất Tinh Tế & Hiện Đại",
       description:
         "Khám phá những thiết kế nội thất Scandinavia & Japandi được chế tác từ gỗ sồi tự nhiên, đá cẩm thạch và vải dệt cao cấp.",

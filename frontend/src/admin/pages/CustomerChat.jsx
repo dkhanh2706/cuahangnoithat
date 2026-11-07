@@ -103,7 +103,7 @@ export default function CustomerChat() {
 
   return <div className="admin-chat-page">
     <div className="admin-chat-heading">
-      <div><span className="admin-chat-eyebrow">FURNIHOME SUPPORT</span><h1>Tư vấn khách hàng</h1><p>Trả lời trực tiếp khi online. Bot tiếp nhận khi bạn offline.</p></div>
+      <div><span className="admin-chat-eyebrow">CHNT SUPPORT</span><h1>Tư vấn khách hàng</h1><p>Trả lời trực tiếp khi online. Bot tiếp nhận khi bạn offline.</p></div>
       <button type="button" className={`admin-chat-toggle ${presence.online ? "online" : ""}`} aria-pressed={accepting} onClick={() => setAccepting(!accepting)}>
         {presence.online ? <Wifi size={18} /> : <WifiOff size={18} />}{accepting ? "Tắt nhận tư vấn" : "Bật nhận tư vấn"}
       </button>

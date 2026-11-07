@@ -115,7 +115,7 @@ function Cart() {
               <ShoppingBag size={40} />
             </div>
             <h2>Giỏ hàng đang trống</h2>
-            <p>Khám phá bộ sưu tập nội thất cao cấp của FurniHome và thêm những sản phẩm yêu thích vào giỏ hàng của bạn.</p>
+            <p>Khám phá bộ sưu tập nội thất cao cấp của CHNT và thêm những sản phẩm yêu thích vào giỏ hàng của bạn.</p>
             <Link to="/products" className="empty-cart-cta">
               <ArrowLeft size={16} />
               <span>Khám phá sản phẩm</span>
@@ -450,7 +450,7 @@ function Cart() {
             </div>
             <h2>Đặt hàng thành công!</h2>
             <p>
-              Cảm ơn quý khách đã tin tưởng FurniHome. Mã đơn hàng:{" "}
+              Cảm ơn quý khách đã tin tưởng CHNT. Mã đơn hàng:{" "}
               <strong className="order-code-text">{orderCode}</strong>
               <br />Thanh toán giả lập thành công. Đơn đã được lưu vào lịch sử, không thu tiền thật.
             </p>

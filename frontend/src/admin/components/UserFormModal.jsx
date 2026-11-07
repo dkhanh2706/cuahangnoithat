@@ -154,7 +154,7 @@ function UserFormModal({ isOpen, onClose, onSubmit, editingUser = null, loading 
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="user@furnihome.vn"
+                placeholder="user@chnt.vn"
                 disabled={isEditing}
                 required
               />

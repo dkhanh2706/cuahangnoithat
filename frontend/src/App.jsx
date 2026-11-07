@@ -25,8 +25,6 @@ import CustomerChat from "./admin/pages/CustomerChat";
 
 import { CartProvider } from "./context/CartContext";
 
-import "./App.css";
-
 function App() {
   return (
     <CartProvider>

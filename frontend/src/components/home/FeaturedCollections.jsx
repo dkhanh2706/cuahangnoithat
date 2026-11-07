@@ -91,7 +91,7 @@ function FeaturedCollections() {
             <span className="philosophy-tag">TRIẾT LÝ THIẾT KẾ</span>
             <h3>Ít hơn, nhưng tốt hơn và bền lâu hơn.</h3>
             <p>
-              Mỗi sản phẩm tại FurniHome là một bản giao hưởng giữa tỷ lệ hoàn hảo, vật liệu thân thiện môi trường và giá trị sử dụng lâu dài qua năm tháng.
+              Mỗi sản phẩm tại CHNT là một bản giao hưởng giữa tỷ lệ hoàn hảo, vật liệu thân thiện môi trường và giá trị sử dụng lâu dài qua năm tháng.
             </p>
 
             <button

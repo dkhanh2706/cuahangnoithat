@@ -104,7 +104,7 @@ function Register() {
           <div className="auth-visual-overlay" />
           <div className="auth-visual-content">
             <div className="auth-brand-pill">
-              <Sparkles size={14} /> GIA NHẬP FURNIHOME
+              <Sparkles size={14} /> GIA NHẬP CHNT
             </div>
 
             <h1>
@@ -146,7 +146,7 @@ function Register() {
             <div className="auth-heading">
               <span className="auth-step-tag">TẠO TÀI KHOẢN MỚI</span>
               <h2>Đăng ký thành viên</h2>
-              <p>Điền thông tin bên dưới để bắt đầu trải nghiệm cùng FurniHome.</p>
+              <p>Điền thông tin bên dưới để bắt đầu trải nghiệm cùng CHNT.</p>
             </div>
 
             {error && (
@@ -298,7 +298,7 @@ function Register() {
             </form>
 
             <div className="auth-switch-prompt">
-              <span>Đã có tài khoản FurniHome?</span>
+              <span>Đã có tài khoản CHNT?</span>
               <Link to="/login">Đăng nhập tại đây</Link>
             </div>
 

@@ -3,7 +3,6 @@ import { Link, NavLink, useNavigate, useLocation, Outlet } from "react-router-do
 import {
   Users,
   Package,
-  Store,
   LogOut,
   Menu,
   X,
@@ -54,11 +53,11 @@ function AdminLayout({ children }) {
         <div className="admin-sidebar-header">
           <Link to="/admin" className="admin-brand">
             <div className="admin-brand-icon">
-              <span>F</span>
+              <span>C</span>
               <Crown size={14} className="brand-crown" />
             </div>
             <div className="admin-brand-text">
-              <h2>FurniHome</h2>
+              <h2>CHNT</h2>
               <span className="brand-badge">ADMIN PORTAL</span>
             </div>
           </Link>
@@ -94,19 +93,6 @@ function AdminLayout({ children }) {
             <MessageCircle size={18} /><span>Tư vấn khách hàng</span>
           </NavLink>
 
-          <div className="nav-group-title" style={{ marginTop: "24px" }}>
-            LIÊN KẾT NGOÀI
-          </div>
-
-          <Link
-            to="/"
-            className="admin-nav-item external"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <Store size={18} />
-            <span>Xem Cửa Hàng FurniHome</span>
-          </Link>
         </div>
 
         {/* Sidebar Footer with Admin Profile */}
@@ -162,11 +148,6 @@ function AdminLayout({ children }) {
               <span className="status-indicator-dot" />
               <span>Hệ thống trực tuyến</span>
             </div>
-
-            <Link to="/" className="view-store-pill">
-              <Store size={15} />
-              <span>Cửa hàng</span>
-            </Link>
 
             <div className="admin-header-profile">
               <div className="profile-badge">

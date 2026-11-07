@@ -1,5 +1,5 @@
 /* =========================================================
-   FURNIHOME ADMIN DASHBOARD STYLES
+   CHNT ADMIN DASHBOARD STYLES
    Aesthetic: Luxury Dark Bronze & Carbon Modern UI
    ========================================================= */
 
@@ -173,18 +173,6 @@
   color: var(--admin-gold);
   font-weight: 600;
   border-left: 3px solid var(--admin-gold);
-}
-
-.admin-nav-item.external {
-  color: var(--admin-text-dim);
-  border: 1px dashed rgba(255, 255, 255, 0.1);
-  margin-top: 6px;
-}
-
-.admin-nav-item.external:hover {
-  border-color: var(--admin-gold);
-  color: var(--admin-gold);
-  background: rgba(197, 155, 108, 0.05);
 }
 
 /* Sidebar Footer */
@@ -365,26 +353,6 @@
 @keyframes pulse-dot {
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.5; transform: scale(0.85); }
-}
-
-.view-store-pill {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--admin-gold);
-  background: var(--admin-gold-light);
-  border: 1px solid rgba(197, 155, 108, 0.25);
-  padding: 6px 12px;
-  border-radius: 20px;
-  text-decoration: none;
-  transition: all 0.2s ease;
-}
-
-.view-store-pill:hover {
-  background: rgba(197, 155, 108, 0.2);
-  color: #fff;
 }
 
 .profile-badge {

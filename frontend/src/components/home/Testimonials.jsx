@@ -17,7 +17,7 @@ export default function Testimonials() {
   }, []);
   if (!reviews.length) return null;
   return <section className="home-reviews" aria-labelledby="home-reviews-title">
-    <div className="home-reviews-heading"><div><span>GÓC CHIA SẺ</span><h2 id="home-reviews-title">Tổ ấm đẹp, trải nghiệm thật</h2><p>Những đánh giá mới nhất từ khách hàng đã mua nội thất tại FurniHome.</p></div><Link to="/reviews">Xem tất cả đánh giá →</Link></div>
+    <div className="home-reviews-heading"><div><span>GÓC CHIA SẺ</span><h2 id="home-reviews-title">Tổ ấm đẹp, trải nghiệm thật</h2><p>Những đánh giá mới nhất từ khách hàng đã mua nội thất tại CHNT.</p></div><Link to="/reviews">Xem tất cả đánh giá →</Link></div>
     <div className="home-reviews-grid">{reviews.map(review => <ReviewCard key={review.id} review={review} />)}</div>
   </section>;
 }

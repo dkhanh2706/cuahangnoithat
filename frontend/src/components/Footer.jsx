@@ -91,15 +91,15 @@ function Footer() {
         {/* BRAND INFO */}
         <div className="footer-brand-col">
           <Link to="/" className="footer-logo">
-            <div className="footer-logo-badge">F</div>
+            <div className="footer-logo-badge">C</div>
             <div className="footer-logo-text">
-              <h3>FurniHome</h3>
+              <h3>CHNT</h3>
               <span>Interior Living</span>
             </div>
           </Link>
 
           <p className="footer-brand-desc">
-            FurniHome kiến tạo không gian sống bền vững, mang vẻ đẹp tinh tế của thiết kế Bắc Âu và vật liệu gỗ tự nhiên vào từng ngôi nhà Việt Nam.
+            CHNT kiến tạo không gian sống bền vững, mang vẻ đẹp tinh tế của thiết kế Bắc Âu và vật liệu gỗ tự nhiên vào từng ngôi nhà Việt Nam.
           </p>
 
           <div className="footer-social-row">
@@ -156,7 +156,7 @@ function Footer() {
       {/* FOOTER BOTTOM */}
       <div className="footer-bottom">
         <div className="footer-bottom-container">
-          <p>© 2026 FurniHome Vietnam. Bản quyền thuộc về HTTT05 - Furniture Management System.</p>
+          <p>© 2026 CHNT Vietnam. Bản quyền thuộc về HTTT05 - Furniture Management System.</p>
 
           <div className="footer-trust-badges">
             <span className="trust-badge">

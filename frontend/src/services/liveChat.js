@@ -9,7 +9,7 @@ export function beaconPost(path, body) {
 
 export function welcomeMessage() {
   return { id: "welcome", role: "assistant", source: "bot", offers: [],
-    text: "Chào bạn! FurniHome sẽ tư vấn trực tiếp khi nhân viên online; trợ lý tự động hỗ trợ khi nhân viên vắng mặt. Bạn muốn sắm cho phòng nào, diện tích và ngân sách khoảng bao nhiêu?",
+    text: "Chào bạn! CHNT sẽ tư vấn trực tiếp khi nhân viên online; trợ lý tự động hỗ trợ khi nhân viên vắng mặt. Bạn muốn sắm cho phòng nào, diện tích và ngân sách khoảng bao nhiêu?",
     suggestions: ["Phòng ngủ nên có những món gì?", "Tư vấn phòng khách", "Tìm sofa dưới 15 triệu"] };
 }
 

@@ -1,0 +1,41 @@
+# Python dependencies and generated files
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# JavaScript dependencies and builds
+node_modules/
+dist/
+dist-ssr/
+coverage/
+
+# Local configuration (keep the template)
+.env
+.env.*
+!.env.example
+*.local
+
+# Local databases, uploaded files and test artifacts
+*.db
+*.sqlite
+*.sqlite3
+uploads/**
+!**/uploads/.gitkeep
+**/test-artifacts/
+**/browser-artifacts/
+*.log
+
+# Editor and operating system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.tmp
+*.bak
+*.swp

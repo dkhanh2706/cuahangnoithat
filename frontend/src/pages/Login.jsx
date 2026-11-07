@@ -90,7 +90,7 @@ function Login() {
           <div className="auth-visual-overlay" />
           <div className="auth-visual-content">
             <div className="auth-brand-pill">
-              <Sparkles size={14} /> FURNIHOME LIVING
+              <Sparkles size={14} /> CHNT LIVING
             </div>
 
             <h1>
@@ -132,7 +132,7 @@ function Login() {
             <div className="auth-heading">
               <span className="auth-step-tag">CHÀO MỪNG TRỞ LẠI</span>
               <h2>Đăng nhập</h2>
-              <p>Nhập thông tin tài khoản FurniHome của bạn để tiếp tục.</p>
+              <p>Nhập thông tin tài khoản CHNT của bạn để tiếp tục.</p>
             </div>
 
             {error && (
@@ -204,7 +204,7 @@ function Login() {
             </form>
 
             <div className="auth-switch-prompt">
-              <span>Chưa có tài khoản FurniHome?</span>
+              <span>Chưa có tài khoản CHNT?</span>
               <Link to="/register">Tạo tài khoản mới</Link>
             </div>
 

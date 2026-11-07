@@ -116,7 +116,7 @@ export default function FurnitureChat() {
         onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); close(); } }}>
         <header className="furniture-chat-header">
           <div className="furniture-chat-avatar"><Sparkles size={22} /></div>
-          <div><h2 id={`${panelId}-title`}>Tư vấn FurniHome</h2><p><span /> {chat.online ? "Nhân viên đang online" : "Trợ lý tự động đang hỗ trợ"}</p></div>
+          <div><h2 id={`${panelId}-title`}>Tư vấn CHNT</h2><p><span /> {chat.online ? "Nhân viên đang online" : "Trợ lý tự động đang hỗ trợ"}</p></div>
           <button type="button" onClick={reset} disabled={busy} title="Cuộc trò chuyện mới" aria-label="Cuộc trò chuyện mới"><RotateCcw size={17} /></button>
           <button type="button" onClick={close} aria-label="Đóng khung tư vấn"><ChevronDown size={23} /></button>
         </header>
@@ -124,7 +124,7 @@ export default function FurnitureChat() {
         <div className="furniture-chat-messages" ref={listRef} role="log" aria-label="Cuộc trò chuyện tư vấn" aria-live="polite" aria-relevant="additions text">
           <p className="furniture-chat-note">Chat tạm thời · Làm mới, đăng xuất hoặc rời trang sẽ xóa cuộc trò chuyện.</p>
           {messages.map((message) => <div key={message.id} className={`furniture-chat-message ${message.role}`}>
-            {message.role === "assistant" && <small className="furniture-chat-sender">{message.source === "admin" ? "Tư vấn viên FurniHome" : "Trợ lý tự động"}</small>}
+            {message.role === "assistant" && <small className="furniture-chat-sender">{message.source === "admin" ? "Tư vấn viên CHNT" : "Trợ lý tự động"}</small>}
             <p className="furniture-chat-bubble">{message.text}</p>
             {message.offers?.filter((offer) => !offer.parentId).map((offer) => <div className="furniture-chat-offer" key={offer.id}>
               {offer.kind === "bundle" && <h3><ShoppingBag size={16} />{offer.title}</h3>}
