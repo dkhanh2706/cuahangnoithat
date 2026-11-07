@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import {
   Compass,
@@ -12,54 +12,33 @@ import {
   Package,
 } from "lucide-react";
 import {
-  MOCK_COLLECTIONS,
   COLLECTION_ROOMS,
   COLLECTION_STYLES,
   getFeaturedCollection,
   calculateCollectionBundlePricing,
-} from "../data/mockCollections";
+} from "../data/collections";
 import "../styles/Collections.css";
+import useCollections from "../hooks/useCollections";
 
 function Collections() {
+  const { collections, loading: catalogLoading, error, reload } = useCollections();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Query params
-  const initialRoom = searchParams.get("room") || "all";
-  const initialStyle = searchParams.get("style") || "all";
-
-  const [activeRoom, setActiveRoom] = useState(initialRoom);
-  const [activeStyle, setActiveStyle] = useState(initialStyle);
+  const activeRoom = searchParams.get("room") || "all";
+  const activeStyle = searchParams.get("style") || "all";
   const [searchQuery, setSearchQuery] = useState("");
-  const [loading, setLoading] = useState(true);
-
-  // Sync state with URL params
-  useEffect(() => {
-    const roomParam = searchParams.get("room");
-    const styleParam = searchParams.get("style");
-    if (roomParam) setActiveRoom(roomParam);
-    if (styleParam) setActiveStyle(styleParam);
-  }, [searchParams]);
-
-  // Simulate smooth loading skeleton on filter change
-  useEffect(() => {
-    setLoading(true);
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 450);
-    return () => clearTimeout(timer);
-  }, [activeRoom, activeStyle, searchQuery]);
+  const loading = catalogLoading;
 
   const featuredCollection = useMemo(() => {
-    return getFeaturedCollection();
-  }, []);
+    return getFeaturedCollection(collections);
+  }, [collections]);
 
   const featuredPricing = useMemo(() => {
     return calculateCollectionBundlePricing(featuredCollection);
   }, [featuredCollection]);
 
   const handleRoomSelect = (slug) => {
-    setActiveRoom(slug);
     const newParams = new URLSearchParams(searchParams);
     if (slug === "all") {
       newParams.delete("room");
@@ -70,7 +49,6 @@ function Collections() {
   };
 
   const handleStyleSelect = (style) => {
-    setActiveStyle(style);
     const newParams = new URLSearchParams(searchParams);
     if (style === "all") {
       newParams.delete("style");
@@ -81,15 +59,13 @@ function Collections() {
   };
 
   const handleClearFilters = () => {
-    setActiveRoom("all");
-    setActiveStyle("all");
     setSearchQuery("");
     setSearchParams({});
   };
 
   // Filtered collections
   const filteredCollections = useMemo(() => {
-    return MOCK_COLLECTIONS.filter((col) => {
+    return collections.filter((col) => {
       const matchRoom =
         activeRoom === "all" || col.room_slug === activeRoom;
       const matchStyle =
@@ -103,7 +79,7 @@ function Collections() {
 
       return matchRoom && matchStyle && matchQuery;
     });
-  }, [activeRoom, activeStyle, searchQuery]);
+  }, [collections, activeRoom, activeStyle, searchQuery]);
 
   const formatPrice = (val) => {
     return new Intl.NumberFormat("vi-VN", {
@@ -112,6 +88,8 @@ function Collections() {
     }).format(val || 0);
   };
 
+  if (catalogLoading) return <div className="collections-container" role="status">Đang tải bộ sưu tập...</div>;
+  if (error) return <div className="collections-container" role="alert">{error} <button onClick={reload}>Thử lại</button></div>;
   return (
     <div className="collections-page">
       {/* 1. Breadcrumb & Page Header */}
@@ -176,12 +154,9 @@ function Collections() {
 
                 <div className="featured-hero-pricing">
                   <div className="price-item">
-                    <span className="price-label">Giá trọn bộ ưu đãi:</span>
+                    <span className="price-label">Tổng giá sản phẩm hiện tại:</span>
                     <span className="price-val highlight">
-                      {formatPrice(featuredPricing.bundlePrice)}
-                    </span>
-                    <span className="price-original">
-                      {formatPrice(featuredPricing.totalPrice)}
+                      {featuredPricing.productsCount ? formatPrice(featuredPricing.bundlePrice) : "Đang cập nhật sản phẩm"}
                     </span>
                   </div>
 
@@ -221,8 +196,8 @@ function Collections() {
             {COLLECTION_ROOMS.map((room) => {
               const count =
                 room.id === "all"
-                  ? MOCK_COLLECTIONS.length
-                  : MOCK_COLLECTIONS.filter((c) => c.room_slug === room.slug).length;
+                  ? collections.length
+                  : collections.filter((c) => c.room_slug === room.slug).length;
 
               return (
                 <button
@@ -398,7 +373,7 @@ function Collections() {
                         <span className="room-name">{col.room}</span>
                         <span className="dot-sep">•</span>
                         <span className="item-count">
-                          {col.product_ids?.length || 5} sản phẩm
+                          {col.product_ids?.length || 0} sản phẩm
                         </span>
                       </div>
 
@@ -408,9 +383,9 @@ function Collections() {
 
                       <div className="card-pricing-row">
                         <div>
-                          <span className="bundle-tag">Trọn bộ từ:</span>
+                          <span className="bundle-tag">Tổng giá hiện tại:</span>
                           <span className="bundle-price">
-                            {formatPrice(pricing.bundlePrice)}
+                            {pricing.productsCount ? formatPrice(pricing.bundlePrice) : "Đang cập nhật"}
                           </span>
                         </div>
 

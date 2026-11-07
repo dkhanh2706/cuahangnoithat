@@ -8,6 +8,7 @@ import "../styles/Reviews.css";
 
 const money = value => Number(value).toLocaleString("vi-VN") + "₫";
 const message = err => typeof err.response?.data?.detail === "string" ? err.response.data.detail : "Không thể kết nối. Vui lòng thử lại.";
+const statusLabels = { PENDING: "Chờ xác nhận", CONFIRMED: "Đã xác nhận", SHIPPING: "Đang giao hàng", COMPLETED: "Đã giao hàng", CANCELLED: "Đã hủy" };
 
 export default function OrderHistory() {
   const location = useLocation();
@@ -19,7 +20,8 @@ export default function OrderHistory() {
   const [rating, setRating] = useState(5);
   const [content, setContent] = useState("");
   const [sending, setSending] = useState(false);
-  const [notice, setNotice] = useState(location.state?.checkoutSuccess ? "Thanh toán giả lập thành công! Đơn đã được lưu; bạn có thể đánh giá sản phẩm bên dưới." : "");
+  const [notice, setNotice] = useState(location.state?.checkoutSuccess ? "Đặt hàng thành công! Đơn đang chờ xác nhận. Bạn thanh toán khi nhận hàng." : "");
+  const [revision, setRevision] = useState(0);
   const submitLock = useRef(false);
   const deleteLock = useRef(false);
   const [deletingId, setDeletingId] = useState(null);
@@ -30,7 +32,7 @@ export default function OrderHistory() {
       if (active) { setOrders(data); setHasMore(data.length === 20); }
     }).catch(err => { if (active) setError(message(err)); }).finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
-  }, []);
+  }, [revision]);
 
   async function loadMore() {
     setLoading(true);
@@ -74,12 +76,13 @@ export default function OrderHistory() {
     <main className="reviews-page order-history">
       <Link to="/">Trang chủ</Link>
       <h1>Lịch sử đơn hàng</h1>
-      <p>Những món nội thất bạn đã chọn cho tổ ấm. Chia sẻ cảm nhận của bạn sau khi thanh toán.</p>
+      <p>Theo dõi tiến độ giao hàng và thanh toán khi nhận hàng. Bạn có thể đánh giá sau khi đơn hoàn tất.</p>
+      <button disabled={loading} onClick={() => { setLoading(true); setError(""); setRevision(value => value + 1); }}>Cập nhật trạng thái</button>
       {notice && <p role="status" className="order-notice">{notice}</p>}
       {error && <p role="alert">{error} <button onClick={() => window.location.reload()}>Thử lại</button></p>}
       {!loading && !error && orders.length === 0 && <section className="review-panel order-empty"><Package size={40} /><h2>Bạn chưa có đơn hàng</h2><Link to="/products">Khám phá nội thất</Link></section>}
       {orders.map(order => <article className="review-panel order-card" key={order.id}>
-        <header className="order-card-heading"><div><strong>{order.code}</strong><p>{new Date(order.created_at).toLocaleString("vi-VN")}</p>{order.code.startsWith("DEMO-") && <small>Thanh toán giả lập · Không thu tiền thật</small>}</div><span className="order-payment">{order.status === "CANCELLED" ? "Đã hủy" : order.payment_status === "SUCCESS" ? "Đã thanh toán" : "Chưa thanh toán"}</span></header>
+        <header className="order-card-heading"><div><strong>{order.code}</strong><p>{new Date(order.created_at).toLocaleString("vi-VN")}</p>{order.code.startsWith("DEMO-") && <small>Đơn demo cũ · Không thu tiền thật</small>}<p>{order.receiver_name} · {order.receiver_phone}</p><p>{order.shipping_address}</p></div><span className="order-payment">{statusLabels[order.status]}<br /><small>{order.payment_status === "SUCCESS" ? "Đã thanh toán" : order.status === "CANCELLED" ? "Đã hủy thanh toán" : "COD · Chưa thu tiền"}</small></span></header>
         {order.items.map(item => <div className="order-product-block" key={item.id}>
           <div className="order-product-row">
             {item.image_url ? <img src={productImageUrl(item.image_url)} alt={item.product_name} /> : <div className="order-image-placeholder"><Package /></div>}

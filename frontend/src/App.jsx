@@ -22,6 +22,9 @@ import AdminLayout from "./admin/layouts/AdminLayout";
 import UserManagement from "./admin/pages/UserManagement";
 import ProductManagement from "./admin/pages/ProductManagement";
 import CustomerChat from "./admin/pages/CustomerChat";
+import OrderManagement from "./admin/pages/OrderManagement";
+import NewsletterSubscribers from "./admin/pages/NewsletterSubscribers";
+import Policies from "./pages/Policies";
 
 import { CartProvider } from "./context/CartContext";
 
@@ -56,6 +59,8 @@ function App() {
 
           <Route path="/admin/products" element={<AdminRoute><AdminLayout><ProductManagement /></AdminLayout></AdminRoute>} />
           <Route path="/admin/chat" element={<AdminRoute><AdminLayout><CustomerChat /></AdminLayout></AdminRoute>} />
+          <Route path="/admin/orders" element={<AdminRoute><AdminLayout><OrderManagement /></AdminLayout></AdminRoute>} />
+          <Route path="/admin/subscribers" element={<AdminRoute><AdminLayout><NewsletterSubscribers /></AdminLayout></AdminRoute>} />
 
           {/* ================= STORE CLIENT ================= */}
 
@@ -74,6 +79,7 @@ function App() {
 
             <Route path="/cart" element={<Cart />} />
             <Route path="/reviews" element={<Reviews />} />
+            <Route path="/policies/:type" element={<Policies />} />
             <Route path="/orders" element={<ProtectedRoute><OrderHistory /></ProtectedRoute>} />
 
             <Route path="/wishlist" element={<Wishlist />} />

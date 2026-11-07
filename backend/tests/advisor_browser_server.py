@@ -5,6 +5,7 @@ From the repository root, after building frontend:
 Stop any other service on that port first. Then run the frontend browser script.
 """
 from pathlib import Path
+import os
 from threading import Lock
 
 from fastapi import Depends, HTTPException
@@ -25,9 +26,13 @@ from routers.live_chat import router as live_chat_router
 from routers.users import router as users_router
 from services.live_chat import live_chat
 from utils.security import create_access_token
+from routers.order_management import router as order_management_router
+from routers.store_features import router as store_features_router
+from database.migrate_store_features import seed_collections
 
 fixture = FurnitureAdvisorTests()
 fixture.setUp()
+seed_collections(fixture.db)
 app = fixture.app
 admin_user = User(full_name="Admin kiểm thử", email="adminhdk@gmail.com", password_hash="unused", role="ADMIN", status=True)
 customer_user = User(full_name="Khách kiểm thử", email="browser-live@example.com", password_hash="unused", role="CUSTOMER", status=True)
@@ -47,7 +52,7 @@ def browser_db():
 
 
 app.dependency_overrides[get_db] = browser_db
-for router in (products_router, images_router, categories_router, reviews_router, live_chat_router, users_router):
+for router in (products_router, images_router, categories_router, reviews_router, live_chat_router, users_router, order_management_router, store_features_router):
     app.include_router(router)
 
 
@@ -81,7 +86,13 @@ def change_fixture(data: ProductChange, db: Session = Depends(get_db)):
     return {"ok": True}
 
 
-dist = Path(__file__).resolve().parents[2] / "frontend/dist"
+@app.get("/__test/product-state/{product_id}")
+def product_state(product_id: int, db: Session = Depends(get_db)):
+    product = db.get(Product, product_id)
+    return {"id": product.id, "stock_quantity": product.stock_quantity, "price": product.price}
+
+
+dist = Path(os.environ.get("TEST_FRONTEND_DIST", Path(__file__).resolve().parents[2] / "frontend/dist"))
 app.mount("/assets", StaticFiles(directory=dist / "assets"), name="assets")
 
 

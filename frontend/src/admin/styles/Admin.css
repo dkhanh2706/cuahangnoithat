@@ -267,6 +267,7 @@
 
 .admin-main-wrapper {
   flex: 1;
+  min-width: 0;
   margin-left: var(--admin-sidebar-width);
   display: flex;
   flex-direction: column;
@@ -374,6 +375,7 @@
 
 .admin-content-area {
   flex: 1;
+  min-width: 0;
   padding: 28px;
 }
 
@@ -1598,4 +1600,13 @@
   .admin-stats-grid {
     grid-template-columns: 1fr;
   }
+}
+
+@media (max-width: 600px) {
+  .admin-content-area { padding: 20px 16px; }
+  .admin-topbar { padding: 0 16px; }
+  .admin-topbar-left { gap: 8px; min-width: 0; }
+  .admin-breadcrumb { font-size: 11px; min-width: 0; }
+  .admin-breadcrumb .bc-current { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .admin-system-status, .admin-header-profile { display: none; }
 }

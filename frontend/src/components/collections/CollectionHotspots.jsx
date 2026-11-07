@@ -9,21 +9,21 @@ import {
   X,
   Check,
 } from "lucide-react";
-import { useCart } from "../../context/CartContext";
-import { MOCK_PRODUCTS } from "../../data/mockProducts";
 
 function CollectionHotspots({
   bannerImage,
   title,
   hotspots = [],
   offerTag,
+  products = [],
+  onAdd,
+  busy,
 }) {
   const [activeHotspotId, setActiveHotspotId] = useState(null);
   const [showHotspots, setShowHotspots] = useState(true);
   const [mobileDrawerProduct, setMobileDrawerProduct] = useState(null);
   const [addedIds, setAddedIds] = useState([]);
   const containerRef = useRef(null);
-  const { addToCart } = useCart();
 
   // Close popup when clicking outside on desktop
   useEffect(() => {
@@ -49,7 +49,7 @@ function CollectionHotspots({
 
   const handleHotspotClick = (hotspot, e) => {
     e.stopPropagation();
-    const product = MOCK_PRODUCTS.find((p) => p.id === hotspot.product_id);
+    const product = products.find((p) => p.id === hotspot.product_id);
 
     // On mobile screens (< 768px), open bottom drawer for ergonomic tapping
     if (window.innerWidth < 768) {
@@ -60,10 +60,11 @@ function CollectionHotspots({
     }
   };
 
-  const handleAddToCart = (product, e) => {
+  const handleAddToCart = async (product, e) => {
     e?.stopPropagation();
-    if (!product) return;
-    addToCart(product, 1);
+    if (!product || busy || product.stock_quantity < 1) return;
+    const added = await onAdd(product);
+    if (!added) return;
     setAddedIds((prev) => [...prev, product.id]);
     setTimeout(() => {
       setAddedIds((prev) => prev.filter((id) => id !== product.id));
@@ -103,7 +104,7 @@ function CollectionHotspots({
         {/* Interactive Hotspot Pins */}
         {showHotspots &&
           hotspots.map((hotspot, index) => {
-            const product = MOCK_PRODUCTS.find((p) => p.id === hotspot.product_id);
+            const product = products.find((p) => p.id === hotspot.product_id);
             const isActive = activeHotspotId === hotspot.id;
 
             return (

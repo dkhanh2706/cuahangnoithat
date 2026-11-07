@@ -131,6 +131,17 @@ export function CartProvider({ children }) {
   const clearCart = () => {
     setCart([]);
   };
+  const refreshCartProducts = (products) => {
+    setCart(previous => previous.map(item => {
+      const product = products.find(candidate => candidate.id === item.product.id);
+      return product ? { ...item, product } : item;
+    }));
+  };
+  const completeCheckout = (orderedItems) => {
+    setCart(previous => previous.map(item => ({ ...item,
+      quantity: item.quantity - (orderedItems.find(ordered => ordered.product_id === item.product.id)?.quantity || 0),
+    })).filter(item => item.quantity > 0));
+  };
 
   const toggleWishlist = (product) => {
     const exists = wishlistProducts.some((p) => p.id === product.id);
@@ -167,6 +178,8 @@ export function CartProvider({ children }) {
         removeFromCart,
         updateQuantity,
         clearCart,
+        refreshCartProducts,
+        completeCheckout,
         toggleWishlist,
         isWishlisted,
         cartCount,

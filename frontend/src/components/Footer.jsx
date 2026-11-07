@@ -10,6 +10,8 @@ import {
   Sparkles,
 } from "lucide-react";
 import "../styles/Footer.css";
+import "../styles/Policies.css";
+import api from "../services/api";
 
 function InstagramIcon({ size = 18 }) {
   return (
@@ -41,14 +43,24 @@ function YoutubeIcon({ size = 18 }) {
 function Footer() {
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
+  const [consent, setConsent] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [feedback, setFeedback] = useState("");
+  const [failed, setFailed] = useState(false);
 
-  const handleSubscribe = (e) => {
+  const handleSubscribe = async (e) => {
     e.preventDefault();
-    if (email.trim() && email.includes("@")) {
+    if (busy || !consent) return;
+    setBusy(true); setFeedback(""); setFailed(false);
+    try {
+      const { data } = await api.post("/api/newsletter/subscriptions", { email: email.trim(), consent });
       setSubscribed(true);
+      setFeedback(data.message);
       setEmail("");
-      setTimeout(() => setSubscribed(false), 5000);
-    }
+    } catch (failure) {
+      setFailed(true);
+      setFeedback(typeof failure.response?.data?.detail === "string" ? failure.response.data.detail : "Chưa đăng ký được. Vui lòng kiểm tra email và thử lại.");
+    } finally { setBusy(false); }
   };
 
   const scrollToTop = () => {
@@ -73,15 +85,20 @@ function Footer() {
           <form onSubmit={handleSubscribe} className="newsletter-form">
             <input
               type="email"
+              maxLength={254}
+              aria-label="Email đăng ký nhận tin"
+              disabled={busy}
               placeholder="Nhập địa chỉ email của bạn..."
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => { setEmail(e.target.value); setSubscribed(false); setFeedback(""); }}
               required
             />
-            <button type="submit" className="newsletter-submit-btn">
-              <span>{subscribed ? "Đã đăng ký!" : "Đăng ký ngay"}</span>
+            <button type="submit" className="newsletter-submit-btn" disabled={busy || !consent}>
+              <span>{busy ? "Đang lưu..." : subscribed ? "Đã đăng ký!" : "Đăng ký ngay"}</span>
               <Send size={15} />
             </button>
+            <label className="newsletter-consent"><input type="checkbox" required checked={consent} onChange={event => setConsent(event.target.checked)} disabled={busy} /><span>Tôi đồng ý để CHNT lưu email liên hệ theo <Link to="/policies/privacy">chính sách thông tin</Link>.</span></label>
+            {feedback && <p className="newsletter-feedback" role={failed ? "alert" : "status"}>{feedback}</p>}
           </form>
         </div>
       </div>
@@ -130,9 +147,10 @@ function Footer() {
           <h4>Hỗ trợ khách hàng</h4>
           <Link to="/cart">Giỏ hàng của bạn</Link>
           <Link to="/orders">Tra cứu đơn hàng</Link>
-          <a href="#chinh-sach">Chính sách bảo hành 5 năm</a>
-          <a href="#doi-tra">Chính sách đổi trả 30 ngày</a>
-          <a href="#van-chuyen">Chính sách vận chuyển</a>
+          <Link to="/policies/warranty">Chính sách bảo hành</Link>
+          <Link to="/policies/returns">Chính sách đổi trả 30 ngày</Link>
+          <Link to="/policies/shipping">Vận chuyển & thanh toán</Link>
+          <Link to="/policies/privacy">Thông tin & nhận tin</Link>
         </div>
 
         {/* CONTACT INFO */}

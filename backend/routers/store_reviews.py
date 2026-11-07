@@ -1,5 +1,5 @@
 from decimal import Decimal
-from uuid import uuid4
+from uuid import UUID, uuid4, uuid5, NAMESPACE_URL
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from pydantic import BaseModel, Field, field_validator
 from sqlalchemy.orm import Session
@@ -20,6 +20,8 @@ class ItemInput(BaseModel):
 
 
 class CheckoutInput(BaseModel):
+    request_id: UUID | None = None
+    expected_total: Decimal | None = Field(default=None, ge=0)
     items: list[ItemInput] = Field(min_length=1, max_length=100)
     promo_code: str = Field(default="", max_length=30)
     receiver_name: str = Field(min_length=1, max_length=100)
@@ -50,6 +52,31 @@ class ReviewInput(ReviewContent):
     order_id: int = Field(gt=0)
 
 
+@router.post("/orders/quote")
+def quote_order(data: CheckoutInput, db: Session = Depends(get_db), user: User = Depends(require_customer)):
+    from services.furniture_advisor import serialize_product
+    quantities = {}
+    for item in data.items:
+        quantities[item.product_id] = quantities.get(item.product_id, 0) + item.quantity
+    products = db.query(Product).filter(Product.id.in_(quantities)).all()
+    if len(products) != len(quantities):
+        raise HTTPException(409, "Có sản phẩm đã bị xóa. Vui lòng kiểm tra lại giỏ hàng.")
+    if any(not p.status or p.stock_quantity < quantities[p.id] for p in products):
+        raise HTTPException(409, "Có sản phẩm hết hàng, bị ẩn hoặc số lượng vượt tồn kho. Vui lòng điều chỉnh giỏ hàng.")
+    subtotal = sum((p.price * quantities[p.id] for p in products), Decimal("0"))
+    discount = promo_discount(data.promo_code)
+    total = subtotal * (1 - discount) + (150000 if subtotal < 2000000 else 0)
+    return {"total": total, "items": [{"product": serialize_product(p), "quantity": quantities[p.id]} for p in products]}
+
+
+def promo_discount(code):
+    discounts = {"FURNI10": Decimal("0.1"), "FURNI20": Decimal("0.2"), "CHNT10": Decimal("0.1"), "CHNT20": Decimal("0.2")}
+    promo = code.strip().upper()
+    if promo and promo not in discounts:
+        raise HTTPException(400, "Mã giảm giá không hợp lệ.")
+    return discounts.get(promo, Decimal("0"))
+
+
 @router.post("/orders", status_code=201)
 def checkout(data: CheckoutInput, db: Session = Depends(get_db), user: User = Depends(require_customer)):
     return save_order(data, db, user)
@@ -64,16 +91,36 @@ def save_order(data, db, user, demo=False):
     quantities = {}
     for item in data.items:
         quantities[item.product_id] = quantities.get(item.product_id, 0) + item.quantity
+    code = ("DEMO-" if demo else "CHNT-") + (uuid5(NAMESPACE_URL, f"{user.id}:{data.request_id}").hex.upper() if data.request_id else uuid4().hex.upper())
+
+    def existing_response(order):
+        items = db.query(OrderItem).filter_by(order_id=order.id).all()
+        if ({i.product_id: i.quantity for i in items} != quantities or
+                order.receiver_name != data.receiver_name or order.receiver_phone != data.receiver_phone or
+                order.shipping_address != data.shipping_address):
+            raise HTTPException(409, "Mã yêu cầu đã được dùng cho đơn khác. Vui lòng tải lại giỏ hàng.")
+        return {"id": order.id, "code": order.code, "total": order.total, "payment_status": order.payment_status}
+
+    if data.request_id:
+        existing = db.query(Order).filter_by(code=code).first()
+        if existing:
+            return existing_response(existing)
     products = db.query(Product).filter(Product.id.in_(quantities)).order_by(Product.id).with_for_update().all()
+    if data.request_id:
+        existing = db.query(Order).filter_by(code=code).first()
+        if existing:
+            return existing_response(existing)
     if len(products) != len(quantities):
         raise HTTPException(400, "Có sản phẩm không còn tồn tại. Vui lòng kiểm tra giỏ hàng.")
     for product in products:
         if not product.status or product.stock_quantity < quantities[product.id]:
             raise HTTPException(400, f"{product.name}: không đủ hàng để đặt mua.")
     subtotal = sum((p.price * quantities[p.id] for p in products), Decimal("0"))
-    discount = {"FURNI10": Decimal("0.1"), "FURNI20": Decimal("0.2")}.get(data.promo_code.strip().upper(), Decimal("0"))
+    discount = promo_discount(data.promo_code)
     total = subtotal * (1 - discount) + (150000 if subtotal < 2000000 else 0)
-    order = Order(code=("DEMO-" if demo else "FH-") + uuid4().hex.upper(), user_id=user.id, total=total,
+    if data.expected_total is not None and total != data.expected_total:
+        raise HTTPException(409, "Giá đã thay đổi. Vui lòng kiểm tra lại tổng tiền và xác nhận đặt hàng lần nữa.")
+    order = Order(code=code, user_id=user.id, total=total,
                   receiver_name=data.receiver_name, receiver_phone=data.receiver_phone,
                   shipping_address=data.shipping_address)
     if demo:
@@ -89,6 +136,12 @@ def save_order(data, db, user, demo=False):
                 product.stock_quantity -= quantities[product.id]
         db.commit()
         db.refresh(order)
+    except IntegrityError:
+        db.rollback()
+        existing = db.query(Order).filter_by(code=code).first() if data.request_id else None
+        if existing:
+            return existing_response(existing)
+        raise
     except Exception:
         db.rollback()
         raise
@@ -153,6 +206,7 @@ def order_history(offset: int = Query(0, ge=0), limit: int = Query(20, ge=1, le=
     reviews = {r.order_item_id: r for r in db.query(OrderItemReview).filter(
         OrderItemReview.order_item_id.in_([i.id for i in items])).all()}
     return [{"id": o.id, "code": o.code, "total": o.total, "status": o.status,
+             "receiver_name": o.receiver_name, "receiver_phone": o.receiver_phone, "shipping_address": o.shipping_address,
              "payment_status": o.payment_status, "created_at": o.created_at,
              "items": [{"id": i.id, "product_id": i.product_id, "product_name": i.product_name,
                         "quantity": i.quantity, "unit_price": i.unit_price, "subtotal": i.subtotal,

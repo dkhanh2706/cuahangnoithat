@@ -27,7 +27,7 @@ import {
   FILTER_MATERIALS,
   FILTER_COLORS,
   FILTER_STYLES,
-} from "../data/mockProducts";
+} from "../data/catalogFilters";
 import "../styles/Products.css";
 
 const ITEMS_PER_PAGE = 8;

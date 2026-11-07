@@ -1,0 +1,23 @@
+.policy-page { max-width: 1180px; margin: auto; padding: 36px 24px 80px; color: #243e30; }
+.policy-page nav { display: flex; flex-wrap: wrap; gap: 12px; font-size: 13px; margin-bottom: 44px; color: #6b756f; }
+.policy-page header { max-width: 800px; margin-bottom: 42px; }
+.policy-eyebrow { font-size: 11px; letter-spacing: 2px; color: #8c704d; }
+.policy-page h1 { font-size: clamp(30px, 4vw, 46px); line-height: 1.25; margin: 14px 0; }
+.policy-page header p { color: #6b756f; font-size: 17px; line-height: 1.8; }
+.policy-layout { display: grid; grid-template-columns: 250px 1fr; gap: 44px; align-items: start; }
+.policy-layout aside { display: flex; flex-direction: column; gap: 10px; padding: 18px; border: 1px solid #e4e8e1; border-radius: 14px; }
+.policy-layout aside a { padding: 12px; border-radius: 8px; font-size: 13px; }
+.policy-layout aside a[aria-current="page"] { background: #e9efe6; font-weight: 600; }
+.policy-layout article { padding: 6px 0; }
+.policy-layout section { margin-bottom: 30px; }
+.policy-layout h2 { font-size: 21px; margin-bottom: 12px; }
+.policy-layout p { color: #5c665f; line-height: 1.9; }
+.policy-order-link { display: inline-block; border-bottom: 1px solid; margin-top: 12px; padding: 8px 0; }
+.newsletter-consent { display: flex; gap: 8px; align-items: flex-start; font-size: 11px; line-height: 1.6; margin-top: 10px; color: #415749; }
+.newsletter-form .newsletter-consent input { width: 16px; height: 16px; min-width: 16px; padding: 0; margin-top: 2px; }
+.newsletter-form { flex-wrap: wrap; }
+.newsletter-form .newsletter-consent, .newsletter-feedback { flex-basis: 100%; }
+.newsletter-feedback { font-size: 12px; line-height: 1.6; margin-top: 10px; color: #274f36; }
+.newsletter-form { padding-bottom: 12px; }
+.newsletter-submit-btn:disabled { opacity: .5; cursor: not-allowed; }
+@media (max-width: 760px) { .policy-layout { grid-template-columns: 1fr; gap: 26px; } .policy-layout aside { flex-direction: row; flex-wrap: wrap; } }

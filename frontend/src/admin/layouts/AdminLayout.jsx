@@ -11,6 +11,8 @@ import {
   ChevronRight,
   Sparkles,
   MessageCircle,
+  ClipboardList,
+  Mail,
 } from "lucide-react";
 import "../styles/Admin.css";
 
@@ -30,6 +32,8 @@ function AdminLayout({ children }) {
   };
 
   const getPageTitle = () => {
+    if (location.pathname.includes("/admin/orders")) return "Quản Lý Đơn Hàng";
+    if (location.pathname.includes("/admin/subscribers")) return "Đăng Ký Nhận Tin";
     if (location.pathname.includes("/admin/chat")) return "Tư Vấn Khách Hàng";
     if (location.pathname.includes("/admin/products")) return "Quản Lý Sản Phẩm";
     if (location.pathname.includes("/admin/users") || location.pathname === "/admin") {
@@ -91,6 +95,12 @@ function AdminLayout({ children }) {
 
           <NavLink to="/admin/chat" className={({ isActive }) => `admin-nav-item${isActive ? " active" : ""}`} onClick={() => setSidebarOpen(false)}>
             <MessageCircle size={18} /><span>Tư vấn khách hàng</span>
+          </NavLink>
+          <NavLink to="/admin/orders" className={({ isActive }) => `admin-nav-item${isActive ? " active" : ""}`} onClick={() => setSidebarOpen(false)}>
+            <ClipboardList size={18} /><span>Quản lý Đơn hàng</span>
+          </NavLink>
+          <NavLink to="/admin/subscribers" className={({ isActive }) => `admin-nav-item${isActive ? " active" : ""}`} onClick={() => setSidebarOpen(false)}>
+            <Mail size={18} /><span>Đăng ký nhận tin</span>
           </NavLink>
 
         </div>

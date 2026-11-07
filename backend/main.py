@@ -16,6 +16,8 @@ from routers.advisor import router as advisor_router
 from routers.live_chat import router as live_chat_router
 from admin.router import router as admin_router
 from admin.init_admin import ensure_single_admin
+from routers.order_management import router as order_management_router
+from routers.store_features import router as store_features_router
 
 
 app = FastAPI(
@@ -70,6 +72,8 @@ app.include_router(store_reviews_router)
 app.include_router(advisor_router)
 app.include_router(live_chat_router)
 app.include_router(admin_router)
+app.include_router(order_management_router)
+app.include_router(store_features_router)
 
 
 # =========================

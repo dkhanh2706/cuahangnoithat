@@ -20,18 +20,19 @@ import {
 } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import api from "../services/api";
+import { productImageUrl } from "../services/media";
 import "../styles/Cart.css";
 
 const TRUST_BADGES = [
   { icon: Truck, label: "Miễn phí vận chuyển", sub: "Đơn từ 2.000.000₫" },
-  { icon: ShieldCheck, label: "Bảo hành 5 năm", sub: "Tại nhà toàn quốc" },
-  { icon: Gift, label: "Đổi trả 30 ngày", sub: "Không điều kiện" },
+  { icon: ShieldCheck, label: "Bảo hành đến 5 năm", sub: "Theo từng sản phẩm" },
+  { icon: Gift, label: "Đổi trả 30 ngày", sub: "Theo chính sách đổi trả" },
   { icon: Star, label: "Chất lượng cao cấp", sub: "Kiểm định nghiêm ngặt" },
 ];
 
 function Cart() {
   const navigate = useNavigate();
-  const { cart, updateQuantity, removeFromCart, clearCart, cartTotal, showToast, toggleWishlist, isWishlisted } = useCart();
+  const { cart, updateQuantity, removeFromCart, clearCart, completeCheckout, refreshCartProducts, cartTotal, showToast, toggleWishlist, isWishlisted } = useCart();
 
   const [promoCode, setPromoCode] = useState("");
   const [discountPercent, setDiscountPercent] = useState(0);
@@ -39,17 +40,18 @@ function Cart() {
   const [orderCode, setOrderCode] = useState("");
   const [checkingOut, setCheckingOut] = useState(false);
   const checkoutLock = useRef(false);
+  const checkoutRequest = useRef(null);
   const [shipping, setShipping] = useState({ receiver_name: "", receiver_phone: "", shipping_address: "" });
   const handleApplyPromo = (e) => {
     e.preventDefault();
-    if (promoCode.trim().toUpperCase() === "FURNI10") {
+    if (promoCode.trim().toUpperCase() === "CHNT10") {
       setDiscountPercent(0.1);
-      showToast("Áp dụng thành công mã FURNI10: Giảm 10%!", "success");
-    } else if (promoCode.trim().toUpperCase() === "FURNI20") {
+      showToast("Áp dụng thành công mã CHNT10: Giảm 10%!", "success");
+    } else if (promoCode.trim().toUpperCase() === "CHNT20") {
       setDiscountPercent(0.2);
-      showToast("Áp dụng thành công mã FURNI20: Giảm 20%!", "success");
+      showToast("Áp dụng thành công mã CHNT20: Giảm 20%!", "success");
     } else {
-      showToast("Mã ưu đãi không hợp lệ. Thử: FURNI10 hoặc FURNI20", "info");
+      showToast("Mã ưu đãi không hợp lệ. Thử: CHNT10 hoặc CHNT20", "info");
     }
   };
 
@@ -69,17 +71,31 @@ function Cart() {
     }
     checkoutLock.current = true;
     setCheckingOut(true);
+    const payload = {
+      ...shipping,
+      items: cart.map(item => ({ product_id: item.product.id, quantity: item.quantity })),
+      promo_code: discountPercent ? (discountPercent === 0.1 ? "CHNT10" : "CHNT20") : "",
+    };
     try {
-      const { data } = await api.post("/api/orders/demo", {
-        ...shipping,
-        items: cart.map(item => ({ product_id: item.product.id, quantity: item.quantity })),
-        promo_code: discountPercent ? (discountPercent === 0.1 ? "FURNI10" : "FURNI20") : "",
-      });
+      const signature = JSON.stringify({ user: localStorage.getItem("user"), ...payload });
+      if (!checkoutRequest.current) {
+        try { checkoutRequest.current = JSON.parse(sessionStorage.getItem("chnt_checkout_request")); } catch { /* A fresh request will be created. */ }
+      }
+      if (checkoutRequest.current?.signature !== signature) checkoutRequest.current = { signature, id: crypto.randomUUID() };
+      try { sessionStorage.setItem("chnt_checkout_request", JSON.stringify(checkoutRequest.current)); } catch { /* The in-memory retry key still works. */ }
+      const { data } = await api.post("/api/orders", { ...payload, expected_total: finalTotal, request_id: checkoutRequest.current.id });
       setOrderCode(data.code);
       setOrderModalOpen(true);
-      clearCart();
+      completeCheckout(payload.items);
+      try { sessionStorage.removeItem("chnt_checkout_request"); } catch { /* No further retry is needed. */ }
       navigate("/orders", { state: { checkoutSuccess: true } });
     } catch (err) {
+      if (err.response?.status === 409) {
+        try {
+          const { data: quote } = await api.post("/api/orders/quote", payload);
+          refreshCartProducts(quote.items.map(item => ({ ...item.product, primary_image: productImageUrl(item.product.primary_image) })));
+        } catch { /* Keep the original checkout error visible. */ }
+      }
       showToast(typeof err.response?.data?.detail === "string" ? err.response.data.detail : "Không thể thanh toán. Vui lòng thử lại.", "error");
     } finally {
       checkoutLock.current = false;
@@ -360,7 +376,7 @@ function Cart() {
                 Áp dụng
               </button>
             </form>
-            <p className="promo-hint">Thử mã: <code>FURNI10</code> hoặc <code>FURNI20</code></p>
+            <p className="promo-hint">Thử mã: <code>CHNT10</code> hoặc <code>CHNT20</code></p>
 
             {/* SUMMARY ROWS */}
             <div className="summary-rows">
@@ -405,10 +421,10 @@ function Cart() {
               <label>Họ tên<input required maxLength={100} autoComplete="name" value={shipping.receiver_name} onChange={e => setShipping({ ...shipping, receiver_name: e.target.value })} disabled={checkingOut} /></label>
               <label>Số điện thoại<input required type="tel" maxLength={20} autoComplete="tel" value={shipping.receiver_phone} onChange={e => setShipping({ ...shipping, receiver_phone: e.target.value })} disabled={checkingOut} /></label>
               <label>Địa chỉ nhận hàng<textarea required maxLength={2000} autoComplete="street-address" value={shipping.shipping_address} onChange={e => setShipping({ ...shipping, shipping_address: e.target.value })} disabled={checkingOut} /></label>
-            <p>Thanh toán giả lập: không thu tiền, lưu đơn để xem lịch sử và đánh giá.</p>
+            <p>Thanh toán khi nhận hàng (COD). Tồn kho được giữ khi đặt đơn; nhân viên sẽ xác nhận và liên hệ giao hàng.</p>
             <button className="checkout-btn" type="submit" disabled={orderModalOpen || checkingOut}>
               <PackageCheck size={18} />
-              <span>{checkingOut ? "Đang xử lý..." : "Thanh toán giả lập"}</span>
+              <span>{checkingOut ? "Đang xử lý..." : "Đặt hàng · Thanh toán khi nhận"}</span>
               <ArrowRight size={16} />
             </button>
             </form>
@@ -417,7 +433,7 @@ function Cart() {
             <div className="summary-trust-mini">
               <div className="trust-mini-item">
                 <ShieldCheck size={14} color="#27ae60" />
-                <span>Thanh toán bảo mật SSL</span>
+                <span>Không yêu cầu thông tin thẻ</span>
               </div>
               <div className="trust-mini-item">
                 <Truck size={14} color="#1e3428" />
@@ -452,7 +468,7 @@ function Cart() {
             <p>
               Cảm ơn quý khách đã tin tưởng CHNT. Mã đơn hàng:{" "}
               <strong className="order-code-text">{orderCode}</strong>
-              <br />Thanh toán giả lập thành công. Đơn đã được lưu vào lịch sử, không thu tiền thật.
+              <br />Đơn đang chờ xác nhận. Bạn thanh toán khi nhận hàng.
             </p>
             <div className="success-modal-actions">
               <Link to="/orders" className="success-shop-btn" onClick={() => setOrderModalOpen(false)}>

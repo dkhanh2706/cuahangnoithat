@@ -1,0 +1,378 @@
+[
+  {
+    "slug": "phong-khach-bac-au",
+    "products": [
+      {
+        "name": "Sofa Góc L-Shape Scandinavia Nord",
+        "hotspot": {
+          "id": "h1",
+          "x": 42,
+          "y": 70,
+          "product_id": 1,
+          "label": "Sofa Góc Scandinavia Nord"
+        }
+      },
+      {
+        "name": "Bàn Trà Tròn Đôi Slate Marble & Walnut",
+        "hotspot": {
+          "id": "h2",
+          "x": 64,
+          "y": 76,
+          "product_id": 2,
+          "label": "Bàn Trà Tròn Đôi Slate Marble"
+        }
+      },
+      {
+        "name": "Ghế Thư Giãn Lounge Chair Eames Style",
+        "hotspot": {
+          "id": "h3",
+          "x": 22,
+          "y": 64,
+          "product_id": 3,
+          "label": "Ghế Lounge Chair Thư Giãn"
+        }
+      },
+      {
+        "name": "Đèn Cây Đứng Nordic Arc Brass Floor Lamp",
+        "hotspot": {
+          "id": "h4",
+          "x": 80,
+          "y": 46,
+          "product_id": 12,
+          "label": "Đèn Cây Đứng Nordic Arc"
+        }
+      },
+      {
+        "name": "Tủ Kệ Tivi Gỗ Óc Chó Walnut Floating Console",
+        "hotspot": {
+          "id": "h5",
+          "x": 90,
+          "y": 70,
+          "product_id": 7,
+          "label": "Kệ Tivi Walnut Floating"
+        }
+      },
+      {
+        "name": "Bàn Cà Phê Gỗ Tái Chế Reclaimed Wood Coffee Table",
+        "hotspot": null
+      }
+    ]
+  },
+  {
+    "slug": "phong-ngu-japandi-zen",
+    "products": [
+      {
+        "name": "Giường Ngủ Nhật Bản Muji Zen Minimalist",
+        "hotspot": {
+          "id": "h1",
+          "x": 50,
+          "y": 68,
+          "product_id": 4,
+          "label": "Giường Ngủ Muji Zen Minimalist"
+        }
+      },
+      {
+        "name": "Tủ Đầu Giường Gỗ Tần Bì Có Ngăn Khóa Nightstand",
+        "hotspot": {
+          "id": "h2",
+          "x": 20,
+          "y": 65,
+          "product_id": 13,
+          "label": "Tủ Đầu Giường Gỗ Tần Bì"
+        }
+      },
+      {
+        "name": "Đèn Ngủ Để Bàn Ceramic Table Lamp Gốm Thủ Công",
+        "hotspot": {
+          "id": "h3",
+          "x": 22,
+          "y": 50,
+          "product_id": 24,
+          "label": "Đèn Ngủ Gốm Thủ Công Ceramic"
+        }
+      },
+      {
+        "name": "Bàn Trang Điểm Gỗ Sồi Gương LED Vanity Table",
+        "hotspot": {
+          "id": "h4",
+          "x": 82,
+          "y": 60,
+          "product_id": 18,
+          "label": "Bàn Phấn Gỗ Sồi Gương LED"
+        }
+      },
+      {
+        "name": "Tủ Giày Cửa Gỗ Kết Hợp Gương Full-Length Shoe Cabinet",
+        "hotspot": null
+      }
+    ]
+  },
+  {
+    "slug": "phong-an-bac-au-nordic-dining",
+    "products": [
+      {
+        "name": "Bàn Ăn Mở Rộng Bắc Âu OAK Nature",
+        "hotspot": {
+          "id": "h1",
+          "x": 48,
+          "y": 68,
+          "product_id": 5,
+          "label": "Bàn Ăn Mở Rộng OAK Nature"
+        }
+      },
+      {
+        "name": "Bộ 4 Ghế Ăn Bọc Đệm Elbow Hans Wegner",
+        "hotspot": {
+          "id": "h2",
+          "x": 30,
+          "y": 72,
+          "product_id": 6,
+          "label": "Bộ 4 Ghế Ăn Elbow Hans Wegner"
+        }
+      },
+      {
+        "name": "Đèn Thả Bàn Ăn 3 Bóng Nghệ Thuật Trio Pendant",
+        "hotspot": {
+          "id": "h3",
+          "x": 50,
+          "y": 32,
+          "product_id": 16,
+          "label": "Đèn Thả Bàn Ăn 3 Bóng Trio"
+        }
+      },
+      {
+        "name": "Tủ Bếp Trên Dưới Hiện Đại Kitchen Cabinet Set",
+        "hotspot": null
+      },
+      {
+        "name": "Ghế Bar Cao Chân Gỗ Bọc Da PU Counter Stool",
+        "hotspot": {
+          "id": "h4",
+          "x": 85,
+          "y": 60,
+          "product_id": 23,
+          "label": "Ghế Bar Chân Gỗ Cao"
+        }
+      }
+    ]
+  },
+  {
+    "slug": "phong-lam-viec-studio-creative",
+    "products": [
+      {
+        "name": "Bàn Làm Việc Studio Desk Gỗ Sồi Có Ngăn Kéo",
+        "hotspot": {
+          "id": "h1",
+          "x": 45,
+          "y": 64,
+          "product_id": 8,
+          "label": "Bàn Làm Việc Studio Gỗ Sồi"
+        }
+      },
+      {
+        "name": "Ghế Làm Việc Công Thái Học Herman Leather Office Chair",
+        "hotspot": {
+          "id": "h2",
+          "x": 55,
+          "y": 70,
+          "product_id": 14,
+          "label": "Ghế Làm Việc Herman Leather"
+        }
+      },
+      {
+        "name": "Kệ Sách Cây Khung Thép 5 Tầng Bookshelf Minimal",
+        "hotspot": {
+          "id": "h3",
+          "x": 82,
+          "y": 45,
+          "product_id": 15,
+          "label": "Kệ Sách Cây Khung Thép 5 Tầng"
+        }
+      },
+      {
+        "name": "Bàn Làm Việc Đứng Điều Chỉnh Điện Standing Desk",
+        "hotspot": null
+      },
+      {
+        "name": "Kệ Trang Trí Floating Wall Shelf Gỗ Tần Bì 3 Tầng",
+        "hotspot": {
+          "id": "h4",
+          "x": 20,
+          "y": 40,
+          "product_id": 19,
+          "label": "Kệ Trang Trí Floating Wall Shelf"
+        }
+      }
+    ]
+  },
+  {
+    "slug": "phong-bep-nordic-island",
+    "products": [
+      {
+        "name": "Tủ Bếp Trên Dưới Hiện Đại Kitchen Cabinet Set",
+        "hotspot": {
+          "id": "h1",
+          "x": 50,
+          "y": 62,
+          "product_id": 22,
+          "label": "Tủ Bếp Trên Dưới Module"
+        }
+      },
+      {
+        "name": "Ghế Bar Cao Chân Gỗ Bọc Da PU Counter Stool",
+        "hotspot": {
+          "id": "h2",
+          "x": 35,
+          "y": 75,
+          "product_id": 23,
+          "label": "Ghế Bar Cao Chân Gỗ Bọc Da"
+        }
+      },
+      {
+        "name": "Đèn Thả Bàn Ăn 3 Bóng Nghệ Thuật Trio Pendant",
+        "hotspot": {
+          "id": "h3",
+          "x": 50,
+          "y": 30,
+          "product_id": 16,
+          "label": "Đèn Thả Trần Hiện Đại"
+        }
+      },
+      {
+        "name": "Bàn Ăn Mở Rộng Bắc Âu OAK Nature",
+        "hotspot": null
+      }
+    ]
+  },
+  {
+    "slug": "phong-khach-co-dien-heritage",
+    "products": [
+      {
+        "name": "Sofa 3 Chỗ Bọc Da Ý Premium Leather Milano",
+        "hotspot": {
+          "id": "h1",
+          "x": 45,
+          "y": 68,
+          "product_id": 20,
+          "label": "Sofa 3 Chỗ Bọc Da Ý Milano"
+        }
+      },
+      {
+        "name": "Bàn Cà Phê Gỗ Tái Chế Reclaimed Wood Coffee Table",
+        "hotspot": {
+          "id": "h2",
+          "x": 68,
+          "y": 74,
+          "product_id": 21,
+          "label": "Bàn Cà Phê Gỗ Tái Chế Mạ Vàng"
+        }
+      },
+      {
+        "name": "Sofa Văng Đôi 2 Chỗ Cozy Velvet Green",
+        "hotspot": {
+          "id": "h3",
+          "x": 20,
+          "y": 65,
+          "product_id": 9,
+          "label": "Sofa Văng Đôi Cozy Velvet Green"
+        }
+      },
+      {
+        "name": "Sofa Đơn Accent Chair Bọc Nhung Blush Pink",
+        "hotspot": {
+          "id": "h4",
+          "x": 80,
+          "y": 62,
+          "product_id": 17,
+          "label": "Sofa Đơn Accent Chair Blush Pink"
+        }
+      },
+      {
+        "name": "Ghế Xích Đu Trong Nhà Rattan Swing Chair Boho",
+        "hotspot": null
+      }
+    ]
+  },
+  {
+    "slug": "phong-ngu-master-modern-haven",
+    "products": [
+      {
+        "name": "Giường Ngủ Bọc Vải Nệm Cloud King Size",
+        "hotspot": {
+          "id": "h1",
+          "x": 48,
+          "y": 68,
+          "product_id": 10,
+          "label": "Giường Ngủ Cloud King Size"
+        }
+      },
+      {
+        "name": "Tủ Quần Áo Cánh Kính Khung Nhôm Minimalist",
+        "hotspot": {
+          "id": "h2",
+          "x": 82,
+          "y": 55,
+          "product_id": 11,
+          "label": "Tủ Quần Áo Cánh Kính Minimalist"
+        }
+      },
+      {
+        "name": "Bàn Trang Điểm Gỗ Sồi Gương LED Vanity Table",
+        "hotspot": {
+          "id": "h3",
+          "x": 18,
+          "y": 62,
+          "product_id": 18,
+          "label": "Bàn Trang Điểm Gương LED"
+        }
+      },
+      {
+        "name": "Đèn Cây Đứng Nordic Arc Brass Floor Lamp",
+        "hotspot": null
+      },
+      {
+        "name": "Tủ Đầu Giường Gỗ Tần Bì Có Ngăn Khóa Nightstand",
+        "hotspot": null
+      }
+    ]
+  },
+  {
+    "slug": "san-vuon-outdoor-oasis",
+    "products": [
+      {
+        "name": "Ghế Xích Đu Trong Nhà Rattan Swing Chair Boho",
+        "hotspot": {
+          "id": "h1",
+          "x": 45,
+          "y": 68,
+          "product_id": 27,
+          "label": "Ghế Xích Đu Rattan Swing Boho"
+        }
+      },
+      {
+        "name": "Ghế Thư Giãn Lounge Chair Eames Style",
+        "hotspot": {
+          "id": "h2",
+          "x": 70,
+          "y": 72,
+          "product_id": 3,
+          "label": "Ghế Thư Giãn Lounge Chair"
+        }
+      },
+      {
+        "name": "Bàn Cà Phê Gỗ Tái Chế Reclaimed Wood Coffee Table",
+        "hotspot": {
+          "id": "h3",
+          "x": 30,
+          "y": 75,
+          "product_id": 21,
+          "label": "Bàn Trà Gỗ Tái Chế Outdoor"
+        }
+      },
+      {
+        "name": "Sofa Đơn Accent Chair Bọc Nhung Blush Pink",
+        "hotspot": null
+      }
+    ]
+  }
+]

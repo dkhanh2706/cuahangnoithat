@@ -1,5 +1,3 @@
-import { MOCK_PRODUCTS } from "./mockProducts";
-
 export const COLLECTION_ROOMS = [
   { id: "all", name: "Tất cả", slug: "all" },
   { id: "phong-khach", name: "Phòng khách", slug: "phong-khach" },
@@ -19,7 +17,7 @@ export const COLLECTION_STYLES = [
   { id: "Cổ điển", name: "Cổ điển (Classic Heritage)" },
 ];
 
-export const MOCK_COLLECTIONS = [
+export const COLLECTIONS = [
   {
     id: 1,
     slug: "phong-khach-bac-au",
@@ -29,7 +27,6 @@ export const MOCK_COLLECTIONS = [
     style: "Bắc Âu",
     is_featured: true,
     badge: "BÁN CHẠY NHẤT 2026",
-    offer_tag: "Ưu đãi Combo -15%",
     banner_image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1920&q=85",
     thumbnail: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1000&q=85",
     tagline: "Ánh sáng tự nhiên hòa cùng gỗ sồi ấm áp và vải linen tinh khiết",
@@ -56,15 +53,6 @@ export const MOCK_COLLECTIONS = [
       "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1400&q=85",
       "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=1400&q=85",
     ],
-    hotspots: [
-      { id: "h1", x: 42, y: 70, product_id: 1, label: "Sofa Góc Scandinavia Nord" },
-      { id: "h2", x: 64, y: 76, product_id: 2, label: "Bàn Trà Tròn Đôi Slate Marble" },
-      { id: "h3", x: 22, y: 64, product_id: 3, label: "Ghế Lounge Chair Thư Giãn" },
-      { id: "h4", x: 80, y: 46, product_id: 12, label: "Đèn Cây Đứng Nordic Arc" },
-      { id: "h5", x: 90, y: 70, product_id: 7, label: "Kệ Tivi Walnut Floating" },
-    ],
-    product_ids: [1, 2, 3, 12, 7, 21],
-    bundle_discount_percent: 15,
   },
 
   {
@@ -76,7 +64,6 @@ export const MOCK_COLLECTIONS = [
     style: "Japandi",
     is_featured: false,
     badge: "XU HƯỚNG 2026",
-    offer_tag: "Ưu đãi Combo -12%",
     banner_image: "https://images.unsplash.com/photo-1540518614846-7ede433c4ef4?auto=format&fit=crop&w=1920&q=85",
     thumbnail: "https://images.unsplash.com/photo-1540518614846-7ede433c4ef4?auto=format&fit=crop&w=1000&q=85",
     tagline: "Giao thoa thiền định Nhật Bản và công năng tối giản phương Bắc",
@@ -99,14 +86,6 @@ export const MOCK_COLLECTIONS = [
       "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=1400&q=85",
       "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1400&q=85",
     ],
-    hotspots: [
-      { id: "h1", x: 50, y: 68, product_id: 4, label: "Giường Ngủ Muji Zen Minimalist" },
-      { id: "h2", x: 20, y: 65, product_id: 13, label: "Tủ Đầu Giường Gỗ Tần Bì" },
-      { id: "h3", x: 22, y: 50, product_id: 24, label: "Đèn Ngủ Gốm Thủ Công Ceramic" },
-      { id: "h4", x: 82, y: 60, product_id: 18, label: "Bàn Phấn Gỗ Sồi Gương LED" },
-    ],
-    product_ids: [4, 13, 24, 18, 26],
-    bundle_discount_percent: 12,
   },
 
   {
@@ -118,7 +97,6 @@ export const MOCK_COLLECTIONS = [
     style: "Bắc Âu",
     is_featured: false,
     badge: "ẤM CÚNG GIA ĐÌNH",
-    offer_tag: "Ưu đãi Combo -15%",
     banner_image: "https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=1920&q=85",
     thumbnail: "https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=1000&q=85",
     tagline: "Bàn ăn mở rộng thông minh cùng đèn thả nghệ thuật cho bữa cơm tròn vị",
@@ -140,14 +118,6 @@ export const MOCK_COLLECTIONS = [
       "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1400&q=85",
       "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=1400&q=85",
     ],
-    hotspots: [
-      { id: "h1", x: 48, y: 68, product_id: 5, label: "Bàn Ăn Mở Rộng OAK Nature" },
-      { id: "h2", x: 30, y: 72, product_id: 6, label: "Bộ 4 Ghế Ăn Elbow Hans Wegner" },
-      { id: "h3", x: 50, y: 32, product_id: 16, label: "Đèn Thả Bàn Ăn 3 Bóng Trio" },
-      { id: "h4", x: 85, y: 60, product_id: 23, label: "Ghế Bar Chân Gỗ Cao" },
-    ],
-    product_ids: [5, 6, 16, 22, 23],
-    bundle_discount_percent: 15,
   },
 
   {
@@ -159,7 +129,6 @@ export const MOCK_COLLECTIONS = [
     style: "Hiện đại",
     is_featured: false,
     badge: "CÔNG THÁI HỌC",
-    offer_tag: "Ưu đãi Combo -10%",
     banner_image: "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?auto=format&fit=crop&w=1920&q=85",
     thumbnail: "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?auto=format&fit=crop&w=1000&q=85",
     tagline: "Bàn đứng nâng hạ thông minh, kệ sách module và ghế bọc da cao cấp",
@@ -180,14 +149,6 @@ export const MOCK_COLLECTIONS = [
       "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1400&q=85",
       "https://images.unsplash.com/photo-1585412727339-54e4bae3bbf9?auto=format&fit=crop&w=1400&q=85",
     ],
-    hotspots: [
-      { id: "h1", x: 45, y: 64, product_id: 8, label: "Bàn Làm Việc Studio Gỗ Sồi" },
-      { id: "h2", x: 55, y: 70, product_id: 14, label: "Ghế Làm Việc Herman Leather" },
-      { id: "h3", x: 82, y: 45, product_id: 15, label: "Kệ Sách Cây Khung Thép 5 Tầng" },
-      { id: "h4", x: 20, y: 40, product_id: 19, label: "Kệ Trang Trí Floating Wall Shelf" },
-    ],
-    product_ids: [8, 14, 15, 25, 19],
-    bundle_discount_percent: 10,
   },
 
   {
@@ -199,7 +160,6 @@ export const MOCK_COLLECTIONS = [
     style: "Hiện đại",
     is_featured: false,
     badge: "TIỆN NGHI HIỆN ĐẠI",
-    offer_tag: "Ưu đãi Combo -12%",
     banner_image: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1920&q=85",
     thumbnail: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1000&q=85",
     tagline: "Đảo bếp đá nhân tạo kết hợp hệ tủ lưu trữ module và ghế bar sang trọng",
@@ -220,13 +180,6 @@ export const MOCK_COLLECTIONS = [
       "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=1400&q=85",
       "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1400&q=85",
     ],
-    hotspots: [
-      { id: "h1", x: 50, y: 62, product_id: 22, label: "Tủ Bếp Trên Dưới Module" },
-      { id: "h2", x: 35, y: 75, product_id: 23, label: "Ghế Bar Cao Chân Gỗ Bọc Da" },
-      { id: "h3", x: 50, y: 30, product_id: 16, label: "Đèn Thả Trần Hiện Đại" },
-    ],
-    product_ids: [22, 23, 16, 5],
-    bundle_discount_percent: 12,
   },
 
   {
@@ -238,7 +191,6 @@ export const MOCK_COLLECTIONS = [
     style: "Cổ điển",
     is_featured: false,
     badge: "VƯƠNG GIẢ QUÝ PHÁI",
-    offer_tag: "Ưu đãi Combo -18%",
     banner_image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=85",
     thumbnail: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=85",
     tagline: "Vẻ đẹp hoàng gia với sofa bọc da Ý cao cấp và các điểm nhấn mạ vàng",
@@ -259,14 +211,6 @@ export const MOCK_COLLECTIONS = [
       "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1400&q=85",
       "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1400&q=85",
     ],
-    hotspots: [
-      { id: "h1", x: 45, y: 68, product_id: 20, label: "Sofa 3 Chỗ Bọc Da Ý Milano" },
-      { id: "h2", x: 68, y: 74, product_id: 21, label: "Bàn Cà Phê Gỗ Tái Chế Mạ Vàng" },
-      { id: "h3", x: 20, y: 65, product_id: 9, label: "Sofa Văng Đôi Cozy Velvet Green" },
-      { id: "h4", x: 80, y: 62, product_id: 17, label: "Sofa Đơn Accent Chair Blush Pink" },
-    ],
-    product_ids: [20, 21, 9, 17, 27],
-    bundle_discount_percent: 18,
   },
 
   {
@@ -278,7 +222,6 @@ export const MOCK_COLLECTIONS = [
     style: "Hiện đại",
     is_featured: false,
     badge: "TRẢI NGHIỆM 5 SAO",
-    offer_tag: "Ưu đãi Combo -15%",
     banner_image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1920&q=85",
     thumbnail: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1000&q=85",
     tagline: "Giường ngủ bọc đệm êm ái như đám mây và tủ áo cánh kính thời thượng",
@@ -299,13 +242,6 @@ export const MOCK_COLLECTIONS = [
       "https://images.unsplash.com/photo-1540518614846-7ede433c4ef4?auto=format&fit=crop&w=1400&q=85",
       "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1400&q=85",
     ],
-    hotspots: [
-      { id: "h1", x: 48, y: 68, product_id: 10, label: "Giường Ngủ Cloud King Size" },
-      { id: "h2", x: 82, y: 55, product_id: 11, label: "Tủ Quần Áo Cánh Kính Minimalist" },
-      { id: "h3", x: 18, y: 62, product_id: 18, label: "Bàn Trang Điểm Gương LED" },
-    ],
-    product_ids: [10, 11, 18, 12, 13],
-    bundle_discount_percent: 15,
   },
 
   {
@@ -317,7 +253,6 @@ export const MOCK_COLLECTIONS = [
     style: "Tối giản",
     is_featured: false,
     badge: "HÒA CÙNG THIÊN NHIÊN",
-    offer_tag: "Ưu đãi Combo -10%",
     banner_image: "https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=1920&q=85",
     thumbnail: "https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=1000&q=85",
     tagline: "Bộ ghế mây đan thư giãn, xích đu và bàn trà chống chịu mọi điều kiện thời tiết",
@@ -337,49 +272,16 @@ export const MOCK_COLLECTIONS = [
       "https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=1400&q=85",
       "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=85",
     ],
-    hotspots: [
-      { id: "h1", x: 45, y: 68, product_id: 27, label: "Ghế Xích Đu Rattan Swing Boho" },
-      { id: "h2", x: 70, y: 72, product_id: 3, label: "Ghế Thư Giãn Lounge Chair" },
-      { id: "h3", x: 30, y: 75, product_id: 21, label: "Bàn Trà Gỗ Tái Chế Outdoor" },
-    ],
-    product_ids: [27, 3, 21, 17],
-    bundle_discount_percent: 10,
   },
 ];
 
-// Helper: lấy thông tin sản phẩm đầy đủ từ MOCK_PRODUCTS cho 1 bộ sưu tập
-export const getCollectionProducts = (collection) => {
-  if (!collection || !collection.product_ids) return [];
-  return collection.product_ids
-    .map((id) => MOCK_PRODUCTS.find((p) => p.id === id))
-    .filter(Boolean);
-};
-
-// Helper: tính tổng tiền gốc và tổng tiền ưu đãi mua trọn bộ
-export const calculateCollectionBundlePricing = (collection) => {
+// Prices, identifiers and availability always come from the API.
+export const getCollectionProducts = collection => collection?.products || [];
+export const calculateCollectionBundlePricing = collection => {
   const products = getCollectionProducts(collection);
-  const totalPrice = products.reduce((sum, p) => sum + (p.price || 0), 0);
-  const discountPercent = collection?.bundle_discount_percent || 10;
-  const bundlePrice = Math.round(totalPrice * (1 - discountPercent / 100));
-  const savings = totalPrice - bundlePrice;
-
-  return {
-    productsCount: products.length,
-    totalPrice,
-    bundlePrice,
-    savings,
-    discountPercent,
-  };
+  const totalPrice = products.reduce((sum, product) => sum + Number(product.price), 0);
+  return { productsCount: products.length, totalPrice, bundlePrice: totalPrice, savings: 0, discountPercent: 0 };
 };
-
-export const getFeaturedCollection = () => {
-  return MOCK_COLLECTIONS.find((c) => c.is_featured) || MOCK_COLLECTIONS[0];
-};
-
-export const getCollectionBySlug = (slug) => {
-  return MOCK_COLLECTIONS.find((c) => c.slug === slug);
-};
-
-export const getRelatedCollections = (currentSlug, limit = 3) => {
-  return MOCK_COLLECTIONS.filter((c) => c.slug !== currentSlug).slice(0, limit);
-};
+export const getFeaturedCollection = collections => collections.find(c => c.is_featured) || collections[0];
+export const getCollectionBySlug = (slug, collections) => collections.find(c => c.slug === slug);
+export const getRelatedCollections = (slug, limit, collections) => collections.filter(c => c.slug !== slug).slice(0, limit);

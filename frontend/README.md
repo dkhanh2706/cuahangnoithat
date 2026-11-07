@@ -1,4 +1,22 @@
-các thư viện cần thiết:
+# Frontend CHNT
+
+Hướng dẫn cài đặt và cập nhật database nằm trong [README gốc](../README.md).
+
+**Quy trình hiện tại:** giỏ hàng đặt đơn COD qua `POST /api/orders`, kiểm tra giá
+và trừ tồn kho. Admin xử lý tại `/admin/orders`: xác nhận → giao hàng → hoàn tất
+và ghi nhận thu tiền. Hủy trước khi giao sẽ hoàn kho một lần. Đơn DEMO cũ vẫn
+hiển thị nhưng không tác động tồn kho khi hủy.
+
+**Bộ sưu tập:** thông tin trang trí trong `src/data/collections.js`; sản phẩm,
+ID, giá, ảnh và tồn kho lấy từ API `/api/collections/products`. Không dùng ID
+hoặc giá sản phẩm mẫu. Thêm cả bộ kiểm tra toàn bộ món trước khi thêm một lần.
+
+**Nhận tin và chính sách:** email có sự đồng ý của khách được lưu vào database;
+admin xem/xóa tại `/admin/subscribers`. Website chưa tự động gửi email. Các
+trang `/policies/warranty`, `/policies/returns`, `/policies/shipping` và
+`/policies/privacy` giải thích quy trình tương ứng.
+
+Các ghi chú chức năng trước đây:
 
 **Tư vấn trực tiếp (20/10/2026):** đăng nhập admin, chọn **Tư vấn khách hàng** ở menu hoặc mở `/admin/chat`, rồi bấm **Bật nhận tư vấn**. Danh sách tự cập nhật tin khách; chọn hội thoại để trả lời. Dùng **Gợi ý sản phẩm / cả bộ** để chọn tối đa 8 món đang còn hàng; có thể ghép thành một bộ hoặc gửi từng món. Khách xác nhận Có/Không trước khi thêm vào giỏ.
 
@@ -16,7 +34,11 @@ Backend bổ sung `POST /api/advisor/chat` và `POST /api/advisor/check-cart`, c
 
 Quản lý sản phẩm: đăng nhập bằng tài khoản admin, mở `/admin/products` hoặc chọn **Quản lý Sản phẩm** trong menu admin. Có thể thêm/sửa thông tin, danh mục, giá, tồn kho, ảnh đại diện; tìm kiếm, lọc, phân trang; xóa và khóa/mở khóa sản phẩm. Sản phẩm bị khóa sẽ ẩn khỏi danh sách và trang chi tiết công khai, không thể đặt mua. Dữ liệu dùng chung với cửa hàng, không cần migration database mới.
 
-Lịch sử đơn hàng: truy cập `/orders` sau khi đăng nhập. Thanh toán giả lập ở giỏ hàng lưu đơn DEMO vào database, không thu tiền và không trừ tồn kho; thành công sẽ chuyển thẳng đến lịch sử. Nhấn icon bình luận cạnh sản phẩm để chọn 1–5 sao và viết đánh giá. Mỗi sản phẩm trong đơn được đánh giá một lần, kèm ảnh sản phẩm tự động. Đánh giá hiện ngay trên Home, phía trên nội dung nội thất, và tại `/reviews`; không hiển thị đánh giá mẫu. Xem toàn bộ thay đổi database và migration tại [DATABASE_CHANGES.md](../DATABASE_CHANGES.md).
+Lịch sử đơn hàng: truy cập `/orders` sau khi đăng nhập để theo dõi đơn COD.
+Nhấn **Cập nhật trạng thái** để xem tiến độ mới nhất. Sau khi admin xác nhận đã
+giao và thu tiền, khách có thể đánh giá từng sản phẩm bằng 1–5 sao và nội dung.
+Mỗi sản phẩm trong đơn được đánh giá một lần, kèm ảnh sản phẩm tự động. Đánh giá
+hiện trên Home và `/reviews`; không hiển thị đánh giá mẫu.
 
 - npm install axios react-router-dom
 - npm install lucide-react

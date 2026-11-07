@@ -22,20 +22,23 @@ import {
   getCollectionProducts,
   calculateCollectionBundlePricing,
   getRelatedCollections,
-} from "../data/mockCollections";
+} from "../data/collections";
 import CollectionHotspots from "../components/collections/CollectionHotspots";
 import CollectionLightbox from "../components/collections/CollectionLightbox";
 import { useCart } from "../context/CartContext";
 import "../styles/Collections.css";
+import useCollections from "../hooks/useCollections";
+import { checkCollectionItems } from "../services/collectionCart";
 
-function CollectionDetail() {
+function CollectionDetailContent() {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const { addToCart, toggleWishlist, isWishlisted } = useCart();
+  const { cart, addToCartBatch, showToast, toggleWishlist, isWishlisted } = useCart();
+  const { collections, loading, error, reload } = useCollections();
 
   const collection = useMemo(() => {
-    return getCollectionBySlug(slug);
-  }, [slug]);
+    return getCollectionBySlug(slug, collections);
+  }, [slug, collections]);
 
   // Pricing & calculations
   const bundlePricing = useMemo(() => {
@@ -47,8 +50,8 @@ function CollectionDetail() {
   }, [collection]);
 
   const relatedCollections = useMemo(() => {
-    return getRelatedCollections(slug, 3);
-  }, [slug]);
+    return getRelatedCollections(slug, 3, collections);
+  }, [slug, collections]);
 
   // Product categories in this collection for quick filter
   const categories = useMemo(() => {
@@ -81,11 +84,10 @@ function CollectionDetail() {
   // Scroll to top on slug change
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    setSelectedCategory("all");
-    setSortBy("default");
-    setVisibleCount(8);
   }, [slug]);
 
+  if (loading) return <div className="collections-container" role="status">Đang tải bộ sưu tập...</div>;
+  if (error) return <div className="collections-container" role="alert">{error} <button onClick={reload}>Thử lại</button></div>;
   if (!collection) {
     return (
       <div className="collection-not-found">
@@ -128,21 +130,25 @@ function CollectionDetail() {
     setTimeout(() => setCopiedHex(null), 1800);
   };
 
-  const handleAddBundleToCart = () => {
-    if (!allProducts.length) return;
+  const addProducts = async (products) => {
+    if (!products.length || isAddingBundle) return;
     setIsAddingBundle(true);
-
-    // Add each product to cart
-    allProducts.forEach((product) => {
-      addToCart(product, 1);
-    });
-
-    setTimeout(() => {
-      setIsAddingBundle(false);
-      setBundleAdded(true);
+    try {
+      const items = await checkCollectionItems(products, cart);
+      const result = addToCartBatch(items);
+      if (!result.ok) throw new Error(result.error);
+      setBundleAdded(products.length > 1);
       setTimeout(() => setBundleAdded(false), 3000);
-    }, 600);
+      return true;
+    } catch (failure) {
+      showToast(typeof failure.response?.data?.detail === "string" ? failure.response.data.detail : failure.message, "error");
+      reload();
+      return false;
+    } finally {
+      setIsAddingBundle(false);
+    }
   };
+  const handleAddBundleToCart = () => addProducts(allProducts);
 
   return (
     <div className="collection-detail-page">
@@ -191,18 +197,8 @@ function CollectionDetail() {
                 <span>
                   Trọn bộ:{" "}
                   <strong className="text-gold">
-                    {formatPrice(bundlePricing.bundlePrice)}
+                    {allProducts.length ? formatPrice(bundlePricing.bundlePrice) : "Đang cập nhật sản phẩm"}
                   </strong>
-                  <span className="original-strike">
-                    {formatPrice(bundlePricing.totalPrice)}
-                  </span>
-                </span>
-              </div>
-              <div className="summary-item saving">
-                <Sparkles size={17} />
-                <span>
-                  Tiết kiệm{" "}
-                  <strong>{formatPrice(bundlePricing.savings)}</strong> khi mua trọn gói (-{bundlePricing.discountPercent}%)
                 </span>
               </div>
             </div>
@@ -214,6 +210,9 @@ function CollectionDetail() {
               bannerImage={collection.banner_image}
               title={collection.title}
               hotspots={collection.hotspots}
+              products={allProducts}
+              onAdd={product => addProducts([product])}
+              busy={isAddingBundle}
               offerTag={collection.offer_tag}
             />
           </div>
@@ -230,17 +229,17 @@ function CollectionDetail() {
               </div>
               <h3>Sở hữu trọn vẹn không gian {collection.title}</h3>
               <p>
-                Tiết kiệm thời gian phối đồ và chi phí với gói nội thất đồng bộ từ CHNT. Cam kết chuẩn tỷ lệ, đồng nhất màu sắc và hỗ trợ lắp đặt miễn phí tại nhà.
+                Chọn nhanh các sản phẩm thật trong bộ sưu tập. Tổng giá là tổng từng món; mã ưu đãi được áp dụng tại giỏ hàng. Giá và tồn kho được kiểm tra lại trước khi thêm.
               </p>
               <div className="bundle-perks-list">
                 <span>
-                  <CheckCircle2 size={16} /> Bảo hành chính hãng 5 năm
+                  <CheckCircle2 size={16} /> Bảo hành theo từng sản phẩm
                 </span>
                 <span>
-                  <CheckCircle2 size={16} /> Giao hàng & lắp đặt tận phòng
+                  <CheckCircle2 size={16} /> Thanh toán khi nhận hàng
                 </span>
                 <span>
-                  <CheckCircle2 size={16} /> Tư vấn 3D điều chỉnh kích thước
+                  <CheckCircle2 size={16} /> Tư vấn phối nội thất
                 </span>
               </div>
             </div>
@@ -250,21 +249,15 @@ function CollectionDetail() {
                 <span className="bundle-box-title">Tổng chi phí gói trọn bộ:</span>
                 <div className="bundle-numbers">
                   <span className="final-price">
-                    {formatPrice(bundlePricing.bundlePrice)}
+                    {allProducts.length ? formatPrice(bundlePricing.bundlePrice) : "Chưa có sản phẩm"}
                   </span>
-                  <span className="strike-price">
-                    {formatPrice(bundlePricing.totalPrice)}
-                  </span>
-                </div>
-                <div className="discount-tag-pill">
-                  Tiết kiệm {formatPrice(bundlePricing.savings)} (-{bundlePricing.discountPercent}%)
                 </div>
               </div>
 
               <button
                 className={`add-bundle-cart-btn ${bundleAdded ? "added" : ""}`}
                 onClick={handleAddBundleToCart}
-                disabled={isAddingBundle}
+                disabled={isAddingBundle || !allProducts.length || allProducts.some(product => product.stock_quantity < 1)}
               >
                 {bundleAdded ? (
                   <>
@@ -280,6 +273,7 @@ function CollectionDetail() {
                   </>
                 )}
               </button>
+              {allProducts.some(product => product.stock_quantity < 1) && <p role="status">Một số món đang hết hàng. Bạn có thể chọn các món còn hàng ở danh sách bên dưới.</p>}
             </div>
           </div>
         </div>
@@ -447,6 +441,7 @@ function CollectionDetail() {
           </div>
 
           {/* Product Cards Grid */}
+          {!allProducts.length && <p role="status">Bộ sưu tập đang được cập nhật. <Link to="/products">Xem các sản phẩm hiện có</Link>.</p>}
           <div className="products-cards-grid">
             {visibleProducts.map((product) => {
               const wishlisted = isWishlisted(product.id);
@@ -521,10 +516,11 @@ function CollectionDetail() {
 
                       <button
                         className="quick-cart-btn"
-                        onClick={() => addToCart(product, 1)}
+                        onClick={() => addProducts([product])}
+                        disabled={isAddingBundle || product.stock_quantity < 1}
                         title="Thêm vào giỏ hàng"
                       >
-                        <ShoppingBag size={16} />
+                        {product.stock_quantity < 1 ? "Hết hàng" : <ShoppingBag size={16} />}
                       </button>
                     </div>
                   </div>
@@ -616,4 +612,7 @@ function CollectionDetail() {
   );
 }
 
-export default CollectionDetail;
+export default function CollectionDetail() {
+  const { slug } = useParams();
+  return <CollectionDetailContent key={slug} />;
+}

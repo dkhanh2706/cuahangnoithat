@@ -4,6 +4,7 @@ import sys
 import unittest
 import asyncio
 import json
+from urllib.parse import urlsplit
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -30,6 +31,7 @@ class ASGIClient:
         self.app = app
 
     def request(self, method, path, payload=None, body=None, headers=None):
+        parsed = urlsplit(path)
         request_body = body if body is not None else json.dumps(payload).encode() if payload is not None else b""
         request_headers = headers if headers is not None else [(b"content-type", b"application/json")]
         async def run():
@@ -39,7 +41,7 @@ class ASGIClient:
             async def send(message):
                 messages.append(message)
             await self.app({"type": "http", "asgi": {"version": "3.0"}, "http_version": "1.1", "method": method,
-                            "scheme": "http", "path": path, "raw_path": path.encode(), "query_string": b"",
+                            "scheme": "http", "path": parsed.path, "raw_path": parsed.path.encode(), "query_string": parsed.query.encode(),
                             "root_path": "", "headers": request_headers,
                             "client": ("test", 1), "server": ("test", 80)}, receive, send)
             status = next(message["status"] for message in messages if message["type"] == "http.response.start")
