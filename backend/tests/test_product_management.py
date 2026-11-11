@@ -13,12 +13,11 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 from database.database import Base, get_db
 import models
-from models.product import Product
 from models.product_image import ProductImage
 from models.user import User
 from routers.products import router
 from routers.store_reviews import router as orders_router
-from utils.dependencies import require_admin, require_customer, get_current_user
+from utils.dependencies import require_customer, get_current_user
 from test_store_reviews import ASGIClient
 
 

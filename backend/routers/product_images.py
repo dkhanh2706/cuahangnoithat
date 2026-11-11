@@ -14,6 +14,7 @@ from fastapi import (
 
 from sqlalchemy.orm import Session
 
+import config
 from database.database import get_db
 
 from models.product import Product
@@ -31,10 +32,7 @@ router = APIRouter(
 )
 
 
-UPLOAD_FOLDER = os.path.join(
-    "uploads",
-    "products"
-)
+UPLOAD_FOLDER = str(config.UPLOADS_DIR / "products")
 
 
 os.makedirs(
@@ -308,7 +306,7 @@ def delete_product_image(
     relative_path = image.image_url.lstrip("/")
 
     file_path = os.path.join(
-        os.getcwd(),
+        str(config.BACKEND_DIR),
         relative_path
     )
 

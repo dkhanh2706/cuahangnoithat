@@ -38,6 +38,14 @@ def orders(q: str = Query("", max_length=150), status: Literal["PENDING", "CONFI
     return {"total": query.count(), "items": [serialize(o) for o in query.order_by(Order.id.desc()).offset(offset).limit(limit).all()]}
 
 
+@router.get("/summary")
+def orders_summary(db: Session = Depends(get_db), admin=Depends(require_admin)):
+    """Số đơn đang chờ xác nhận, dùng cho huy hiệu thông báo trên menu admin."""
+    pending = db.query(Order).filter(Order.status == "PENDING", ~Order.code.startswith("DEMO-")).count()
+    latest = db.query(Order.id).filter(~Order.code.startswith("DEMO-")).order_by(Order.id.desc()).first()
+    return {"pending": pending, "latest_order_id": latest[0] if latest else 0}
+
+
 @router.get("/{order_id}")
 def order_detail(order_id: int, db: Session = Depends(get_db), admin=Depends(require_admin)):
     order = db.get(Order, order_id)

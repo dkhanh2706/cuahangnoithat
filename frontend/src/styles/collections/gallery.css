@@ -1,0 +1,231 @@
+/* =========================================================
+   5. GALLERY MASONRY & LIGHTBOX
+   ========================================================= */
+
+.gallery-section {
+  padding: 60px 0;
+}
+
+.section-header-centered {
+  text-align: center;
+  max-width: 650px;
+  margin: 0 auto 36px;
+}
+
+.section-header-centered h2 {
+  font-size: 32px;
+  font-weight: 800;
+  margin: 0 0 8px 0;
+}
+
+.section-header-centered p {
+  color: #78716c;
+  font-size: 15px;
+  margin: 0;
+}
+
+.gallery-masonry-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 240px;
+  gap: 20px;
+}
+
+.gallery-item {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  background: #ede8e1;
+}
+
+.gallery-item.item-1 {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.gallery-item.item-2 {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+.gallery-item.item-3 {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+.gallery-item.item-4 {
+  grid-column: span 1;
+  grid-row: span 2;
+}
+
+.gallery-item.item-5 {
+  grid-column: span 2;
+  grid-row: span 1;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.gallery-item:hover img {
+  transform: scale(1.05);
+}
+
+.gallery-item-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 16, 20, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.gallery-item:hover .gallery-item-overlay {
+  opacity: 1;
+}
+
+.zoom-label {
+  background: #ffffff;
+  color: #0f1013;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+/* Lightbox Modal */
+.collection-lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 11, 14, 0.96);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  backdrop-filter: blur(8px);
+}
+
+.lightbox-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 32px;
+  color: #ffffff;
+}
+
+.lightbox-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-right: 12px;
+}
+
+.lightbox-counter {
+  font-size: 13px;
+  color: #c59b6c;
+  background: rgba(197, 155, 108, 0.15);
+  padding: 3px 10px;
+  border-radius: 12px;
+}
+
+.lightbox-close-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #ffffff;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-close-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.lightbox-main-stage {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  position: relative;
+}
+
+.lightbox-image-container {
+  max-width: 85%;
+  max-height: 72vh;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-active-img {
+  max-width: 100%;
+  max-height: 72vh;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+}
+
+.lightbox-nav-btn {
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  color: #ffffff;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.lightbox-nav-btn:hover {
+  background: #c59b6c;
+  color: #0f1013;
+}
+
+.lightbox-thumbs-strip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 24px 24px;
+  overflow-x: auto;
+}
+
+.lightbox-thumb-btn {
+  width: 68px;
+  height: 48px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+  opacity: 0.5;
+  transition: all 0.2s ease;
+}
+
+.lightbox-thumb-btn.active,
+.lightbox-thumb-btn:hover {
+  opacity: 1;
+  border-color: #c59b6c;
+}
+
+.lightbox-thumb-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

@@ -3,11 +3,13 @@
 Existing installations should use the migration scripts instead.
 """
 from database.database import Base, SessionLocal, engine
-import models  # Register users, categories, products and images.
-from models.order_review import Order, OrderItem, StoreReview, OrderItemReview
+import models  # noqa: F401  Register users, categories, products and images.
+import models.order_review  # noqa: F401  Register order and review tables.
+import models.store_features  # noqa: F401  Register collection and newsletter tables.
+import models.shopping  # noqa: F401  Register cart and wishlist tables.
+from models.order_review import Order
 from models.category import Category
 from database.seed_catalog import CATEGORY_NAMES, seed_catalog
-from models.store_features import CollectionProduct, NewsletterSubscriber
 from database.migrate_store_features import seed_collections
 
 

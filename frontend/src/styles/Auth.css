@@ -24,6 +24,13 @@
   box-shadow: 0 20px 60px rgba(20, 32, 24, 0.08);
 }
 
+/* Thẻ một cột cho các trang quên / đặt lại mật khẩu */
+.auth-container-single {
+  width: min(560px, 100%);
+  min-height: auto;
+  grid-template-columns: 1fr;
+}
+
 .register-container {
   min-height: 720px;
 }

@@ -1,0 +1,49 @@
+/* =========================================================
+   CHNT ADMIN DASHBOARD STYLES
+   Aesthetic: Luxury Dark Bronze & Carbon Modern UI
+   ========================================================= */
+
+/* (font import moved to the aggregate file) */
+
+:root {
+  --admin-bg-base: #0b0c10;
+  --admin-bg-surface: #14161d;
+  --admin-bg-card: #191c24;
+  --admin-bg-elevated: #212530;
+  --admin-border-subtle: rgba(255, 255, 255, 0.07);
+  --admin-border-hover: rgba(197, 155, 108, 0.35);
+
+  --admin-gold: #c59b6c;
+  --admin-gold-hover: #d6af80;
+  --admin-gold-light: rgba(197, 155, 108, 0.12);
+  --admin-gold-glow: rgba(197, 155, 108, 0.25);
+
+  --admin-text-main: #f3f4f6;
+  --admin-text-muted: #94a3b8;
+  --admin-text-dim: #64748b;
+
+  --admin-emerald: #10b981;
+  --admin-emerald-bg: rgba(16, 185, 129, 0.12);
+  --admin-rose: #f43f5e;
+  --admin-rose-bg: rgba(244, 63, 94, 0.12);
+  --admin-blue: #38bdf8;
+  --admin-blue-bg: rgba(56, 189, 248, 0.12);
+  --admin-purple: #a855f7;
+  --admin-purple-bg: rgba(168, 85, 247, 0.14);
+
+  --admin-sidebar-width: 270px;
+  --admin-topbar-height: 70px;
+  --admin-radius: 12px;
+  --admin-radius-sm: 8px;
+  --admin-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* Base Admin Layout Structure */
+.admin-root {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--admin-bg-base);
+  color: var(--admin-text-main);
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+}

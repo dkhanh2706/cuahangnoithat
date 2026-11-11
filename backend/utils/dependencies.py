@@ -1,4 +1,5 @@
 from fastapi import Depends, HTTPException, status
+from config import ADMIN_EMAIL
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 
@@ -78,10 +79,10 @@ def require_staff(
 def require_admin(
     current_user: User = Depends(get_current_user)
 ):
-    if current_user.role != "ADMIN" or current_user.email != "adminhdk@gmail.com":
+    if current_user.role != "ADMIN" or current_user.email.lower() != ADMIN_EMAIL:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Chỉ tài khoản quản trị viên duy nhất (adminhdk@gmail.com) mới có quyền truy cập"
+            detail="Chỉ tài khoản quản trị viên duy nhất mới có quyền truy cập"
         )
 
     return current_user

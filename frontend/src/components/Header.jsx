@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import api from "../services/api";
-import { readUser, saveUser } from "../services/session";
+import { readUser, saveUser, endSession } from "../services/session";
 import UserAvatar from "./UserAvatar";
 import "../styles/Header.css";
 
@@ -62,9 +62,7 @@ function Header() {
   }, [location.pathname]);
 
   const handleLogout = () => {
-    window.dispatchEvent(new Event("session-ending"));
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("user");
+    endSession();
     navigate("/");
     window.location.reload();
   };
@@ -200,7 +198,7 @@ function Header() {
                       <small>{user?.email || ""}</small>
                     </div>
                     <div className="dropdown-divider" />
-                    {user?.role === "ADMIN" && user?.email?.toLowerCase() === "adminhdk@gmail.com" && (
+                    {user?.role === "ADMIN" && (
                       <button
                         className="dropdown-item"
                         style={{ color: "#c59b6c", fontWeight: "600" }}
@@ -298,7 +296,7 @@ function Header() {
             </div>
 
             <nav className="mobile-nav-links">
-              {user?.role === "ADMIN" && user?.email?.toLowerCase() === "adminhdk@gmail.com" && (
+              {user?.role === "ADMIN" && (
                 <NavLink
                   to="/admin"
                   onClick={() => setMobileMenuOpen(false)}

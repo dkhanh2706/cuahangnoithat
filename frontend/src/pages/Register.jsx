@@ -115,7 +115,7 @@ function Register() {
             </h1>
 
             <p className="auth-visual-description">
-              Đăng ký thành viên để trải nghiệm hệ sinh thái nội thất cao cấp, nhận ngay voucher giảm 10% và tích điểm đổi quà giá trị.
+              Tạo tài khoản để theo dõi đơn hàng, lưu giỏ hàng và danh sách yêu thích, dùng được trên mọi thiết bị.
             </p>
 
             <div className="auth-visual-perks">
@@ -145,7 +145,7 @@ function Register() {
           <div className="auth-form-box register-box">
             <div className="auth-heading">
               <span className="auth-step-tag">TẠO TÀI KHOẢN MỚI</span>
-              <h2>Đăng ký thành viên</h2>
+              <h2>Tạo tài khoản</h2>
               <p>Điền thông tin bên dưới để bắt đầu trải nghiệm cùng CHNT.</p>
             </div>
 

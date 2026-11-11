@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import UserLayout from "./layouts/UserLayout";
@@ -5,6 +6,8 @@ import UserLayout from "./layouts/UserLayout";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import Products from "./pages/Products";
 import ProductDetail from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
@@ -19,14 +22,27 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 import AdminRoute from "./admin/AdminRoute";
 import AdminLayout from "./admin/layouts/AdminLayout";
-import UserManagement from "./admin/pages/UserManagement";
-import ProductManagement from "./admin/pages/ProductManagement";
-import CustomerChat from "./admin/pages/CustomerChat";
-import OrderManagement from "./admin/pages/OrderManagement";
-import NewsletterSubscribers from "./admin/pages/NewsletterSubscribers";
+
+// Các trang quản trị chỉ tải khi admin truy cập, giúp bundle của khách nhẹ hơn.
+const Dashboard = lazy(() => import("./admin/pages/Dashboard"));
+const UserManagement = lazy(() => import("./admin/pages/UserManagement"));
+const ProductManagement = lazy(() => import("./admin/pages/ProductManagement"));
+const CustomerChat = lazy(() => import("./admin/pages/CustomerChat"));
+const OrderManagement = lazy(() => import("./admin/pages/OrderManagement"));
+const NewsletterSubscribers = lazy(() => import("./admin/pages/NewsletterSubscribers"));
 import Policies from "./pages/Policies";
 
 import { CartProvider } from "./context/CartContext";
+
+function adminPage(page) {
+  return (
+    <AdminRoute>
+      <AdminLayout>
+        <Suspense fallback={null}>{page}</Suspense>
+      </AdminLayout>
+    </AdminRoute>
+  );
+}
 
 function App() {
   return (
@@ -35,32 +51,12 @@ function App() {
         <Routes>
           {/* ================= ADMIN PORTAL ================= */}
 
-          <Route
-            path="/admin"
-            element={
-              <AdminRoute>
-                <AdminLayout>
-                  <UserManagement />
-                </AdminLayout>
-              </AdminRoute>
-            }
-          />
-
-          <Route
-            path="/admin/users"
-            element={
-              <AdminRoute>
-                <AdminLayout>
-                  <UserManagement />
-                </AdminLayout>
-              </AdminRoute>
-            }
-          />
-
-          <Route path="/admin/products" element={<AdminRoute><AdminLayout><ProductManagement /></AdminLayout></AdminRoute>} />
-          <Route path="/admin/chat" element={<AdminRoute><AdminLayout><CustomerChat /></AdminLayout></AdminRoute>} />
-          <Route path="/admin/orders" element={<AdminRoute><AdminLayout><OrderManagement /></AdminLayout></AdminRoute>} />
-          <Route path="/admin/subscribers" element={<AdminRoute><AdminLayout><NewsletterSubscribers /></AdminLayout></AdminRoute>} />
+          <Route path="/admin" element={adminPage(<Dashboard />)} />
+          <Route path="/admin/users" element={adminPage(<UserManagement />)} />
+          <Route path="/admin/products" element={adminPage(<ProductManagement />)} />
+          <Route path="/admin/chat" element={adminPage(<CustomerChat />)} />
+          <Route path="/admin/orders" element={adminPage(<OrderManagement />)} />
+          <Route path="/admin/subscribers" element={adminPage(<NewsletterSubscribers />)} />
 
           {/* ================= STORE CLIENT ================= */}
 
@@ -87,6 +83,10 @@ function App() {
             <Route path="/login" element={<Login />} />
 
             <Route path="/register" element={<Register />} />
+
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+
+            <Route path="/reset-password" element={<ResetPassword />} />
 
             {/* PROTECTED ROUTES */}
 

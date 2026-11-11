@@ -1,36 +1,15 @@
 import { useState, useEffect, useCallback } from "react";
-import {
-  Users,
-  UserCheck,
-  UserX,
-  UserPlus,
-  Search,
-  RefreshCw,
-  Edit2,
-  Trash2,
-  Lock,
-  Unlock,
-  Key,
-  Eye,
-  Crown,
-  Shield,
-  Briefcase,
-  User as UserIcon,
-  ChevronLeft,
-  ChevronRight,
-  Filter,
-  CheckCircle2,
-  AlertCircle,
-  X,
-  Sparkles,
-} from "lucide-react";
+import { UserPlus, RefreshCw, CheckCircle2, AlertCircle, X, Sparkles } from "lucide-react";
 import adminService from "../services/adminService";
 import UserFormModal from "../components/UserFormModal";
 import UserDetailModal from "../components/UserDetailModal";
 import ResetPasswordModal from "../components/ResetPasswordModal";
 import DeleteConfirmModal from "../components/DeleteConfirmModal";
+import UserPagination from "../components/users/UserPagination";
+import UserTable from "../components/users/UserTable";
+import UserTableControls from "../components/users/UserTableControls";
+import UserStatsCards from "../components/users/UserStatsCards";
 
-const ADMIN_EMAIL = "adminhdk@gmail.com";
 
 function UserManagement() {
   // State data
@@ -113,6 +92,8 @@ function UserManagement() {
     }
   }, [page, limit, searchQuery, roleFilter, statusFilter]);
 
+  // Tải dữ liệu ban đầu và tải lại khi bộ lọc đổi.
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     fetchStats();
   }, []);
@@ -120,6 +101,7 @@ function UserManagement() {
   useEffect(() => {
     fetchUsers();
   }, [fetchUsers]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   // Handlers for Add/Edit
   const handleOpenAddModal = () => {
@@ -156,7 +138,7 @@ function UserManagement() {
 
   // Handlers for Toggle Status
   const handleToggleStatus = async (user) => {
-    if (user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+    if (user.role === "ADMIN") {
       showToast("Không thể khóa tài khoản Quản trị viên tối cao", "error");
       return;
     }
@@ -206,7 +188,7 @@ function UserManagement() {
 
   // Handlers for Delete
   const handleOpenDeleteModal = (user) => {
-    if (user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+    if (user.role === "ADMIN") {
       showToast("Không thể xóa tài khoản Quản trị viên tối cao", "error");
       return;
     }
@@ -304,383 +286,22 @@ function UserManagement() {
         <div className="rule-card-text">
           <h4>Chính Sách Bảo Mật Tài Khoản Quản Trị</h4>
           <p>
-            Hệ thống tuân thủ nghiêm ngặt quy định: Duy nhất <strong>adminhdk@gmail.com</strong> có quyền Quản trị viên (ADMIN).
+            Hệ thống tuân thủ nghiêm ngặt quy định: Duy nhất tài khoản Admin hệ thống có quyền Quản trị viên (ADMIN).
             Không một ai có thể đăng ký hoặc tạo thêm tài khoản Admin mới. Mọi tài khoản mới chỉ được phép nhận quyền <em>Khách hàng (CUSTOMER)</em> hoặc <em>Nhân viên (STAFF)</em>.
           </p>
         </div>
       </div>
 
       {/* Stats Cards */}
-      <div className="admin-stats-grid">
-        <div className="admin-stat-card">
-          <div className="stat-card-top">
-            <span className="stat-label">Tổng người dùng</span>
-            <div className="stat-icon-pill gold">
-              <Users size={20} />
-            </div>
-          </div>
-          <div className="stat-number">
-            {statsLoading ? "..." : stats?.total_users ?? 0}
-          </div>
-          <div className="stat-subtext">
-            <span>+{stats?.recent_users_count || 0} mới trong 30 ngày qua</span>
-          </div>
-        </div>
-
-        <div className="admin-stat-card">
-          <div className="stat-card-top">
-            <span className="stat-label">Đang hoạt động</span>
-            <div className="stat-icon-pill green">
-              <UserCheck size={20} />
-            </div>
-          </div>
-          <div className="stat-number text-green">
-            {statsLoading ? "..." : stats?.active_users ?? 0}
-          </div>
-          <div className="stat-subtext">
-            <span>Đủ điều kiện đăng nhập mua sắm</span>
-          </div>
-        </div>
-
-        <div className="admin-stat-card">
-          <div className="stat-card-top">
-            <span className="stat-label">Tài khoản bị khóa</span>
-            <div className="stat-icon-pill red">
-              <UserX size={20} />
-            </div>
-          </div>
-          <div className="stat-number text-red">
-            {statsLoading ? "..." : stats?.locked_users ?? 0}
-          </div>
-          <div className="stat-subtext">
-            <span>Tạm ngưng quyền truy cập</span>
-          </div>
-        </div>
-
-        <div className="admin-stat-card">
-          <div className="stat-card-top">
-            <span className="stat-label">Phân bố vai trò</span>
-            <div className="stat-icon-pill blue">
-              <Shield size={20} />
-            </div>
-          </div>
-          <div className="stat-roles-breakdown">
-            <div className="role-mini-item">
-              <span className="dot admin" />
-              <span>Admin: <strong>{stats?.admin_count ?? 1}</strong></span>
-            </div>
-            <div className="role-mini-item">
-              <span className="dot staff" />
-              <span>Nhân viên: <strong>{stats?.staff_count ?? 0}</strong></span>
-            </div>
-            <div className="role-mini-item">
-              <span className="dot customer" />
-              <span>Khách hàng: <strong>{stats?.customer_count ?? 0}</strong></span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <UserStatsCards stats={stats} statsLoading={statsLoading} />
 
       {/* Main Table Card */}
       <div className="admin-table-card">
-        {/* Table Controls (Search & Filters) */}
-        <div className="admin-table-controls">
-          <div className="table-search-box">
-            <Search size={18} className="search-icon" />
-            <input
-              type="text"
-              placeholder="Tìm theo họ tên, email, số điện thoại..."
-              value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-                setPage(1);
-              }}
-            />
-            {searchQuery && (
-              <button
-                className="clear-search-btn"
-                onClick={() => setSearchQuery("")}
-              >
-                <X size={15} />
-              </button>
-            )}
-          </div>
+        <UserTableControls roleFilter={roleFilter} searchQuery={searchQuery} setPage={setPage} setRoleFilter={setRoleFilter} setSearchQuery={setSearchQuery} setStatusFilter={setStatusFilter} statusFilter={statusFilter} />
 
-          <div className="table-filters-row">
-            <div className="filter-select-wrap">
-              <Filter size={15} className="filter-icon" />
-              <select
-                value={roleFilter}
-                onChange={(e) => {
-                  setRoleFilter(e.target.value);
-                  setPage(1);
-                }}
-              >
-                <option value="">Tất cả vai trò</option>
-                <option value="CUSTOMER">Khách hàng</option>
-                <option value="STAFF">Nhân viên</option>
-                <option value="ADMIN">Quản trị viên (Admin)</option>
-              </select>
-            </div>
+        <UserTable actionLoading={actionLoading} formatDate={formatDate} handleOpenDeleteModal={handleOpenDeleteModal} handleOpenEditModal={handleOpenEditModal} handleOpenPasswordModal={handleOpenPasswordModal} handleToggleStatus={handleToggleStatus} loading={loading} roleFilter={roleFilter} searchQuery={searchQuery} setIsDetailModalOpen={setIsDetailModalOpen} setRoleFilter={setRoleFilter} setSearchQuery={setSearchQuery} setSelectedUser={setSelectedUser} setStatusFilter={setStatusFilter} statusFilter={statusFilter} users={users} />
 
-            <div className="filter-select-wrap">
-              <select
-                value={statusFilter}
-                onChange={(e) => {
-                  setStatusFilter(e.target.value);
-                  setPage(1);
-                }}
-              >
-                <option value="">Tất cả trạng thái</option>
-                <option value="true">Đang hoạt động</option>
-                <option value="false">Đã bị khóa</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        {/* Table */}
-        <div className="admin-table-responsive">
-          <table className="admin-custom-table">
-            <thead>
-              <tr>
-                <th style={{ width: "60px" }}>ID</th>
-                <th>Người dùng</th>
-                <th>Số điện thoại</th>
-                <th>Địa chỉ</th>
-                <th>Vai trò</th>
-                <th>Trạng thái</th>
-                <th>Ngày tạo</th>
-                <th style={{ textAlign: "right", width: "170px" }}>Thao tác</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                <tr>
-                  <td colSpan="8" className="table-loading-row">
-                    <div className="table-spinner" />
-                    <span>Đang tải danh sách người dùng...</span>
-                  </td>
-                </tr>
-              ) : users.length === 0 ? (
-                <tr>
-                  <td colSpan="8" className="table-empty-row">
-                    <div className="table-empty-box">
-                      <UserX size={36} />
-                      <p>Không tìm thấy người dùng nào phù hợp với bộ lọc</p>
-                      {(searchQuery || roleFilter || statusFilter) && (
-                        <button
-                          className="admin-btn secondary"
-                          onClick={() => {
-                            setSearchQuery("");
-                            setRoleFilter("");
-                            setStatusFilter("");
-                          }}
-                        >
-                          Xóa bộ lọc
-                        </button>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ) : (
-                users.map((item) => {
-                  const isMainAdmin =
-                    item.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
-
-                  return (
-                    <tr
-                      key={item.id}
-                      className={isMainAdmin ? "admin-row-highlight" : ""}
-                    >
-                      <td className="col-id">#{item.id}</td>
-
-                      <td className="col-user">
-                        <div className="user-profile-cell">
-                          <div
-                            className={`user-avatar-badge ${
-                              isMainAdmin ? "gold-avatar" : ""
-                            }`}
-                          >
-                            {item.full_name?.charAt(0)?.toUpperCase() || "U"}
-                            {isMainAdmin && (
-                              <Crown size={12} className="avatar-crown-icon" />
-                            )}
-                          </div>
-                          <div className="user-text-info">
-                            <span className="user-full-name">
-                              {item.full_name}
-                              {isMainAdmin && (
-                                <span className="super-admin-pill">
-                                  ADMIN DUY NHẤT
-                                </span>
-                              )}
-                            </span>
-                            <span className="user-email">{item.email}</span>
-                          </div>
-                        </div>
-                      </td>
-
-                      <td className="col-phone">
-                        {item.phone || <span className="text-muted">Chưa có</span>}
-                      </td>
-
-                      <td className="col-address">
-                        <span className="address-truncate" title={item.address || ""}>
-                          {item.address || <span className="text-muted">Chưa cập nhật</span>}
-                        </span>
-                      </td>
-
-                      <td className="col-role">
-                        <span className={`admin-role-badge ${item.role?.toLowerCase()}`}>
-                          {item.role === "ADMIN" && <Crown size={13} />}
-                          {item.role === "STAFF" && <Briefcase size={13} />}
-                          {item.role === "CUSTOMER" && <UserIcon size={13} />}
-                          <span>
-                            {item.role === "ADMIN"
-                              ? "Quản Trị Viên"
-                              : item.role === "STAFF"
-                              ? "Nhân Viên"
-                              : "Khách Hàng"}
-                          </span>
-                        </span>
-                      </td>
-
-                      <td className="col-status">
-                        <span
-                          className={`admin-status-badge ${
-                            item.status ? "active" : "locked"
-                          }`}
-                        >
-                          <span className="status-dot" />
-                          <span>{item.status ? "Hoạt động" : "Bị khóa"}</span>
-                        </span>
-                      </td>
-
-                      <td className="col-date">{formatDate(item.created_at)}</td>
-
-                      <td className="col-actions">
-                        <div className="row-action-buttons">
-                          {/* View detail button */}
-                          <button
-                            className="action-btn view"
-                            title="Xem chi tiết"
-                            onClick={() => {
-                              setSelectedUser(item);
-                              setIsDetailModalOpen(true);
-                            }}
-                          >
-                            <Eye size={15} />
-                          </button>
-
-                          {/* Edit user button */}
-                          <button
-                            className="action-btn edit"
-                            title="Chỉnh sửa thông tin"
-                            onClick={() => handleOpenEditModal(item)}
-                          >
-                            <Edit2 size={15} />
-                          </button>
-
-                          {/* Lock / Unlock button (Disabled for main admin) */}
-                          <button
-                            className={`action-btn ${
-                              item.status ? "lock" : "unlock"
-                            }`}
-                            title={
-                              isMainAdmin
-                                ? "Không thể khóa tài khoản Admin tối cao"
-                                : item.status
-                                ? "Khóa tài khoản"
-                                : "Mở khóa tài khoản"
-                            }
-                            disabled={isMainAdmin || actionLoading}
-                            onClick={() => handleToggleStatus(item)}
-                          >
-                            {item.status ? <Lock size={15} /> : <Unlock size={15} />}
-                          </button>
-
-                          {/* Reset password button */}
-                          <button
-                            className="action-btn key"
-                            title="Đặt lại mật khẩu"
-                            onClick={() => handleOpenPasswordModal(item)}
-                          >
-                            <Key size={15} />
-                          </button>
-
-                          {/* Delete user button (Disabled for main admin) */}
-                          <button
-                            className="action-btn delete"
-                            title={
-                              isMainAdmin
-                                ? "Không thể xóa tài khoản Admin tối cao"
-                                : "Xóa tài khoản"
-                            }
-                            disabled={isMainAdmin || actionLoading}
-                            onClick={() => handleOpenDeleteModal(item)}
-                          >
-                            <Trash2 size={15} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Pagination bar */}
-        <div className="admin-pagination-bar">
-          <div className="pagination-info">
-            <span>
-              Hiển thị <strong>{users.length}</strong> trong tổng số{" "}
-              <strong>{total}</strong> tài khoản
-            </span>
-            <div className="limit-selector">
-              <label>Mỗi trang:</label>
-              <select
-                value={limit}
-                onChange={(e) => {
-                  setLimit(Number(e.target.value));
-                  setPage(1);
-                }}
-              >
-                <option value={10}>10</option>
-                <option value={20}>20</option>
-                <option value={50}>50</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="pagination-buttons">
-            <button
-              className="page-nav-btn"
-              disabled={page <= 1 || loading}
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              title="Trang trước"
-            >
-              <ChevronLeft size={16} />
-              <span>Trước</span>
-            </button>
-
-            <span className="current-page-tag">
-              Trang {page} / {totalPages}
-            </span>
-
-            <button
-              className="page-nav-btn"
-              disabled={page >= totalPages || loading}
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              title="Trang sau"
-            >
-              <span>Sau</span>
-              <ChevronRight size={16} />
-            </button>
-          </div>
-        </div>
+        <UserPagination limit={limit} loading={loading} page={page} setLimit={setLimit} setPage={setPage} total={total} totalPages={totalPages} users={users} />
       </div>
 
       {/* Modals */}

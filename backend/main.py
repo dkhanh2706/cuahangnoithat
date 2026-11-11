@@ -2,9 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from sqlalchemy import text
-
-from database.database import engine
+import config
 
 from routers.auth import router as auth_router
 from routers.users import router as users_router
@@ -18,6 +16,8 @@ from admin.router import router as admin_router
 from admin.init_admin import ensure_single_admin
 from routers.order_management import router as order_management_router
 from routers.store_features import router as store_features_router
+from routers.shopping import router as shopping_router
+from routers.admin_dashboard import router as admin_dashboard_router
 
 
 app = FastAPI(
@@ -38,23 +38,18 @@ def on_startup():
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "http://localhost:5174",
-        "http://127.0.0.1:5174",
-        "http://localhost:5175",
-        "http://127.0.0.1:5175",
-    ],
+    allow_origins=config.CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 
+config.UPLOADS_DIR.mkdir(exist_ok=True)
+
 app.mount(
     "/uploads",
-    StaticFiles(directory="uploads"),
+    StaticFiles(directory=config.UPLOADS_DIR),
     name="uploads"
 )
 
@@ -74,6 +69,8 @@ app.include_router(live_chat_router)
 app.include_router(admin_router)
 app.include_router(order_management_router)
 app.include_router(store_features_router)
+app.include_router(shopping_router)
+app.include_router(admin_dashboard_router)
 
 
 # =========================
@@ -96,33 +93,3 @@ def health():
     return {
         "status": "ok"
     }
-
-
-# =========================
-# DATABASE TEST
-# =========================
-
-@app.get("/api/db-test")
-def test_database():
-    try:
-        with engine.connect() as connection:
-
-            result = connection.execute(
-                text(
-                    "SELECT current_database();"
-                )
-            )
-
-            database_name = result.scalar()
-
-        return {
-            "status": "success",
-            "database": database_name
-        }
-
-    except Exception as e:
-
-        return {
-            "status": "error",
-            "message": str(e)
-        }

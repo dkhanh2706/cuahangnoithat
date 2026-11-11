@@ -1,0 +1,44 @@
+/* =========================================================
+   8. PAGINATION
+   ========================================================= */
+
+.catalog-pagination {
+  margin-top: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.pagination-btn {
+  min-width: 42px;
+  height: 42px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid #ded8cb;
+  background: #ffffff;
+  color: #2b3830;
+  font-size: 14px;
+  font-weight: 600;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: #f4efe4;
+  border-color: #c9bfad;
+}
+
+.pagination-btn.active {
+  background: #1e3428;
+  color: #ffffff;
+  border-color: #1e3428;
+  box-shadow: 0 4px 12px rgba(30, 52, 40, 0.2);
+}
+
+.pagination-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

@@ -1,19 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { X, Key, Eye, EyeOff, AlertCircle, CheckCircle2 } from "lucide-react";
 
-function ResetPasswordModal({ isOpen, onClose, onSubmit, user, loading = false }) {
+function ResetPasswordForm({ onClose, onSubmit, user, loading }) {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    setNewPassword("");
-    setConfirmPassword("");
-    setError("");
-  }, [isOpen, user]);
-
-  if (!isOpen || !user) return null;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -123,6 +115,12 @@ function ResetPasswordModal({ isOpen, onClose, onSubmit, user, loading = false }
       </div>
     </div>
   );
+}
+
+// Gắn form khi mở và gỡ khi đóng để mỗi lần mở đều bắt đầu với trạng thái trống.
+function ResetPasswordModal({ isOpen, user, loading = false, ...props }) {
+  if (!isOpen || !user) return null;
+  return <ResetPasswordForm key={user.id} user={user} loading={loading} {...props} />;
 }
 
 export default ResetPasswordModal;

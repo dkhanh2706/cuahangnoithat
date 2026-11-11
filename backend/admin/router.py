@@ -1,5 +1,5 @@
 import math
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
@@ -209,7 +209,7 @@ def update_user(
         if data.role == "ADMIN":
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Hệ thống quy định chỉ có 1 Admin duy nhất (adminhdk@gmail.com). Không thể thăng cấp thêm Admin."
+                detail="Hệ thống quy định chỉ có 1 Admin duy nhất. Không thể thăng cấp thêm Admin."
             )
 
     if data.full_name is not None:

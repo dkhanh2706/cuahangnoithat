@@ -10,6 +10,14 @@ export default function NewsletterSubscribers() {
   const [revision, setRevision] = useState(0);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  // Tìm ngay khi gõ (debounce 300ms), không cần bấm nút
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setQuery(search.trim());
+      setPage(0);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [search]);
   useEffect(() => {
     let active = true;
     api.get("/api/admin/newsletter/subscriptions", { params: { q: query, offset: page * 20 } }).then(({ data }) => {

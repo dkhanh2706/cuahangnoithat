@@ -78,7 +78,7 @@ function Footer() {
             </span>
             <h3>Đăng ký nhận cẩm nang không gian sống & ưu đãi 10%</h3>
             <p>
-              Cập nhật sớm nhất các bộ sưu tập mới, mẹo bài trí nhà cửa phong cách Bắc Âu và ưu đãi dành riêng cho thành viên.
+              Cập nhật sớm nhất các bộ sưu tập mới, mẹo bài trí nhà cửa phong cách Bắc Âu và các chương trình ưu đãi mới nhất.
             </p>
           </div>
 

@@ -1,0 +1,206 @@
+/* =========================================================
+   3. COLLECTIONS GRID & CARDS
+   ========================================================= */
+
+.collections-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.collection-room-card {
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid #ede8e1;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.collection-room-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.09);
+  border-color: #d6d3d1;
+}
+
+/* Large Fixed Aspect Media with Hover Effect */
+.card-media-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: #e7e5e4;
+}
+
+.card-room-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.collection-room-card:hover .card-room-image {
+  transform: scale(1.06);
+}
+
+.card-glass-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.45) 100%);
+  transition: opacity 0.3s ease;
+}
+
+.card-top-badges {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 2;
+}
+
+.card-style-pill {
+  background: rgba(255, 255, 255, 0.9);
+  color: #1c1917;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  backdrop-filter: blur(4px);
+}
+
+.card-promo-pill {
+  background: #c59b6c;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+}
+
+/* Hover Description Overlay */
+.card-hover-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 16, 20, 0.85);
+  color: #ffffff;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 3;
+  backdrop-filter: blur(3px);
+}
+
+.collection-room-card:hover .card-hover-overlay {
+  opacity: 1;
+}
+
+.hover-description {
+  font-size: 13.5px;
+  color: #e7e5e4;
+  line-height: 1.55;
+  margin-bottom: 16px;
+}
+
+.hover-cta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding-top: 12px;
+}
+
+.hover-explore-text {
+  font-size: 14px;
+  font-weight: 700;
+  color: #c59b6c;
+}
+
+.hover-explore-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #c59b6c;
+  color: #0f1013;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Card Footer */
+.card-details-footer {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.card-room-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: #78716c;
+  margin-bottom: 8px;
+}
+
+.card-room-meta .dot-sep {
+  color: #d6d3d1;
+}
+
+.card-collection-title {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #1c1917;
+  margin: 0 0 16px 0;
+}
+
+.card-pricing-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #f5f5f4;
+  padding-top: 14px;
+}
+
+.bundle-tag {
+  display: block;
+  font-size: 11.5px;
+  color: #a8a29e;
+  margin-bottom: 2px;
+}
+
+.bundle-price {
+  font-size: 16px;
+  font-weight: 800;
+  color: #c59b6c;
+}
+
+.card-action-arrow {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #f5f4f0;
+  color: #1c1917;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.card-action-arrow:hover {
+  background: #c59b6c;
+  color: #ffffff;
+}

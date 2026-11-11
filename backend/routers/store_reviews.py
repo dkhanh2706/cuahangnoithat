@@ -1,6 +1,6 @@
 from decimal import Decimal
 from uuid import UUID, uuid4, uuid5, NAMESPACE_URL
-from fastapi import APIRouter, Depends, HTTPException, Query, Response
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query, Response
 from pydantic import BaseModel, Field, field_validator
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
@@ -9,6 +9,8 @@ from models.user import User
 from models.product import Product
 from models.order_review import Order, OrderItem, StoreReview, OrderItemReview
 from models.product_image import ProductImage
+import config
+from services.email_service import send_new_order_email
 from utils.dependencies import require_customer
 
 router = APIRouter(prefix="/api", tags=["Orders and store reviews"])
@@ -78,8 +80,12 @@ def promo_discount(code):
 
 
 @router.post("/orders", status_code=201)
-def checkout(data: CheckoutInput, db: Session = Depends(get_db), user: User = Depends(require_customer)):
-    return save_order(data, db, user)
+def checkout(data: CheckoutInput, background_tasks: BackgroundTasks, db: Session = Depends(get_db), user: User = Depends(require_customer)):
+    def notify_admin(order):
+        background_tasks.add_task(
+            send_new_order_email, config.ADMIN_NOTIFY_EMAIL, order.code, order.receiver_name,
+            order.total, f"{config.FRONTEND_URL}/admin/orders")
+    return save_order(data, db, user, on_created=notify_admin)
 
 
 @router.post("/orders/demo", status_code=201)
@@ -87,7 +93,7 @@ def demo_checkout(data: CheckoutInput, db: Session = Depends(get_db), user: User
     return save_order(data, db, user, demo=True)
 
 
-def save_order(data, db, user, demo=False):
+def save_order(data, db, user, demo=False, on_created=None):
     quantities = {}
     for item in data.items:
         quantities[item.product_id] = quantities.get(item.product_id, 0) + item.quantity
@@ -136,6 +142,8 @@ def save_order(data, db, user, demo=False):
                 product.stock_quantity -= quantities[product.id]
         db.commit()
         db.refresh(order)
+        if on_created:
+            on_created(order)
     except IntegrityError:
         db.rollback()
         existing = db.query(Order).filter_by(code=code).first() if data.request_id else None

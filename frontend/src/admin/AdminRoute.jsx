@@ -1,8 +1,6 @@
 import { Navigate, useLocation, Link } from "react-router-dom";
 import { ShieldAlert, ArrowLeft, LogIn } from "lucide-react";
 
-const ADMIN_EMAIL = "adminhdk@gmail.com";
-
 function AdminRoute({ children }) {
   const location = useLocation();
   const token = localStorage.getItem("access_token");
@@ -19,11 +17,8 @@ function AdminRoute({ children }) {
     );
   }
 
-  // Đã đăng nhập nhưng không phải adminhdk@gmail.com
-  const isSuperAdmin =
-    user &&
-    user.role === "ADMIN" &&
-    user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+  // Hệ thống chỉ có đúng một ADMIN; backend vẫn kiểm tra lại mọi yêu cầu.
+  const isSuperAdmin = user?.role === "ADMIN";
 
   if (!isSuperAdmin) {
     return (
@@ -66,9 +61,7 @@ function AdminRoute({ children }) {
           </h2>
 
           <p style={{ fontSize: "14px", color: "#9ca3af", lineHeight: "1.6", marginBottom: "20px" }}>
-            Trang quản trị chỉ dành riêng cho tài khoản quản trị viên duy nhất của hệ thống:
-            <br />
-            <strong style={{ color: "#e5e7eb" }}>adminhdk@gmail.com</strong>.
+            Trang quản trị chỉ dành riêng cho tài khoản quản trị viên duy nhất của hệ thống.
             <br />
             Tài khoản hiện tại của bạn không có thẩm quyền truy cập.
           </p>

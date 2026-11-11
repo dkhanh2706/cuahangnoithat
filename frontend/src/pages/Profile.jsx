@@ -5,13 +5,13 @@ import {
   ShoppingBag,
   Heart,
   LogOut,
-  Sparkles,
+  KeyRound,
   Camera,
   Trash2,
 } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import api from "../services/api";
-import { readUser, saveUser } from "../services/session";
+import { readUser, saveUser, endSession } from "../services/session";
 import UserAvatar from "../components/UserAvatar";
 import { productImageUrl } from "../services/media";
 import "../styles/Profile.css";
@@ -27,6 +27,8 @@ function Profile() {
   const [saving, setSaving] = useState(false);
   const [profileLoading, setProfileLoading] = useState(true);
   const [profileError, setProfileError] = useState("");
+  const [passwordForm, setPasswordForm] = useState({ current: "", next: "", confirm: "" });
+  const [changingPassword, setChangingPassword] = useState(false);
   const uploadLock = useRef(false);
   const saveLock = useRef(false);
 
@@ -81,9 +83,35 @@ function Profile() {
     } finally { uploadLock.current = false; setUploading(false); }
   };
 
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+    if (changingPassword) return;
+    if (passwordForm.next.length < 6) {
+      showToast("Mật khẩu mới phải có tối thiểu 6 ký tự.", "error");
+      return;
+    }
+    if (passwordForm.next !== passwordForm.confirm) {
+      showToast("Mật khẩu xác nhận không khớp.", "error");
+      return;
+    }
+    setChangingPassword(true);
+    try {
+      const { data } = await api.post("/api/auth/change-password", {
+        current_password: passwordForm.current,
+        new_password: passwordForm.next,
+      });
+      setPasswordForm({ current: "", next: "", confirm: "" });
+      showToast(data.message || "Đã đổi mật khẩu thành công!", "success");
+    } catch (err) {
+      const detail = err.response?.data?.detail;
+      showToast(typeof detail === "string" ? detail : "Không thể đổi mật khẩu. Vui lòng thử lại.", "error");
+    } finally {
+      setChangingPassword(false);
+    }
+  };
+
   const handleLogout = () => {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("user");
+    endSession();
     navigate("/");
     window.location.reload();
   };
@@ -102,9 +130,6 @@ function Profile() {
               </div>
               <h3>{userInfo.full_name}</h3>
               <p>{userInfo.email}</p>
-              <div className="member-tier-pill">
-                <Sparkles size={13} /> Thành viên Vàng (Gold)
-              </div>
             </div>
 
             <nav className="profile-nav">
@@ -125,6 +150,16 @@ function Profile() {
                 <Heart size={18} />
                 <span>Yêu thích ({wishlist.length})</span>
               </button>
+
+              {storedUser.role !== "ADMIN" && (
+                <button
+                  className={`profile-nav-btn ${activeTab === "password" ? "active" : ""}`}
+                  onClick={() => setActiveTab("password")}
+                >
+                  <KeyRound size={18} />
+                  <span>Đổi mật khẩu</span>
+                </button>
+              )}
 
               <button className="profile-nav-btn logout" onClick={handleLogout}>
                 <LogOut size={18} />
@@ -207,6 +242,64 @@ function Profile() {
                   <button type="submit" className="profile-save-btn">
                     {saving ? "Đang lưu..." : "Lưu thay đổi"}
                   </button>
+                  </fieldset>
+                </form>
+              </div>
+            )}
+
+            {activeTab === "password" && (
+              <div>
+                <div className="panel-header">
+                  <h2>Đổi mật khẩu</h2>
+                  <p>Dùng mật khẩu mạnh và không trùng với tài khoản khác</p>
+                </div>
+
+                <form onSubmit={handleChangePassword}>
+                  <fieldset className="profile-fields-group" disabled={changingPassword}>
+                    <div className="profile-form-grid">
+                      <div className="profile-field">
+                        <label htmlFor="current-password">Mật khẩu hiện tại</label>
+                        <input
+                          id="current-password"
+                          type="password"
+                          autoComplete="current-password"
+                          required
+                          value={passwordForm.current}
+                          onChange={(e) => setPasswordForm({ ...passwordForm, current: e.target.value })}
+                        />
+                      </div>
+                      <div className="profile-field" />
+                      <div className="profile-field">
+                        <label htmlFor="next-password">Mật khẩu mới</label>
+                        <input
+                          id="next-password"
+                          type="password"
+                          autoComplete="new-password"
+                          required
+                          minLength={6}
+                          maxLength={100}
+                          value={passwordForm.next}
+                          onChange={(e) => setPasswordForm({ ...passwordForm, next: e.target.value })}
+                        />
+                      </div>
+                      <div className="profile-field">
+                        <label htmlFor="confirm-new-password">Nhập lại mật khẩu mới</label>
+                        <input
+                          id="confirm-new-password"
+                          type="password"
+                          autoComplete="new-password"
+                          required
+                          minLength={6}
+                          maxLength={100}
+                          value={passwordForm.confirm}
+                          onChange={(e) => setPasswordForm({ ...passwordForm, confirm: e.target.value })}
+                        />
+                      </div>
+                    </div>
+
+                    <button type="submit" className="profile-save-btn">
+                      {changingPassword ? "Đang lưu..." : "Đổi mật khẩu"}
+                    </button>
                   </fieldset>
                 </form>
               </div>

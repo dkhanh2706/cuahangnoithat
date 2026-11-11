@@ -62,3 +62,15 @@
 }
 .order-existing-review { margin-bottom: 20px; }
 .reviews-page .delete-review-btn { display: inline-flex; align-items: center; gap: 8px; background: #fff; border: 1px solid #d9b6ad; color: #a33624; }
+
+/* ===== Làm mượt trang Đơn hàng / Đánh giá ===== */
+.reviews-page button { transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease, opacity .2s ease; }
+.reviews-page button:not(:disabled):not(.delete-review-btn):not([aria-pressed]):hover { background: #1e3428; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(30, 52, 40, .18); }
+.reviews-page button:not(:disabled):active { transform: translateY(0); box-shadow: none; }
+.reviews-page [role="alert"] { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 0 0 20px; padding: 16px 18px; border: 1px solid #ecc9c1; border-radius: 12px; background: #fdf3f1; color: #a33624; }
+.order-card { transition: box-shadow .3s ease, transform .3s ease; }
+.order-card:hover { box-shadow: 0 12px 30px rgba(30, 52, 40, .08); }
+@media (max-width: 600px) {
+  .reviews-page { padding: 32px 16px 64px; }
+  .order-card-heading strong { font-size: 13px; letter-spacing: .01em; }
+}

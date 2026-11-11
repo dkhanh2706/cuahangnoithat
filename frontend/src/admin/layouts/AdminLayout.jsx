@@ -13,7 +13,11 @@ import {
   MessageCircle,
   ClipboardList,
   Mail,
+  LayoutDashboard,
+  Bell,
 } from "lucide-react";
+import { endSession } from "../../services/session";
+import usePendingOrders from "../hooks/usePendingOrders";
 import "../styles/Admin.css";
 
 function AdminLayout({ children }) {
@@ -22,11 +26,10 @@ function AdminLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const user = JSON.parse(localStorage.getItem("user") || "null");
+  const { pending, newOrder, dismissNewOrder } = usePendingOrders();
 
   const handleLogout = () => {
-    window.dispatchEvent(new Event("session-ending"));
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("user");
+    endSession();
     navigate("/login");
     window.location.reload();
   };
@@ -36,9 +39,8 @@ function AdminLayout({ children }) {
     if (location.pathname.includes("/admin/subscribers")) return "Đăng Ký Nhận Tin";
     if (location.pathname.includes("/admin/chat")) return "Tư Vấn Khách Hàng";
     if (location.pathname.includes("/admin/products")) return "Quản Lý Sản Phẩm";
-    if (location.pathname.includes("/admin/users") || location.pathname === "/admin") {
-      return "Quản Lý Tài Khoản Người Dùng";
-    }
+    if (location.pathname.includes("/admin/users")) return "Quản Lý Tài Khoản Người Dùng";
+    if (location.pathname === "/admin") return "Tổng Quan";
     return "Bảng Quản Trị Hệ Thống";
   };
 
@@ -77,16 +79,12 @@ function AdminLayout({ children }) {
         <div className="admin-sidebar-nav">
           <div className="nav-group-title">QUẢN TRỊ HỆ THỐNG</div>
 
-          <NavLink
-            to="/admin"
-            end
-            className={({ isActive }) =>
-              isActive ? "admin-nav-item active" : "admin-nav-item"
-            }
-            onClick={() => setSidebarOpen(false)}
-          >
-            <Users size={18} />
-            <span>Quản lý Người dùng</span>
+          <NavLink to="/admin" end className={({ isActive }) => `admin-nav-item${isActive ? " active" : ""}`} onClick={() => setSidebarOpen(false)}>
+            <LayoutDashboard size={18} /><span>Tổng quan</span>
+          </NavLink>
+
+          <NavLink to="/admin/users" className={({ isActive }) => `admin-nav-item${isActive ? " active" : ""}`} onClick={() => setSidebarOpen(false)}>
+            <Users size={18} /><span>Quản lý Người dùng</span>
           </NavLink>
 
           <NavLink to="/admin/products" className={({ isActive }) => `admin-nav-item${isActive ? " active" : ""}`} onClick={() => setSidebarOpen(false)}>
@@ -98,6 +96,7 @@ function AdminLayout({ children }) {
           </NavLink>
           <NavLink to="/admin/orders" className={({ isActive }) => `admin-nav-item${isActive ? " active" : ""}`} onClick={() => setSidebarOpen(false)}>
             <ClipboardList size={18} /><span>Quản lý Đơn hàng</span>
+            {pending > 0 && <span className="admin-nav-badge" aria-label={`${pending} đơn chờ xác nhận`}>{pending}</span>}
           </NavLink>
           <NavLink to="/admin/subscribers" className={({ isActive }) => `admin-nav-item${isActive ? " active" : ""}`} onClick={() => setSidebarOpen(false)}>
             <Mail size={18} /><span>Đăng ký nhận tin</span>
@@ -117,7 +116,7 @@ function AdminLayout({ children }) {
                 {user?.full_name || "Admin HDK"}
               </span>
               <span className="admin-user-email">
-                adminhdk@gmail.com
+                {user?.email}
               </span>
             </div>
           </div>
@@ -167,6 +166,15 @@ function AdminLayout({ children }) {
             </div>
           </div>
         </header>
+
+        {newOrder && (
+          <div className="admin-new-order-toast" role="status">
+            <Bell size={16} />
+            <span>Có đơn hàng mới đang chờ xác nhận.</span>
+            <Link to="/admin/orders" onClick={dismissNewOrder}>Xem đơn</Link>
+            <button type="button" onClick={dismissNewOrder} aria-label="Đóng thông báo"><X size={14} /></button>
+          </div>
+        )}
 
         {/* Content Body */}
         <main className="admin-content-area">

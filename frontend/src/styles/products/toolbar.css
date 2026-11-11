@@ -1,0 +1,131 @@
+/* =========================================================
+   4. TOOLBAR (SEARCH, SORT, VIEW MODE, MOBILE FILTER BTN)
+   ========================================================= */
+
+.catalog-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 22px;
+  background: #ffffff;
+  border: 1px solid #ebe5d8;
+  border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(20, 32, 24, 0.03);
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.toolbar-search-form {
+  position: relative;
+  width: min(320px, 100%);
+}
+
+.toolbar-search-form input {
+  width: 100%;
+  height: 42px;
+  padding: 0 36px 0 38px;
+  border-radius: 10px;
+  border: 1.5px solid #ded8cb;
+  background: #faf8f4;
+  font-size: 13.5px;
+  color: #1e2621;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.toolbar-search-form input:focus {
+  border-color: #1e3428;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(30, 52, 40, 0.08);
+}
+
+.toolbar-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #8c978f;
+}
+
+.clear-search-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ba69e;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+.toolbar-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  min-width: 0;
+}
+
+.sort-dropdown {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  min-width: 0;
+  font-size: 13px;
+  color: #556358;
+}
+
+.sort-dropdown select {
+  height: 42px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 1.5px solid #ded8cb;
+  background: #ffffff;
+  font-size: 13px;
+  font-weight: 500;
+  color: #1e3428;
+  outline: none;
+  cursor: pointer;
+}
+
+/* VIEW MODE TOGGLE (GRID / LIST) */
+.view-mode-toggle {
+  display: flex;
+  align-items: center;
+  background: #f1ede3;
+  border-radius: 8px;
+  padding: 3px;
+}
+
+.view-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  color: #6a766e;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.view-btn.active {
+  background: #ffffff;
+  color: #1e3428;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* MOBILE FILTER TRIGGER BUTTON */
+.mobile-filter-open-btn {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: #1e3428;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}

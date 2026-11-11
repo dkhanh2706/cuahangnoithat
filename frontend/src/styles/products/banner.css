@@ -1,0 +1,97 @@
+/* =========================================================
+   PRODUCTS CATALOG COMPREHENSIVE STYLING
+   ========================================================= */
+
+.products-page {
+  padding-bottom: 120px;
+}
+
+/* =========================================================
+   1. ROOM BANNER (DYNAMIC PER ROOM / COLLECTION)
+   ========================================================= */
+
+.room-hero-banner {
+  position: relative;
+  min-height: 280px;
+  background-size: cover;
+  background-position: center;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  transition: all 0.5s ease;
+}
+
+.room-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(16, 28, 21, 0.9) 0%,
+    rgba(16, 28, 21, 0.65) 55%,
+    rgba(16, 28, 21, 0.3) 100%
+  );
+  backdrop-filter: blur(2px);
+}
+
+.room-hero-content {
+  width: min(1240px, calc(100% - 48px));
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+  padding: 45px 0;
+}
+
+.banner-breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: #cad5ce;
+  margin-bottom: 12px;
+}
+
+.banner-breadcrumbs a {
+  color: #e2ede6;
+  text-decoration: none;
+}
+
+.banner-breadcrumbs a:hover {
+  color: #ffffff;
+}
+
+.banner-breadcrumbs span {
+  color: #dfba88;
+}
+
+.banner-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 12px;
+  border-radius: 999px;
+  background: rgba(196, 154, 98, 0.25);
+  border: 1px solid rgba(196, 154, 98, 0.4);
+  color: #dfba88;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  margin-bottom: 12px;
+}
+
+.room-hero-content h1 {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(30px, 3.8vw, 44px);
+  font-weight: 500;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.room-hero-content p {
+  margin: 12px 0 0;
+  color: rgba(240, 245, 242, 0.88);
+  font-size: 14.5px;
+  line-height: 1.6;
+  max-width: 620px;
+}

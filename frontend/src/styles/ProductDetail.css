@@ -24,6 +24,8 @@
 .detail-breadcrumbs a {
   color: #46554b;
   text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .detail-breadcrumbs a:hover {
@@ -32,6 +34,15 @@
 
 .detail-breadcrumbs span {
   color: #a3ad9b;
+  flex-shrink: 0;
+}
+
+.detail-breadcrumbs span:last-child {
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* TOP MAIN SECTION */

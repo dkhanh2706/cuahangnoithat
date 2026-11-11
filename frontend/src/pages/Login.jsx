@@ -63,7 +63,7 @@ function Login() {
 
       let redirectPath = location.state?.from;
       if (!redirectPath || redirectPath === "/") {
-        if (user.role === "ADMIN" && user.email?.toLowerCase() === "adminhdk@gmail.com") {
+        if (user.role === "ADMIN") {
           redirectPath = "/admin";
         } else {
           redirectPath = "/";
@@ -101,7 +101,7 @@ function Login() {
             </h1>
 
             <p className="auth-visual-description">
-              Đăng nhập tài khoản để nhận ưu đãi độc quyền 10%, theo dõi tình trạng đơn hàng và lưu trữ những thiết kế yêu thích.
+              Đăng nhập để theo dõi tình trạng đơn hàng, đồng bộ giỏ hàng và lưu trữ những thiết kế yêu thích trên mọi thiết bị.
             </p>
 
             <div className="auth-visual-perks">
@@ -163,9 +163,9 @@ function Login() {
               <div className="auth-field">
                 <div className="auth-label-row">
                   <label htmlFor="password">Mật khẩu</label>
-                  <a href="#forgot" className="forgot-password-link">
+                  <Link to="/forgot-password" className="forgot-password-link">
                     Quên mật khẩu?
-                  </a>
+                  </Link>
                 </div>
                 <div className="input-with-icon">
                   <Lock size={18} className="field-icon" />

@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, EmailStr, Field
+from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, selectinload
 from database.database import get_db
@@ -55,8 +56,11 @@ def subscribe(data: SubscribeInput, db: Session = Depends(get_db)):
 def subscribers(q: str = Query("", max_length=254), offset: int = Query(0, ge=0),
                 limit: int = Query(20, ge=1, le=100), db: Session = Depends(get_db), admin=Depends(require_admin)):
     query = db.query(NewsletterSubscriber)
-    if q.strip():
-        query = query.filter(NewsletterSubscriber.email.ilike(f"%{q.strip()}%"))
+    term = q.strip().lower()
+    if term:
+        # Escape LIKE wildcards so "_" and "%" in an email are matched literally
+        term = term.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+        query = query.filter(func.lower(NewsletterSubscriber.email).like(f"%{term}%", escape="\\"))
     return {"total": query.count(), "items": [{"id": row.id, "email": row.email, "created_at": row.created_at}
         for row in query.order_by(NewsletterSubscriber.id.desc()).offset(offset).limit(limit).all()]}
 

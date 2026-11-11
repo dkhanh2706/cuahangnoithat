@@ -1,0 +1,138 @@
+/* =========================================================
+   7. BUNDLE PURCHASE CARD
+   ========================================================= */
+
+.bundle-purchase-section {
+  padding: 30px 0;
+}
+
+.bundle-purchase-card {
+  background: linear-gradient(135deg, #1c1917 0%, #292524 100%);
+  border-radius: 20px;
+  padding: 36px 40px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 36px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.15);
+}
+
+.bundle-header-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #fde047;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.bundle-card-left h3 {
+  font-size: 26px;
+  font-weight: 800;
+  margin: 0 0 10px 0;
+  color: #ffffff;
+}
+
+.bundle-card-left p {
+  color: #d6d3d1;
+  font-size: 14.5px;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 0 18px 0;
+}
+
+.bundle-perks-list {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.bundle-perks-list span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #e7e5e4;
+}
+
+.bundle-card-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 16px;
+  min-width: 320px;
+}
+
+.bundle-pricing-box {
+  text-align: right;
+}
+
+.bundle-box-title {
+  display: block;
+  font-size: 13px;
+  color: #a8a29e;
+  margin-bottom: 4px;
+}
+
+.bundle-numbers {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.bundle-numbers .final-price {
+  font-size: 28px;
+  font-weight: 800;
+  color: #fde047;
+}
+
+.bundle-numbers .strike-price {
+  font-size: 16px;
+  color: #78716c;
+  text-decoration: line-through;
+}
+
+.discount-tag-pill {
+  display: inline-block;
+  background: rgba(234, 179, 8, 0.18);
+  border: 1px solid rgba(234, 179, 8, 0.35);
+  color: #fde047;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-top: 4px;
+}
+
+.add-bundle-cart-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 14px 24px;
+  border-radius: 12px;
+  background: #c59b6c;
+  color: #0f1013;
+  font-size: 15px;
+  font-weight: 800;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 6px 18px rgba(197, 155, 108, 0.4);
+}
+
+.add-bundle-cart-btn:hover:not(:disabled) {
+  background: #d6af80;
+  transform: translateY(-2px);
+}
+
+.add-bundle-cart-btn.added {
+  background: #10b981;
+  color: #ffffff;
+}

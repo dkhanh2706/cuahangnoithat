@@ -1,18 +1,14 @@
-from pathlib import Path
 from uuid import uuid4
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from pydantic import BaseModel, Field, field_validator
 from sqlalchemy.orm import Session
+import config
 from database.database import get_db
 from schemas.user import UserResponse
 
 from models.user import User
-from utils.dependencies import (
-    get_current_user,
-    require_staff,
-    require_admin
-)
+from utils.dependencies import get_current_user
 
 
 router = APIRouter(
@@ -53,7 +49,7 @@ def update_profile(data: ProfileInput, db: Session = Depends(get_db), current_us
     return current_user
 
 
-AVATAR_DIR = Path("uploads") / "avatars"
+AVATAR_DIR = config.UPLOADS_DIR / "avatars"
 MAX_AVATAR_BYTES = 5 * 1024 * 1024
 
 
@@ -87,23 +83,3 @@ async def upload_avatar(file: UploadFile = File(...), db: Session = Depends(get_
         destination.unlink(missing_ok=True)
         raise
     return current_user
-
-
-@router.get("/staff-test")
-def staff_test(
-    current_user: User = Depends(require_staff)
-):
-    return {
-        "message": "Bạn có quyền STAFF hoặc ADMIN",
-        "user": current_user.email
-    }
-
-
-@router.get("/admin-test")
-def admin_test(
-    current_user: User = Depends(require_admin)
-):
-    return {
-        "message": "Bạn có quyền ADMIN",
-        "user": current_user.email
-    }

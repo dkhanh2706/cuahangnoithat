@@ -26,42 +26,45 @@ Khách hàng có thể tìm sản phẩm, khám phá bộ sưu tập, thêm gi�
 
 ### 1.1. Dành cho khách hàng
 
-| Nhóm | Chức năng |
-| --- | --- |
-| Tài khoản | Đăng ký, đăng nhập, đăng xuất; cập nhật họ tên, số điện thoại, địa chỉ và ảnh đại diện. |
-| Sản phẩm | Xem danh sách, tìm kiếm, lọc, sắp xếp và xem thông tin chi tiết. |
+| Nhóm       | Chức năng                                                                                                  |
+| ---------- | ---------------------------------------------------------------------------------------------------------- |
+| Tài khoản  | Đăng ký, đăng nhập, đăng xuất; cập nhật hồ sơ và ảnh đại diện; đổi mật khẩu; quên mật khẩu qua email.      |
+| Sản phẩm   | Xem danh sách, tìm kiếm, lọc, sắp xếp và xem thông tin chi tiết.                                           |
 | Bộ sưu tập | Khám phá theo không gian/phong cách; xem sản phẩm tại điểm gắn trên ảnh; thêm từng món hoặc cả bộ vào giỏ. |
-| Giỏ hàng | Thêm/xóa sản phẩm, điều chỉnh số lượng, áp dụng mã giảm giá và xem phí vận chuyển. |
-| Đặt hàng | Nhập thông tin nhận hàng, đặt COD và theo dõi tiến độ trong lịch sử đơn hàng. |
-| Đánh giá | Đánh giá sản phẩm trong đơn đã thanh toán; xem và xóa đánh giá của mình. |
-| Yêu thích | Lưu và bỏ lưu sản phẩm trên trình duyệt. |
-| Tư vấn | Chat với nhân viên online hoặc nhận gợi ý tự động về sản phẩm, ngân sách và cách phối nội thất. |
-| Nhận tin | Đăng ký lưu email liên hệ sau khi đồng ý với chính sách thông tin. |
-| Chính sách | Xem nội dung bảo hành, đổi trả, vận chuyển, thanh toán và thông tin nhận tin. |
+| Giỏ hàng   | Thêm/xóa sản phẩm, điều chỉnh số lượng, áp dụng mã giảm giá và xem phí vận chuyển. Khi đăng nhập, giỏ được lưu theo tài khoản và dùng được trên nhiều thiết bị. |
+| Đặt hàng   | Nhập thông tin nhận hàng, đặt COD và theo dõi tiến độ trong lịch sử đơn hàng.                              |
+| Đánh giá   | Đánh giá sản phẩm trong đơn đã thanh toán; xem và xóa đánh giá của mình.                                   |
+| Yêu thích  | Lưu và bỏ lưu sản phẩm; khi đăng nhập được lưu theo tài khoản.                                             |
+| Tư vấn     | Chat với nhân viên online hoặc nhận gợi ý tự động về sản phẩm, ngân sách và cách phối nội thất.            |
+| Nhận tin   | Đăng ký lưu email liên hệ sau khi đồng ý với chính sách thông tin.                                         |
+| Chính sách | Xem nội dung bảo hành, đổi trả, vận chuyển, thanh toán và thông tin nhận tin.                              |
 
 ### 1.2. Dành cho quản trị viên
 
-| Trang | Chức năng |
-| --- | --- |
-| `/admin` hoặc `/admin/users` | Xem, tìm kiếm, tạo/sửa, khóa/mở khóa, đặt lại mật khẩu và xóa tài khoản theo ràng buộc của hệ thống. |
-| `/admin/products` | Quản lý thông tin sản phẩm, danh mục, giá, tồn kho, ảnh; khóa/mở khóa và xóa sản phẩm. |
-| `/admin/orders` | Tìm/lọc đơn, xem người nhận và sản phẩm, xác nhận, chuyển giao hàng, hoàn tất hoặc hủy trước khi giao. |
-| `/admin/chat` | Bật/tắt nhận tư vấn, chọn hội thoại, trả lời và gửi gợi ý từng món hoặc cả bộ. |
-| `/admin/subscribers` | Tìm kiếm, xem và xóa email đăng ký nhận tin. |
+| Trang                        | Chức năng                                                                                              |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `/admin`                     | Bảng điều khiển: doanh thu, đơn hàng, sản phẩm bán chạy, tồn kho thấp (mô tả bên dưới).               |
+| `/admin/users`               | Xem, tìm kiếm, tạo/sửa, khóa/mở khóa, đặt lại mật khẩu và xóa tài khoản theo ràng buộc của hệ thống.   |
+| `/admin/products`            | Quản lý thông tin sản phẩm, danh mục, giá, tồn kho, ảnh; khóa/mở khóa và xóa sản phẩm.                 |
+| `/admin/orders`              | Tìm/lọc đơn, xem người nhận và sản phẩm, xác nhận, chuyển giao hàng, hoàn tất hoặc hủy trước khi giao. |
+| `/admin/chat`                | Bật/tắt nhận tư vấn, chọn hội thoại, trả lời và gửi gợi ý từng món hoặc cả bộ.                         |
+| `/admin/subscribers`         | Tìm kiếm, xem và xóa email đăng ký nhận tin.                                                           |
+
+Trang `/admin` là **bảng điều khiển**: doanh thu theo ngày (7/30/90 ngày), số đơn, khách mới, đơn theo trạng thái, sản phẩm bán chạy và sản phẩm sắp hết hàng. Doanh thu chỉ tính đơn đã hoàn tất, không tính đơn demo cũ. Menu **Quản lý Đơn hàng** hiện huy hiệu số đơn chờ xác nhận; khi có đơn mới, admin thấy thông báo ở góc màn hình (kiểm tra mỗi 30 giây) và số đơn trên tiêu đề tab. Nếu đã cấu hình SMTP, hệ thống còn gửi email báo đơn mới tới `ADMIN_NOTIFY_EMAIL` (mặc định là email admin).
 
 ## 2. Công nghệ và kiến trúc
 
-| Thành phần | Công nghệ |
-| --- | --- |
-| Frontend | React 19, Vite 8, React Router 7, JavaScript/JSX, CSS. |
-| Giao tiếp API | Axios, HTTP và JSON. |
-| Biểu tượng | Lucide React. |
-| Backend | Python, FastAPI, Uvicorn. |
-| ORM và driver | SQLAlchemy, Psycopg/Psycopg2. |
-| Database ứng dụng | PostgreSQL. |
-| Kiểm tra đầu vào | Pydantic, Email Validator. |
-| Xác thực | JWT qua Python JOSE; băm mật khẩu bằng Passlib/Bcrypt. |
-| Kiểm thử | Python Unittest, SQLite riêng cho tests, Chrome và Chrome DevTools Protocol. |
+| Thành phần        | Công nghệ                                                                    |
+| ----------------- | ---------------------------------------------------------------------------- |
+| Frontend          | React 19, Vite 8, React Router 7, JavaScript/JSX, CSS.                       |
+| Giao tiếp API     | Axios, HTTP và JSON.                                                         |
+| Biểu tượng        | Lucide React.                                                                |
+| Backend           | Python, FastAPI, Uvicorn.                                                    |
+| ORM và driver     | SQLAlchemy, Psycopg/Psycopg2.                                                |
+| Database ứng dụng | PostgreSQL.                                                                  |
+| Kiểm tra đầu vào  | Pydantic, Email Validator.                                                   |
+| Xác thực          | JWT qua Python JOSE; băm mật khẩu bằng Passlib/Bcrypt.                       |
+| Kiểm thử          | Python Unittest, SQLite riêng cho tests, Chrome và Chrome DevTools Protocol. |
 
 ```mermaid
 flowchart LR
@@ -95,6 +98,7 @@ cuahangnoithat/
 │   ├── uploads/                # Ảnh sản phẩm và ảnh đại diện
 │   ├── utils/                  # JWT, mật khẩu và kiểm tra quyền
 │   ├── .env.example            # Mẫu cấu hình, không chứa kết nối thật
+│   ├── config.py               # Đường dẫn uploads và danh sách CORS
 │   ├── main.py                 # Điểm khởi chạy FastAPI
 │   └── requirements.txt        # Thư viện Python
 ├── frontend/
@@ -115,7 +119,6 @@ cuahangnoithat/
 │   ├── package-lock.json
 │   └── vite.config.js
 ├── .gitignore
-├── DATABASE_CHANGES.md          # Ghi chú thay đổi database trước đây
 └── README.md
 ```
 
@@ -178,18 +181,37 @@ Mở `backend/.env` và điền thông tin của máy đang chạy:
 ```dotenv
 DATABASE_URL=postgresql+psycopg://postgres:YOUR_PASSWORD@localhost:5432/chnt
 SECRET_KEY=YOUR_RANDOM_SECRET
+CORS_ORIGINS=http://localhost:5175,http://127.0.0.1:5175
 ```
 
-| Biến | Ý nghĩa |
-| --- | --- |
+| Biến           | Ý nghĩa                                                                         |
+| -------------- | ------------------------------------------------------------------------------- |
 | `DATABASE_URL` | Kết nối PostgreSQL: driver, tài khoản, mật khẩu, địa chỉ, cổng và tên database. |
-| `SECRET_KEY` | Khóa ký/xác minh JWT; dùng chuỗi ngẫu nhiên riêng cho môi trường đang chạy. |
+| `SECRET_KEY`   | Khóa ký/xác minh JWT; dùng chuỗi ngẫu nhiên riêng cho môi trường đang chạy.     |
+| `CORS_ORIGINS` | (Tùy chọn) Danh sách địa chỉ frontend được gọi API, cách nhau bằng dấu phẩy.    |
 
 Có thể tạo chuỗi cho `SECRET_KEY` bằng:
 
 ```powershell
 .\.venv\Scripts\python.exe -c "import secrets; print(secrets.token_hex(32))"
 ```
+
+### Quên mật khẩu và gửi email
+
+Khách bấm **Quên mật khẩu?** ở trang đăng nhập, nhập email và nhận liên kết đặt lại có hiệu lực 30 phút, chỉ dùng được một lần. Liên kết là token ký bằng `SECRET_KEY`, không cần thêm bảng database. Tài khoản admin không dùng luồng này (mật khẩu admin lấy từ `ADMIN_PASSWORD`). Khách đã đăng nhập có thể đổi mật khẩu trong **Hồ sơ → Đổi mật khẩu**.
+
+Để email được gửi thật, điền cấu hình SMTP vào `backend/.env`:
+
+```dotenv
+FRONTEND_URL=http://localhost:5175
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=ten-ban@gmail.com
+SMTP_PASSWORD=mat-khau-ung-dung
+SMTP_FROM=ten-ban@gmail.com
+```
+
+Với Gmail cần bật xác minh 2 bước và dùng "Mật khẩu ứng dụng". Nếu để trống `SMTP_HOST`, backend không gửi email mà ghi liên kết ra log — tiện cho lúc phát triển, **không dùng cho môi trường thật**.
 
 Thay các giá trị mẫu trước khi chạy. Nếu mật khẩu database chứa ký tự đặc biệt trong URL như `@`, `#`, `/` hoặc `:`, cần mã hóa phần mật khẩu theo quy tắc URL. Không commit `.env` lên GitHub.
 
@@ -216,12 +238,12 @@ Tiếp tục từ thư mục `backend`:
 
 Khi backend khởi động và kết nối được database đã chuẩn bị, hệ thống kiểm tra/tạo admin demo.
 
-| Địa chỉ | Mục đích |
-| --- | --- |
-| <http://127.0.0.1:8000> | Kiểm tra API đang chạy. |
-| <http://127.0.0.1:8000/api/health> | Trạng thái tiến trình API. |
-| <http://127.0.0.1:8000/docs> | Swagger UI để xem và thử API. |
-| <http://127.0.0.1:8000/redoc> | Tài liệu API dạng ReDoc. |
+| Địa chỉ                            | Mục đích                      |
+| ---------------------------------- | ----------------------------- |
+| <http://127.0.0.1:8000>            | Kiểm tra API đang chạy.       |
+| <http://127.0.0.1:8000/api/health> | Trạng thái tiến trình API.    |
+| <http://127.0.0.1:8000/docs>       | Swagger UI để xem và thử API. |
+| <http://127.0.0.1:8000/redoc>      | Tài liệu API dạng ReDoc.      |
 
 `/api/health` kiểm tra tiến trình, không thay thế việc kiểm tra kết nối database. Luôn chạy backend từ `backend` để đường dẫn upload nhất quán. Chạy **một worker** vì phiên chat nằm trong RAM của tiến trình.
 
@@ -263,14 +285,14 @@ cd frontend
 npm run dev
 ```
 
-| Trang | Địa chỉ |
-| --- | --- |
-| Cửa hàng | <http://localhost:5175> |
-| Sản phẩm | <http://localhost:5175/products> |
-| Bộ sưu tập | <http://localhost:5175/collections> |
-| Giỏ hàng | <http://localhost:5175/cart> |
-| Lịch sử đơn hàng | <http://localhost:5175/orders> |
-| Quản trị | <http://localhost:5175/admin> |
+| Trang            | Địa chỉ                             |
+| ---------------- | ----------------------------------- |
+| Cửa hàng         | <http://localhost:5175>             |
+| Sản phẩm         | <http://localhost:5175/products>    |
+| Bộ sưu tập       | <http://localhost:5175/collections> |
+| Giỏ hàng         | <http://localhost:5175/cart>        |
+| Lịch sử đơn hàng | <http://localhost:5175/orders>      |
+| Quản trị         | <http://localhost:5175/admin>       |
 
 Dùng `Ctrl+C` trong từng terminal để dừng. Không cần khởi tạo lại database mỗi lần bật website.
 
@@ -278,12 +300,13 @@ Dùng `Ctrl+C` trong từng terminal để dừng. Không cần khởi tạo l�
 
 Với database cũ, kiểm tra cấu trúc và sao lưu dữ liệu cần giữ trước khi chạy migration phù hợp. Các script sau chạy từ `backend`:
 
-| Script | Mục đích và điều kiện |
-| --- | --- |
-| `python -B -m database.migrate_user_avatar` | Thêm cột ảnh đại diện; yêu cầu đã có `users`. |
-| `python -B -m database.migrate_reviews` | Tạo bảng đánh giá cửa hàng; yêu cầu các bảng người dùng/đơn hàng nền tảng. |
-| `python -B -m database.migrate_order_history` | Tạo bảng đánh giá từng sản phẩm trong đơn; yêu cầu các bảng nền tảng. |
+| Script                                         | Mục đích và điều kiện                                                                 |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `python -B -m database.migrate_user_avatar`    | Thêm cột ảnh đại diện; yêu cầu đã có `users`.                                         |
+| `python -B -m database.migrate_reviews`        | Tạo bảng đánh giá cửa hàng; yêu cầu các bảng người dùng/đơn hàng nền tảng.            |
+| `python -B -m database.migrate_order_history`  | Tạo bảng đánh giá từng sản phẩm trong đơn; yêu cầu các bảng nền tảng.                 |
 | `python -B -m database.migrate_store_features` | Tạo bảng liên kết bộ sưu tập và đăng ký email; khởi tạo liên kết từ sản phẩm hiện có. |
+| `python -B -m database.migrate_cart_wishlist`  | Đảm bảo có các bảng giỏ hàng (`carts`, `cart_items`) và yêu thích (`wishlist_items`); bảng đã có thì giữ nguyên. |
 
 Ví dụ cập nhật bộ sưu tập và nhận tin bằng Python trong môi trường ảo:
 
@@ -301,30 +324,30 @@ Nếu cần thêm catalog vào database đã có các danh mục tương ứng:
 ..\.venv\Scripts\python.exe -B -m database.migrate_store_features
 ```
 
-`--dry-run` rollback thay đổi dữ liệu để xem trước; sequence ID của PostgreSQL vẫn có thể tăng. Các migration riêng lẻ không thay thế bộ cài cho database trống. Xem thêm [DATABASE_CHANGES.md](DATABASE_CHANGES.md).
+`--dry-run` rollback thay đổi dữ liệu để xem trước; sequence ID của PostgreSQL vẫn có thể tăng. Các migration riêng lẻ không thay thế bộ cài cho database trống.
 
 ## 8. Tài khoản và phân quyền
 
 ### Tài khoản admin demo
 
-| Thông tin | Giá trị |
-| --- | --- |
-| Email | `adminhdk@gmail.com` |
-| Mật khẩu | `1234567890` |
-| Vai trò | `ADMIN` |
+| Thông tin       | Giá trị                       |
+| --------------- | ----------------------------- |
+| Email           | `adminhdk@gmail.com`          |
+| Mật khẩu        | `1234567890`                  |
+| Vai trò         | `ADMIN`                       |
 | Trang đăng nhập | <http://localhost:5175/login> |
 
-Tài khoản cố định này phục vụ bài thực hành. Mỗi lần backend khởi động, logic hiện tại kiểm tra tài khoản trên, đặt lại mật khẩu demo nếu khác và chuyển các tài khoản `ADMIN` khác về `CUSTOMER`. Không dùng cơ chế admin demo cố định cho hệ thống kinh doanh thực tế.
+Email và mật khẩu mặc định lấy từ `ADMIN_EMAIL` và `ADMIN_PASSWORD` trong `backend/.env` (không đặt thì dùng giá trị trên). Tài khoản cố định này phục vụ bài thực hành. Mỗi lần backend khởi động, logic hiện tại kiểm tra tài khoản trên, đặt lại mật khẩu demo nếu khác và chuyển các tài khoản `ADMIN` khác về `CUSTOMER`. Không dùng cơ chế admin demo cố định cho hệ thống kinh doanh thực tế.
 
 ### Tài khoản khách hàng
 
 Đăng ký tại `/register` để tạo tài khoản `CUSTOMER`. Database mới không có sẵn tài khoản khách hàng dùng chung.
 
-| Đối tượng | Quyền chính |
-| --- | --- |
-| Chưa đăng nhập | Xem cửa hàng, tìm sản phẩm, dùng giỏ/yêu thích trên trình duyệt, xem đánh giá, tư vấn, đăng ký nhận tin. |
-| Khách đã đăng nhập | Đặt hàng, xem đơn của mình, cập nhật hồ sơ, đánh giá sản phẩm đủ điều kiện. |
-| Admin | Quản lý người dùng, sản phẩm, đơn hàng, email và tư vấn trực tiếp. Dùng tài khoản khách riêng để đặt COD. |
+| Đối tượng          | Quyền chính                                                                                               |
+| ------------------ | --------------------------------------------------------------------------------------------------------- |
+| Chưa đăng nhập     | Xem cửa hàng, tìm sản phẩm, dùng giỏ/yêu thích trên trình duyệt, xem đánh giá, tư vấn, đăng ký nhận tin.  |
+| Khách đã đăng nhập | Đặt hàng, xem đơn của mình, cập nhật hồ sơ, đánh giá sản phẩm đủ điều kiện.                               |
+| Admin              | Quản lý người dùng, sản phẩm, đơn hàng, email và tư vấn trực tiếp. Dùng tài khoản khách riêng để đặt COD. |
 
 Mật khẩu được băm bằng Bcrypt. Đăng nhập thành công trả JWT; frontend gửi `Authorization: Bearer <token>` khi gọi API cần xác thực. Token có hạn mặc định 24 giờ. Backend kiểm tra token, trạng thái tài khoản và quyền, không chỉ dựa vào ẩn/hiện menu frontend.
 
@@ -334,7 +357,7 @@ Mật khẩu được băm bằng Bcrypt. Đăng nhập thành công trả JWT; 
 
 - Danh sách, chi tiết sản phẩm và ảnh được tải từ backend/database.
 - Sản phẩm bị khóa không xuất hiện trong truy vấn công khai và không được chấp nhận khi đặt hàng.
-- Giỏ và yêu thích lưu trong `localStorage` của trình duyệt; chưa đồng bộ giữa các thiết bị và không phải các bảng giỏ hàng trong PostgreSQL.
+- Giỏ và yêu thích luôn lưu trong `localStorage` của trình duyệt. Với khách đã đăng nhập, dữ liệu còn được đồng bộ lên PostgreSQL (`/api/cart`, `/api/wishlist`): khi đăng nhập, giỏ trong trình duyệt được gộp với giỏ đã lưu của tài khoản (lấy số lượng lớn hơn), sau đó mọi thay đổi được lưu lại. Đăng xuất sẽ xóa dữ liệu tạm trong trình duyệt. Giá thật luôn được kiểm tra lại khi đặt hàng, không lấy từ giỏ đã lưu.
 - Giá/tồn kho có thể thay đổi sau khi admin cập nhật. Backend kiểm tra lại khi thêm bộ sưu tập và đặt đơn.
 
 ### 9.2. Bộ sưu tập dùng sản phẩm thật
@@ -356,14 +379,14 @@ Thêm cả bộ kiểm tra tất cả món và số lượng đã có trong gi�
 
 Yêu cầu đặt hàng từ giao diện có mã yêu cầu để việc gửi lại cùng yêu cầu không tạo thêm đơn hoặc trừ kho lần nữa.
 
-| Thành phần | Quy tắc |
-| --- | --- |
-| Tạm tính | Tổng đơn giá trong database × số lượng từng món. |
-| `CHNT10` | Giảm 10% tiền sản phẩm. |
-| `CHNT20` | Giảm 20% tiền sản phẩm. |
+| Thành phần | Quy tắc                                                                       |
+| ---------- | ----------------------------------------------------------------------------- |
+| Tạm tính   | Tổng đơn giá trong database × số lượng từng món.                              |
+| `CHNT10`   | Giảm 10% tiền sản phẩm.                                                       |
+| `CHNT20`   | Giảm 20% tiền sản phẩm.                                                       |
 | Vận chuyển | Miễn phí khi tạm tính trước giảm giá từ 2.000.000₫; dưới mức này là 150.000₫. |
-| Tổng tiền | Tạm tính − giảm giá + phí vận chuyển. |
-| Thanh toán | COD — thanh toán khi nhận hàng, không thu tiền qua website. |
+| Tổng tiền  | Tạm tính − giảm giá + phí vận chuyển.                                         |
+| Thanh toán | COD — thanh toán khi nhận hàng, không thu tiền qua website.                   |
 
 ### 9.4. Vòng đời đơn hàng và tồn kho
 
@@ -376,12 +399,12 @@ flowchart LR
     Confirmed --> Cancelled
 ```
 
-| Trạng thái | Ý nghĩa |
-| --- | --- |
-| `PENDING` | Đã tạo đơn, đã trừ tồn kho, chờ admin xác nhận. |
-| `CONFIRMED` | Đã xác nhận để chuẩn bị giao. |
-| `SHIPPING` | Đang giao; không hủy trực tiếp bằng thao tác hủy hiện tại. |
-| `COMPLETED` | Admin xác nhận đã giao và thu tiền COD; thanh toán chuyển `SUCCESS`. |
+| Trạng thái  | Ý nghĩa                                                                      |
+| ----------- | ---------------------------------------------------------------------------- |
+| `PENDING`   | Đã tạo đơn, đã trừ tồn kho, chờ admin xác nhận.                              |
+| `CONFIRMED` | Đã xác nhận để chuẩn bị giao.                                                |
+| `SHIPPING`  | Đang giao; không hủy trực tiếp bằng thao tác hủy hiện tại.                   |
+| `COMPLETED` | Admin xác nhận đã giao và thu tiền COD; thanh toán chuyển `SUCCESS`.         |
 | `CANCELLED` | Hủy từ chờ/đã xác nhận; hoàn số lượng của sản phẩm còn tồn tại đúng một lần. |
 
 Backend không cho bỏ qua các bước hoặc mở lại đơn đã hủy. Đơn `DEMO-...` của luồng giả lập được nhận diện riêng; hủy chúng không tăng tồn kho vì lúc tạo không trừ kho.
@@ -418,18 +441,18 @@ File được phục vụ dưới `/uploads`. Khi chuyển database có ảnh up
 
 ## 10. Dữ liệu và các bảng chính
 
-| Bảng | Vai trò |
-| --- | --- |
-| `users` | Tài khoản, mật khẩu đã băm, vai trò, trạng thái và hồ sơ. |
-| `categories` | Danh mục sản phẩm. |
-| `products` | Thông tin, giá, chất liệu, kích thước, tồn kho và trạng thái sản phẩm. |
-| `product_images` | Ảnh và thông tin ảnh chính của sản phẩm. |
-| `orders` | Mã đơn, người đặt/nhận, địa chỉ, tổng tiền, trạng thái đơn và thanh toán. |
-| `order_details` | Các dòng sản phẩm đã đặt, giữ tên và giá lúc tạo đơn. |
-| `store_reviews` | Đánh giá cấp đơn/cửa hàng qua API đánh giá cửa hàng. |
-| `order_item_reviews` | Đánh giá từng sản phẩm đã mua, dùng trên giao diện hiện tại. |
-| `curated_collection_products` | Liên kết bộ sưu tập với ID sản phẩm thật, thứ tự và tọa độ trên ảnh. |
-| `newsletter_subscribers` | Email đăng ký và thời điểm đăng ký. |
+| Bảng                          | Vai trò                                                                   |
+| ----------------------------- | ------------------------------------------------------------------------- |
+| `users`                       | Tài khoản, mật khẩu đã băm, vai trò, trạng thái và hồ sơ.                 |
+| `categories`                  | Danh mục sản phẩm.                                                        |
+| `products`                    | Thông tin, giá, chất liệu, kích thước, tồn kho và trạng thái sản phẩm.    |
+| `product_images`              | Ảnh và thông tin ảnh chính của sản phẩm.                                  |
+| `orders`                      | Mã đơn, người đặt/nhận, địa chỉ, tổng tiền, trạng thái đơn và thanh toán. |
+| `order_details`               | Các dòng sản phẩm đã đặt, giữ tên và giá lúc tạo đơn.                     |
+| `store_reviews`               | Đánh giá cấp đơn/cửa hàng qua API đánh giá cửa hàng.                      |
+| `order_item_reviews`          | Đánh giá từng sản phẩm đã mua, dùng trên giao diện hiện tại.              |
+| `curated_collection_products` | Liên kết bộ sưu tập với ID sản phẩm thật, thứ tự và tọa độ trên ảnh.      |
+| `newsletter_subscribers`      | Email đăng ký và thời điểm đăng ký.                                       |
 
 Giỏ/yêu thích nằm trên trình duyệt; tư vấn nằm trong RAM backend. Hai nhóm này không phải bảng lưu lịch sử trong database.
 
@@ -437,26 +460,28 @@ Giỏ/yêu thích nằm trên trình duyệt; tư vấn nằm trong RAM backend.
 
 Địa chỉ gốc: `http://127.0.0.1:8000`. Xem đầy đủ đường dẫn, kiểu dữ liệu và yêu cầu xác thực tại `/docs`; có thể thử bằng Swagger UI hoặc Postman.
 
-| Phương thức và đường dẫn | Mục đích |
-| --- | --- |
-| `POST /api/auth/register`, `POST /api/auth/login` | Đăng ký, đăng nhập. |
-| `GET /api/users/me`, `PATCH /api/users/me` | Lấy/cập nhật hồ sơ. |
-| `POST /api/users/me/avatar` | Upload ảnh đại diện qua multipart form. |
-| `GET /api/products`, `GET /api/products/{id}` | Danh sách, chi tiết sản phẩm công khai. |
-| `GET /api/products/{id}/images` | Các ảnh sản phẩm. |
-| `GET /api/collections/products` | Sản phẩm thật và điểm gắn trong bộ sưu tập. |
-| `POST /api/orders/quote` | Kiểm tra giỏ và tính tổng phía server. |
-| `POST /api/orders`, `GET /api/orders` | Tạo COD và lấy đơn của khách đăng nhập. |
-| `GET /api/admin/orders`, `GET /api/admin/orders/{id}` | Danh sách/lọc và chi tiết đơn cho admin. |
-| `PATCH /api/admin/orders/{id}/status` | Chuyển trạng thái theo quy trình. |
-| `GET /api/product-reviews`, `POST /api/product-reviews` | Xem, tạo đánh giá sản phẩm. |
-| `DELETE /api/product-reviews/{id}` | Xóa đánh giá của chính khách. |
+| Phương thức và đường dẫn                                 | Mục đích                                              |
+| -------------------------------------------------------- | ----------------------------------------------------- |
+| `POST /api/auth/register`, `POST /api/auth/login`        | Đăng ký, đăng nhập.                                   |
+| `POST /api/auth/change-password`                         | Khách đã đăng nhập đổi mật khẩu (cần mật khẩu cũ).    |
+| `POST /api/auth/forgot-password`, `POST /api/auth/reset-password` | Gửi liên kết đặt lại qua email và đặt mật khẩu mới.   |
+| `GET /api/users/me`, `PATCH /api/users/me`               | Lấy/cập nhật hồ sơ.                                   |
+| `POST /api/users/me/avatar`                              | Upload ảnh đại diện qua multipart form.               |
+| `GET /api/products`, `GET /api/products/{id}`            | Danh sách, chi tiết sản phẩm công khai.               |
+| `GET /api/products/{id}/images`                          | Các ảnh sản phẩm.                                     |
+| `GET /api/collections/products`                          | Sản phẩm thật và điểm gắn trong bộ sưu tập.           |
+| `POST /api/orders/quote`                                 | Kiểm tra giỏ và tính tổng phía server.                |
+| `POST /api/orders`, `GET /api/orders`                    | Tạo COD và lấy đơn của khách đăng nhập.               |
+| `GET /api/admin/orders`, `GET /api/admin/orders/{id}`    | Danh sách/lọc và chi tiết đơn cho admin.              |
+| `PATCH /api/admin/orders/{id}/status`                    | Chuyển trạng thái theo quy trình.                     |
+| `GET /api/product-reviews`, `POST /api/product-reviews`  | Xem, tạo đánh giá sản phẩm.                           |
+| `DELETE /api/product-reviews/{id}`                       | Xóa đánh giá của chính khách.                         |
 | `POST /api/advisor/chat`, `POST /api/advisor/check-cart` | Tư vấn tự động, kiểm tra lựa chọn trước khi thêm giỏ. |
-| `/api/live-chat/*` | Phiên chat, trạng thái online, tư vấn trực tiếp. |
-| `POST /api/newsletter/subscriptions` | Ghi nhận email có sự đồng ý của khách. |
-| `GET /api/admin/newsletter/subscriptions` | Danh sách email cho admin. |
-| `DELETE /api/admin/newsletter/subscriptions/{id}` | Xóa đăng ký nhận tin. |
-| `/api/admin/users*`, `/api/products/admin/all` | Quản lý tài khoản, danh sách sản phẩm quản trị. |
+| `/api/live-chat/*`                                       | Phiên chat, trạng thái online, tư vấn trực tiếp.      |
+| `POST /api/newsletter/subscriptions`                     | Ghi nhận email có sự đồng ý của khách.                |
+| `GET /api/admin/newsletter/subscriptions`                | Danh sách email cho admin.                            |
+| `DELETE /api/admin/newsletter/subscriptions/{id}`        | Xóa đăng ký nhận tin.                                 |
+| `/api/admin/users*`, `/api/products/admin/all`           | Quản lý tài khoản, danh sách sản phẩm quản trị.       |
 
 `/api/orders/demo` vẫn tồn tại để tương thích luồng giả lập; giao diện đặt hàng hiện tại dùng `/api/orders` cho COD.
 
@@ -534,37 +559,37 @@ Dùng hai phiên trình duyệt độc lập để giữ đăng nhập admin và
 
 ## 14. Xử lý lỗi thường gặp
 
-| Hiện tượng | Cách kiểm tra/xử lý |
-| --- | --- |
-| Không tìm thấy Python/npm | Kiểm tra cài đặt và PATH; mở lại terminal, chạy `python --version`, `node --version`, `npm --version`. |
-| Vite báo Node không phù hợp | Kiểm tra `engines` của Vite, dùng Node đáp ứng yêu cầu rồi cài lại bằng `npm ci`. |
-| `ModuleNotFoundError` | Dùng Python trong `.venv`, cài lại `backend/requirements.txt`. |
-| Không kết nối database | Kiểm tra PostgreSQL, database tồn tại, `DATABASE_URL`, quyền tài khoản và mã hóa mật khẩu trong URL. |
-| Thiếu bảng/cột | Database mới: chạy `database.init_database`; database cũ: kiểm tra cấu trúc rồi chạy migration tương ứng. |
-| Lỗi thư mục upload | Chạy Uvicorn từ `backend`; kiểm tra `backend/uploads` tồn tại và có quyền ghi. |
-| Frontend không tải dữ liệu | Kiểm tra backend 8000, địa chỉ API, Network trong DevTools và log backend. |
-| CORS hoặc Vite đổi cổng | Backend cho phép localhost/127.0.0.1 tại 5173, 5174, 5175. Dùng cổng được cho phép hoặc cập nhật CORS trong `backend/main.py`. |
-| Không đăng nhập admin | Kiểm tra database, log khởi tạo, đúng tài khoản demo; thử đăng xuất/đăng nhập lại. |
-| API trả `401`/`403` | Kiểm tra đăng nhập, hạn token, khóa tài khoản và vai trò; admin không dùng thay khách để đặt COD. |
-| Bộ sưu tập trống | Kiểm tra catalog, chạy migration bộ sưu tập và bảo đảm sản phẩm liên kết không bị khóa. |
-| Giá đổi/không đủ kho | Kiểm tra giỏ, điều chỉnh số lượng và xác nhận giá mới; backend không nhận đơn vượt kho. |
-| Không thấy ảnh | Kiểm tra Internet với ảnh ngoài; với upload, kiểm tra file được chép theo database và URL `/uploads`. |
-| Chat không có nhân viên | Admin mở `/admin/chat`, bật nhận tư vấn; heartbeat hết hạn thì bot tiếp nhận. Chạy một worker. |
-| Mất chat khi tải lại | Đây là cơ chế hiện tại: chat không lưu lịch sử bền vững. |
+| Hiện tượng                  | Cách kiểm tra/xử lý                                                                                                            |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Không tìm thấy Python/npm   | Kiểm tra cài đặt và PATH; mở lại terminal, chạy `python --version`, `node --version`, `npm --version`.                         |
+| Vite báo Node không phù hợp | Kiểm tra `engines` của Vite, dùng Node đáp ứng yêu cầu rồi cài lại bằng `npm ci`.                                              |
+| `ModuleNotFoundError`       | Dùng Python trong `.venv`, cài lại `backend/requirements.txt`.                                                                 |
+| Không kết nối database      | Kiểm tra PostgreSQL, database tồn tại, `DATABASE_URL`, quyền tài khoản và mã hóa mật khẩu trong URL.                           |
+| Thiếu bảng/cột              | Database mới: chạy `database.init_database`; database cũ: kiểm tra cấu trúc rồi chạy migration tương ứng.                      |
+| Lỗi thư mục upload          | Kiểm tra `backend/uploads` có quyền ghi (thư mục tự được tạo khi chạy backend, không phụ thuộc nơi chạy Uvicorn).                                                 |
+| Frontend không tải dữ liệu  | Kiểm tra backend 8000, địa chỉ API, Network trong DevTools và log backend.                                                     |
+| CORS hoặc Vite đổi cổng     | Backend mặc định cho phép localhost/127.0.0.1 tại 5173, 5174, 5175. Dùng cổng được cho phép hoặc đặt `CORS_ORIGINS` trong `backend/.env`. |
+| Không đăng nhập admin       | Kiểm tra database, log khởi tạo, đúng tài khoản demo; thử đăng xuất/đăng nhập lại.                                             |
+| API trả `401`/`403`         | Kiểm tra đăng nhập, hạn token, khóa tài khoản và vai trò; admin không dùng thay khách để đặt COD.                              |
+| Bộ sưu tập trống            | Kiểm tra catalog, chạy migration bộ sưu tập và bảo đảm sản phẩm liên kết không bị khóa.                                        |
+| Giá đổi/không đủ kho        | Kiểm tra giỏ, điều chỉnh số lượng và xác nhận giá mới; backend không nhận đơn vượt kho.                                        |
+| Không thấy ảnh              | Kiểm tra Internet với ảnh ngoài; với upload, kiểm tra file được chép theo database và URL `/uploads`.                          |
+| Chat không có nhân viên     | Admin mở `/admin/chat`, bật nhận tư vấn; heartbeat hết hạn thì bot tiếp nhận. Chạy một worker.                                 |
+| Mất chat khi tải lại        | Đây là cơ chế hiện tại: chat không lưu lịch sử bền vững.                                                                       |
 
 ## 15. Phạm vi hiện tại và hướng phát triển
 
 Dự án hỗ trợ đặt COD và quản trị cục bộ. Các giới hạn cần phân biệt khi báo cáo:
 
 - Chưa tích hợp thanh toán online, đơn vị vận chuyển hoặc chuyển tiền hoàn trả tự động.
-- Email đăng ký lưu thật nhưng chưa tự động gửi email/campaign.
+- Email đăng ký lưu thật nhưng chưa tự động gửi email/campaign. Hệ thống chỉ gửi email đặt lại mật khẩu (khi đã cấu hình SMTP).
 - Trợ lý tư vấn dùng quy tắc/catalog, không phải chatbot gọi LLM bên ngoài.
 - Chat trong RAM, chưa lưu lịch sử sau phiên hoặc chia sẻ giữa nhiều worker.
-- Giỏ/yêu thích theo trình duyệt, chưa đồng bộ theo tài khoản trên nhiều thiết bị.
+- Giỏ/yêu thích đồng bộ theo tài khoản khi đăng nhập; khách chưa đăng nhập chỉ lưu trong trình duyệt. Chưa có cơ chế giữ chỗ tồn kho cho hàng trong giỏ.
 - Bộ sưu tập có nội dung và cấu hình liên kết ban đầu; chưa có màn hình admin thiết kế/quản lý thành phần bộ sưu tập.
 - Đổi trả sau giao hàng được mô tả trong chính sách và tiếp nhận qua nhân viên; chưa có phân hệ xử lý yêu cầu riêng.
 - Admin cố định là cơ chế demo; cần thay trước khi vận hành kinh doanh thực tế.
 
 Hướng mở rộng gồm quản lý đổi trả, dashboard thống kê, đồng bộ giỏ theo tài khoản, dịch vụ email, thanh toán online và lưu trữ/chia sẻ phiên chat.
 
-Tài liệu bổ sung: [ghi chú frontend](frontend/README.md), [thay đổi database trước đây](DATABASE_CHANGES.md), [tests backend](backend/tests/) và [tests trình duyệt](frontend/tests/).
+Tài liệu bổ sung: [ghi chú frontend](frontend/README.md), [tests backend](backend/tests/) và [tests trình duyệt](frontend/tests/).

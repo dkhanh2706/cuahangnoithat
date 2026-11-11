@@ -209,7 +209,7 @@ function Cart() {
               )}
             </div>
             <span className="shipping-threshold-label">
-              {isFreeShipping ? "Miễn phí" : "150.000₫"}
+              {isFreeShipping ? "Miễn phí" : `${freeShippingThreshold.toLocaleString("vi-VN")}₫`}
             </span>
           </div>
           <div className="shipping-bar-track">

@@ -1,8 +1,18 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, useEffect, useRef } from "react";
 import { CheckCircle2, Heart, X } from "lucide-react";
+import api from "../services/api";
+import { readUser } from "../services/session";
+import { toCatalogProduct } from "../services/catalog";
 
 const CartContext = createContext();
+
+const SYNC_DEBOUNCE_MS = 600;
+
+// Chỉ khách hàng đã đăng nhập mới đồng bộ giỏ và yêu thích lên tài khoản.
+function isCustomerSession() {
+  return Boolean(localStorage.getItem("access_token")) && readUser()?.role === "CUSTOMER";
+}
 
 export function CartProvider({ children }) {
   const [cart, setCartState] = useState(() => {
@@ -32,6 +42,76 @@ export function CartProvider({ children }) {
   });
 
   const [toasts, setToasts] = useState([]);
+
+  // Đồng bộ với tài khoản: gộp dữ liệu trong trình duyệt với dữ liệu đã lưu trên máy chủ,
+  // sau đó mọi thay đổi được lưu lại (có trễ ngắn để gom nhiều thao tác liên tiếp).
+  const [synced, setSynced] = useState(false);
+  const wishlistRef = useRef(wishlistProducts);
+  useEffect(() => {
+    wishlistRef.current = wishlistProducts;
+  }, [wishlistProducts]);
+
+  useEffect(() => {
+    if (!isCustomerSession()) return undefined;
+    let cancelled = false;
+    (async () => {
+      try {
+        const [serverCart, serverWishlist, catalogResponse] = await Promise.all([
+          api.get("/api/cart"),
+          api.get("/api/wishlist"),
+          api.get("/api/products"),
+        ]);
+        if (cancelled) return;
+        const catalog = new Map(catalogResponse.data.map((p) => [p.id, toCatalogProduct(p)]));
+
+        const mergedCart = new Map();
+        for (const { product_id, quantity } of serverCart.data.items) {
+          const product = catalog.get(product_id);
+          if (product) mergedCart.set(product_id, { id: product_id, product, quantity });
+        }
+        for (const item of cartRef.current) {
+          const product = catalog.get(item.product.id);
+          if (!product) continue;
+          const quantity = Math.max(mergedCart.get(product.id)?.quantity || 0, item.quantity);
+          mergedCart.set(product.id, { id: product.id, product, quantity });
+        }
+        setCart([...mergedCart.values()]);
+
+        const wishIds = [...new Set([
+          ...serverWishlist.data.product_ids,
+          ...wishlistRef.current.map((p) => p.id),
+        ])];
+        setWishlistProducts(wishIds.map((id) => catalog.get(id)).filter(Boolean));
+        setSynced(true);
+      } catch (error) {
+        // Mất mạng hoặc lỗi máy chủ: vẫn dùng dữ liệu trong trình duyệt, không đồng bộ.
+        console.error("Không thể đồng bộ giỏ hàng:", error);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!synced) return undefined;
+    const timer = setTimeout(() => {
+      api
+        .put("/api/cart", {
+          items: cart.map((item) => ({ product_id: item.product.id, quantity: Math.min(999, item.quantity) })),
+        })
+        .catch(() => {});
+    }, SYNC_DEBOUNCE_MS);
+    return () => clearTimeout(timer);
+  }, [cart, synced]);
+
+  useEffect(() => {
+    if (!synced) return undefined;
+    const timer = setTimeout(() => {
+      api.put("/api/wishlist", { product_ids: wishlistProducts.map((p) => p.id) }).catch(() => {});
+    }, SYNC_DEBOUNCE_MS);
+    return () => clearTimeout(timer);
+  }, [wishlistProducts, synced]);
 
   useEffect(() => {
     try {

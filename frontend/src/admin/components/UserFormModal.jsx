@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   X,
   User,
@@ -13,49 +13,38 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
-function UserFormModal({ isOpen, onClose, onSubmit, editingUser = null, loading = false }) {
-  const [formData, setFormData] = useState({
-    full_name: "",
-    email: "",
+const emptyForm = {
+  full_name: "",
+  email: "",
+  password: "",
+  phone: "",
+  address: "",
+  role: "CUSTOMER",
+  status: true,
+};
+
+function toFormData(user) {
+  if (!user) return emptyForm;
+  return {
+    full_name: user.full_name || "",
+    email: user.email || "",
     password: "",
-    phone: "",
-    address: "",
-    role: "CUSTOMER",
-    status: true,
-  });
+    phone: user.phone || "",
+    address: user.address || "",
+    role: user.role || "CUSTOMER",
+    status: user.status ?? true,
+  };
+}
+
+function UserForm({ onClose, onSubmit, editingUser, loading }) {
+  const [formData, setFormData] = useState(() => toFormData(editingUser));
 
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
   const isEditing = Boolean(editingUser);
-  const isMainAdmin = editingUser?.email?.toLowerCase() === "adminhdk@gmail.com";
+  const isMainAdmin = editingUser?.role === "ADMIN";
 
-  useEffect(() => {
-    if (editingUser) {
-      setFormData({
-        full_name: editingUser.full_name || "",
-        email: editingUser.email || "",
-        password: "",
-        phone: editingUser.phone || "",
-        address: editingUser.address || "",
-        role: editingUser.role || "CUSTOMER",
-        status: editingUser.status ?? true,
-      });
-    } else {
-      setFormData({
-        full_name: "",
-        email: "",
-        password: "",
-        phone: "",
-        address: "",
-        role: "CUSTOMER",
-        status: true,
-      });
-    }
-    setError("");
-  }, [editingUser, isOpen]);
-
-  if (!isOpen) return null;
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -77,10 +66,6 @@ function UserFormModal({ isOpen, onClose, onSubmit, editingUser = null, loading 
     if (!isEditing) {
       if (!formData.email.trim()) {
         setError("Email không được để trống");
-        return;
-      }
-      if (formData.email.trim().toLowerCase() === "adminhdk@gmail.com") {
-        setError("Không thể dùng email adminhdk@gmail.com vì đã là Admin hệ thống");
         return;
       }
       if (!formData.password || formData.password.length < 6) {
@@ -125,7 +110,7 @@ function UserFormModal({ isOpen, onClose, onSubmit, editingUser = null, loading 
         <div className="admin-security-note">
           <Shield size={16} />
           <span>
-            <strong>Quy tắc bảo mật:</strong> Không thể tạo thêm hoặc thăng cấp tài khoản ADMIN. Chỉ duy nhất <code>adminhdk@gmail.com</code> có quyền Quản trị viên.
+            <strong>Quy tắc bảo mật:</strong> Không thể tạo thêm hoặc thăng cấp tài khoản ADMIN. Chỉ duy nhất tài khoản Admin hệ thống có quyền Quản trị viên.
           </span>
         </div>
 
@@ -284,6 +269,19 @@ function UserFormModal({ isOpen, onClose, onSubmit, editingUser = null, loading 
         </form>
       </div>
     </div>
+  );
+}
+
+// Gắn form khi mở và gỡ khi đóng để mỗi lần mở đều nạp lại dữ liệu mới.
+function UserFormModal({ isOpen, editingUser = null, loading = false, ...props }) {
+  if (!isOpen) return null;
+  return (
+    <UserForm
+      key={editingUser?.id ?? "new"}
+      editingUser={editingUser}
+      loading={loading}
+      {...props}
+    />
   );
 }
 

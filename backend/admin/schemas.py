@@ -1,6 +1,9 @@
-from pydantic import BaseModel, EmailStr, Field, field_validator
-from typing import Optional, Literal
 from datetime import datetime
+from typing import Optional, Literal
+
+from pydantic import BaseModel, EmailStr, Field, field_validator
+
+from config import ADMIN_EMAIL
 
 
 class AdminUserCreate(BaseModel):
@@ -15,7 +18,7 @@ class AdminUserCreate(BaseModel):
     @field_validator("email")
     @classmethod
     def validate_email(cls, v: str) -> str:
-        if v.strip().lower() == "adminhdk@gmail.com":
+        if v.strip().lower() == ADMIN_EMAIL:
             raise ValueError("Không thể tạo tài khoản với email quản trị viên hệ thống")
         return v.strip().lower()
 

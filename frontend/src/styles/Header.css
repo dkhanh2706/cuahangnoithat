@@ -166,6 +166,7 @@
 
 .nav-link {
   position: relative;
+  white-space: nowrap;
   padding: 10px 0;
   font-size: 14.5px;
   font-weight: 500;
@@ -636,7 +637,13 @@
 }
 
 /* RESPONSIVE */
-@media (max-width: 960px) {
+@media (max-width: 1240px) {
+  .main-nav {
+    gap: 22px;
+  }
+}
+
+@media (max-width: 1080px) {
   .main-nav {
     display: none;
   }
@@ -647,6 +654,28 @@
 
 @media (max-width: 640px) {
   .auth-buttons {
+    display: none;
+  }
+  .header-container {
+    width: calc(100% - 28px);
+    gap: 10px;
+  }
+  .header-actions {
+    gap: 6px;
+  }
+  .action-icon-btn {
+    width: 38px;
+    height: 38px;
+  }
+  .brand {
+    gap: 8px;
+  }
+  .user-button {
+    padding: 3px;
+    border-radius: 50%;
+  }
+  .user-name,
+  .user-chevron {
     display: none;
   }
   .brand-text span {

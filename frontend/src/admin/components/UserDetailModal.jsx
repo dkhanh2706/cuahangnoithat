@@ -7,15 +7,13 @@ import {
   Shield,
   Calendar,
   Clock,
-  CheckCircle,
-  AlertTriangle,
   Crown,
 } from "lucide-react";
 
 function UserDetailModal({ isOpen, onClose, user }) {
   if (!isOpen || !user) return null;
 
-  const isMainAdmin = user.email?.toLowerCase() === "adminhdk@gmail.com";
+  const isMainAdmin = user.role === "ADMIN";
 
   const formatDate = (dateStr) => {
     if (!dateStr) return "Chưa cập nhật";

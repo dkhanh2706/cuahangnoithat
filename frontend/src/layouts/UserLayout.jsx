@@ -19,6 +19,7 @@ function ScrollToTopOnNavigate() {
 }
 
 function UserLayout() {
+  const { pathname } = useLocation();
   const [showTopBtn, setShowTopBtn] = useState(false);
 
   useEffect(() => {
@@ -40,7 +41,9 @@ function UserLayout() {
       <Header />
 
       <main className="user-content">
-        <Outlet />
+        <div className="page-transition" key={pathname}>
+          <Outlet />
+        </div>
       </main>
 
       <Footer />

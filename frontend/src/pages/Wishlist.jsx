@@ -7,7 +7,6 @@ import {
   Star,
   Check,
   ArrowLeft,
-  PackageOpen,
   ArrowRight,
 } from "lucide-react";
 import { useCart } from "../context/CartContext";
@@ -15,7 +14,7 @@ import "../styles/Wishlist.css";
 
 function Wishlist() {
   const navigate = useNavigate();
-  const { wishlistProducts, toggleWishlist, addToCart, isWishlisted } = useCart();
+  const { wishlistProducts, toggleWishlist, addToCart } = useCart();
   const [addedIds, setAddedIds] = useState([]);
 
   const handleAddToCart = (e, product) => {

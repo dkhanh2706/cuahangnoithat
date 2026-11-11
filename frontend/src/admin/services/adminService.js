@@ -1,7 +1,19 @@
 import api from "../../services/api";
 
 const adminService = {
-  // Lấy thống kê tổng quan
+  // Số liệu tổng quan: doanh thu, đơn hàng, sản phẩm bán chạy, tồn kho thấp
+  getDashboard: async (days = 30) => {
+    const response = await api.get(`/api/admin/dashboard?days=${days}`);
+    return response.data;
+  },
+
+  // Số đơn đang chờ xác nhận (huy hiệu trên menu)
+  getOrdersSummary: async () => {
+    const response = await api.get("/api/admin/orders/summary");
+    return response.data;
+  },
+
+  // Lấy thống kê người dùng
   getStats: async () => {
     const response = await api.get("/api/admin/stats");
     return response.data;

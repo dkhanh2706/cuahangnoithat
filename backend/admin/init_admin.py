@@ -5,15 +5,13 @@ from utils.security import hash_password, verify_password
 
 logger = logging.getLogger(__name__)
 
-ADMIN_EMAIL = "adminhdk@gmail.com"
-ADMIN_PASSWORD = "1234567890"
+from config import ADMIN_EMAIL, ADMIN_PASSWORD
 
 
 def ensure_single_admin():
     """
     Đảm bảo trong hệ thống chỉ có DUY NHẤT 1 tài khoản ADMIN:
-    Email: adminhdk@gmail.com
-    Password: 1234567890
+    Email/Password lấy từ config (ADMIN_EMAIL, ADMIN_PASSWORD)
     Role: ADMIN
     Status: True
     Bất kỳ tài khoản nào khác có role ADMIN sẽ bị chuyển về CUSTOMER.
@@ -30,7 +28,7 @@ def ensure_single_admin():
                 other.role = "CUSTOMER"
                 logger.warning(f"Đã chuyển quyền tài khoản {other.email} từ ADMIN về CUSTOMER.")
 
-            # 2. Tìm hoặc tạo adminhdk@gmail.com
+            # 2. Tìm hoặc tạo tài khoản admin chính
             admin_user = db.query(User).filter(
                 User.email == ADMIN_EMAIL
             ).first()
@@ -50,7 +48,7 @@ def ensure_single_admin():
             else:
                 admin_user.role = "ADMIN"
                 admin_user.status = True
-                # Đảm bảo mật khẩu luôn khớp 1234567890 theo yêu cầu
+                # Đảm bảo mật khẩu luôn khớp ADMIN_PASSWORD
                 if not verify_password(ADMIN_PASSWORD, admin_user.password_hash):
                     admin_user.password_hash = hash_password(ADMIN_PASSWORD)
                     logger.info(f"Đã cập nhật mật khẩu chuẩn cho {ADMIN_EMAIL}")
